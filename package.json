@@ -1,0 +1,15 @@
+{
+  "name": "jccipher-blog-preview",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:preview": "node scripts/preview-build.mjs",
+    "preview": "node scripts/preview-server.mjs"
+  },
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0",
+    "liquidjs": "^10.21.0",
+    "marked": "^15.0.12"
+  }
+}

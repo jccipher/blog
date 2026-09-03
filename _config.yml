@@ -1,12 +1,22 @@
-title: James Blog
+title: James Chen
+tagline: "Build. Break. Learn. Repeat."
 author: James Chen
 email: banger007@qq.com
-description: > # this means to ignore newlines until "baseurl:"
-I'm working on building up this blog to note/share something usefull/helpfull. Please let me know if any sugguestion.
+description: "James Chen's personal technology blog about engineering practice, code experiments, and continuous learning."
+url: "https://jccipher.github.io"
+baseurl: "/blog"
 
-# social links
-twitter_username: TBD # DO NOT include the @ character, or else the build will fail!
-github_username:  JamesChenPage # DO NOT include the @ character, or else the build will fail!
+lang: en
+timezone: Asia/Shanghai
+github_username: jccipher
+show_excerpts: true
 
-show_excerpts: true # set to false to remove excerpts on the homepage
 theme: minima
+markdown: kramdown
+permalink: /posts/:title/
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor

@@ -1,8 +1,8 @@
 # blog URL:
-* https://jameschenpage.github.io/blog/
+* https://jccipher.github.io/blog/
 
 # blog github repository
-* git clone https://github.com/JamesChenPage/blog.git
+* git clone https://github.com/jccipher/blog.git
 
 
 # Your GitHub Learning Lab Repository for GitHub Pages

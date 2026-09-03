@@ -1,6 +1,8 @@
 ---
-title: "Welcome to James' blog"
+layout: home
+title: Home
+lang: en
+permalink: /
+translation_url: /zh/
+description: "James Chen's personal technology blog about engineering practice, code experiments, and continuous learning."
 ---
-
-欢迎来到我的blog!
-不定期持续更新，敬请关注！

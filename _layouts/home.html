@@ -1,0 +1,98 @@
+---
+layout: default
+---
+{% assign is_zh = false %}
+{% assign archive_path = '/archives/' %}
+{% if page.lang == 'zh' %}
+  {% assign is_zh = true %}
+  {% assign archive_path = '/zh/archives/' %}
+{% endif %}
+{% assign localized_posts = site.posts | where: "lang", page.lang %}
+
+<section class="hero shell">
+  <div class="hero-main">
+    <div class="eyebrow"><span>root@james</span>:<span>~</span>$ whoami</div>
+    <h1>{% if is_zh %}在代码与系统之间，<br><em>持续探索。</em>{% else %}Between code<br>and systems,<br><em>keep exploring.</em>{% endif %}</h1>
+    <p class="hero-copy">{% if is_zh %}你好，我是 James。一名热衷于工程实践与技术探索的开发者。这里记录代码实验、问题拆解，以及一路上值得复用的经验。{% else %}Hi, I'm James—a developer driven by engineering practice and technical exploration. This is where I document code experiments, break down problems, and share lessons worth reusing.{% endif %}</p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="#latest"><span aria-hidden="true">&gt;_</span> {% if is_zh %}浏览文章{% else %}Explore posts{% endif %}</a>
+      <a class="button button-ghost" href="https://github.com/{{ site.github_username }}" target="_blank" rel="noreferrer">{% if is_zh %}查看 GitHub{% else %}View GitHub{% endif %} <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+
+  <aside class="terminal-card" aria-label="{% if is_zh %}个人状态{% else %}Profile status{% endif %}">
+    <div class="terminal-bar">
+      <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <span>profile.sh</span>
+      <span class="terminal-lock" aria-hidden="true">⌁</span>
+    </div>
+    <div class="terminal-body">
+      <p><span class="prompt">$</span> cat profile.json</p>
+      <div class="json">
+        <span>{</span>
+        <span class="indent"><b>"name"</b>: <i>"James Chen"</i>,</span>
+        <span class="indent"><b>"role"</b>: <i>"Developer"</i>,</span>
+        <span class="indent"><b>"focus"</b>: [</span>
+        <span class="indent-2"><i>"Engineering"</i>,</span>
+        <span class="indent-2"><i>"Open Source"</i>,</span>
+        <span class="indent-2"><i>"Learning"</i></span>
+        <span class="indent">],</span>
+        <span class="indent"><b>"status"</b>: <strong>"online"</strong></span>
+        <span>}</span>
+      </div>
+      <p class="terminal-next"><span class="prompt">$</span> <span data-type-command>./keep_building.sh</span><span class="block-cursor" aria-hidden="true"></span></p>
+    </div>
+  </aside>
+</section>
+
+<section class="signal-strip" aria-label="{% if is_zh %}博客特点{% else %}Blog highlights{% endif %}">
+  <div class="shell signal-grid">
+    <span><b>01</b> REAL NOTES</span>
+    <span><b>02</b> DEEP DIVES</span>
+    <span><b>03</b> OPEN SOURCE</span>
+  </div>
+</section>
+
+<section class="posts-section shell" id="latest">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow"><span>~/blog</span>$ ls -la ./latest</p>
+      <h2>{% if is_zh %}最新日志{% else %}Latest logs{% endif %}<span>.</span></h2>
+    </div>
+    <a href="{{ archive_path | relative_url }}">{% if is_zh %}查看全部{% else %}View all{% endif %} <span aria-hidden="true">→</span></a>
+  </div>
+
+  {% if localized_posts.size > 0 %}
+    <div class="post-list">
+      {% for post in localized_posts limit: 4 %}
+        <article class="post-card">
+          <div class="post-index">0{{ forloop.index }}</div>
+          <div class="post-content">
+            <div class="post-meta">
+              <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>
+              <span>{{ post.reading_time | default: '3' }} MIN READ</span>
+            </div>
+            <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+            <p>{{ post.excerpt | strip_html | normalize_whitespace | truncate: 150 }}</p>
+            <div class="post-tags">
+              {% if post.tags.size > 0 %}
+                {% for tag in post.tags %}<span>#{{ tag }}</span>{% endfor %}
+              {% else %}
+                <span>#notes</span><span>#github-pages</span>
+              {% endif %}
+            </div>
+          </div>
+          <a class="post-arrow" href="{{ post.url | relative_url }}" aria-label="{% if is_zh %}阅读{% else %}Read{% endif %} {{ post.title }}">↗</a>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state"><span>$</span> {% if is_zh %}暂无文章，第一篇正在编译中……{% else %}No posts yet. The first one is compiling…{% endif %}</div>
+  {% endif %}
+</section>
+
+<section class="manifesto shell">
+  <p class="eyebrow"><span>//</span> README.md</p>
+  <blockquote>{% if is_zh %}“把踩过的坑写下来，<br>也把看见的光分享出去。”{% else %}“Document the pitfalls.<br>Share the breakthroughs.”{% endif %}</blockquote>
+  <p>{% if is_zh %}这个博客不是完美答案的陈列柜，而是一份持续更新的工程日志。{% else %}This isn't a showcase of perfect answers. It's a continuously evolving engineering log.{% endif %}</p>
+</section>

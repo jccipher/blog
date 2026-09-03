@@ -1,0 +1,12 @@
+---
+layout: default
+---
+
+<article class="article shell">
+  <header class="article-header compact">
+    <div class="eyebrow"><span>~/blog</span>$ open {{ page.slug | default: page.title | downcase }}.md</div>
+    <h1>{{ page.title }}<span class="accent">.</span></h1>
+    {% if page.description %}<p class="page-description">{{ page.description }}</p>{% endif %}
+  </header>
+  <div class="prose page-copy">{{ content }}</div>
+</article>
