@@ -14,7 +14,7 @@ description: "关于 James 和这个技术博客。"
 这里主要记录技术探索、工程实践和解决问题的过程。内容会不定期更新；如果你对某篇文章有建议，欢迎通过 [GitHub](https://github.com/jccipher) 联系我。
 
 ```text
-contact  : banger007@qq.com
+contact  : chenjianbangjob@126.com
 github   : jccipher
 status   : keep building
 ```

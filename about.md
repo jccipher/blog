@@ -14,7 +14,7 @@ I'm James Chen, a developer who never stops learning.
 This is where I document technical explorations, engineering practice, and the process of solving real problems. New notes arrive whenever there is something worth sharing. If you have a suggestion, feel free to reach out through [GitHub](https://github.com/jccipher).
 
 ```text
-contact  : banger007@qq.com
+contact  : chenjianbangjob@126.com
 github   : jccipher
 status   : keep building
 ```
