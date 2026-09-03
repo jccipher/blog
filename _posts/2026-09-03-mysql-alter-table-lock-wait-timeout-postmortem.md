@@ -173,7 +173,7 @@ sequenceDiagram
 
     App->>DB: BEGIN
     App->>DB: SELECT / UPDATE chat_sessions
-    Note over App,DB: Transaction not committed; table MDL remains held
+    Note over App,DB: Transaction not committed, table MDL remains held
     Deploy->>DB: ALTER TABLE ... ADD robot_id
     DB-->>Deploy: Waiting for table metadata lock
     Note over DB,Deploy: Later requests may queue behind the wait
