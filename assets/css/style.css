@@ -177,6 +177,13 @@ a { color: inherit; }
 .prose hr { margin: 40px 0; border: 0; border-top: 1px solid var(--line); }
 .prose ul, .prose ol { padding-left: 1.4em; }
 .prose li::marker { color: var(--green); }
+.prose table { display: block; width: 100%; overflow-x: auto; margin: 28px 0; border-collapse: collapse; font-size: .9em; }
+.prose th, .prose td { min-width: 145px; padding: 12px 14px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+.prose th { color: var(--green-soft); background: var(--panel); font-family: var(--mono); font-size: .84em; letter-spacing: .02em; }
+.prose tbody tr:nth-child(even) { background: rgba(255, 255, 255, .012); }
+.prose input[type="checkbox"] { accent-color: var(--green); }
+.prose pre.mermaid { display: flex; justify-content: center; min-height: 120px; padding: 28px 16px; white-space: normal; }
+.prose .mermaid svg { max-width: 100%; height: auto; }
 .page-copy { max-width: 850px; padding-top: 48px; border-top: 1px solid var(--line); }
 
 .archive-list { border-top: 1px solid var(--line); }
