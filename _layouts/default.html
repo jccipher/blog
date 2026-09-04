@@ -41,7 +41,7 @@
     <link rel="alternate" hreflang="zh-CN" href="{{ chinese_url | absolute_url }}">
     <link rel="alternate" hreflang="x-default" href="{{ english_url | absolute_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M17 20l13 12-13 12M34 44h14%22 fill=%22none%22 stroke=%22%2300ff88%22 stroke-width=%225%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
   </head>
   <body
     data-page-id="{{ page.url | replace:'index.html','' | escape }}"
@@ -55,8 +55,8 @@
 
     <header class="site-header">
       <div class="shell nav-shell">
-        <a class="brand" href="{{ home_path | relative_url }}" aria-label="{{ site.title }} {% if is_zh %}首页{% else %}home{% endif %}">
-          <span class="brand-prompt" aria-hidden="true">~/</span>{{ site.title | downcase | replace: ' ', '_' }}<span class="cursor" aria-hidden="true"></span>
+        <a class="brand" href="{{ home_path | relative_url }}" aria-label="LATENTX {% if is_zh %}首页{% else %}home{% endif %}">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
         </a>
         <nav class="site-nav" aria-label="{% if is_zh %}主导航{% else %}Primary navigation{% endif %}">
           <a href="{{ home_path | relative_url }}"{% if page.url == home_path %} aria-current="page"{% endif %}>./home</a>

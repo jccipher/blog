@@ -4,5 +4,5 @@ title: Home
 lang: en
 permalink: /
 translation_url: /zh/
-description: "James Chen's personal technology blog about engineering practice, code experiments, and continuous learning."
+description: "LATENTX explores AI agents, harnesses, models, and intelligent systems."
 ---

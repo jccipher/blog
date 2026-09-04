@@ -11,9 +11,10 @@ layout: default
 
 <section class="hero shell">
   <div class="hero-main">
-    <div class="eyebrow"><span>root@james</span>:<span>~</span>$ whoami</div>
-    <h1>{% if is_zh %}在代码与系统之间，<br><em>持续探索。</em>{% else %}Between code<br>and systems,<br><em>keep exploring.</em>{% endif %}</h1>
-    <p class="hero-copy">{% if is_zh %}你好，我是 James。一名热衷于工程实践与技术探索的开发者。这里记录代码实验、问题拆解，以及一路上值得复用的经验。{% else %}Hi, I'm James—a developer driven by engineering practice and technical exploration. This is where I document code experiments, break down problems, and share lessons worth reusing.{% endif %}</p>
+    <div class="eyebrow"><span>AI ENGINEERING BLOG</span> · JAMES CHEN</div>
+    <h1 class="hero-logo" aria-label="LATENTX"><span>LATENT</span><b>X</b></h1>
+    <p class="hero-tagline">{% if is_zh %}专注于 AI Agent、Harness、模型与人工智能。{% else %}agents, harnesses, models, and AI.{% endif %}</p>
+    <p class="hero-copy">{% if is_zh %}探索如何把模型的潜在能力，构建成可靠、可观测、可投入生产的智能系统。{% else %}Exploring how the latent capabilities of models become reliable, observable, production-ready intelligent systems.{% endif %}</p>
     <div class="hero-actions">
       <a class="button button-primary" href="#latest"><span aria-hidden="true">&gt;_</span> {% if is_zh %}浏览文章{% else %}Explore posts{% endif %}</a>
       <a class="button button-ghost" href="https://github.com/{{ site.github_username }}" target="_blank" rel="noreferrer">{% if is_zh %}查看 GitHub{% else %}View GitHub{% endif %} <span aria-hidden="true">↗</span></a>
@@ -31,11 +32,11 @@ layout: default
       <div class="json">
         <span>{</span>
         <span class="indent"><b>"name"</b>: <i>"James Chen"</i>,</span>
-        <span class="indent"><b>"role"</b>: <i>"Developer"</i>,</span>
+        <span class="indent"><b>"role"</b>: <i>"AI Engineer"</i>,</span>
         <span class="indent"><b>"focus"</b>: [</span>
-        <span class="indent-2"><i>"Engineering"</i>,</span>
-        <span class="indent-2"><i>"Open Source"</i>,</span>
-        <span class="indent-2"><i>"Learning"</i></span>
+        <span class="indent-2"><i>"AI Agents"</i>,</span>
+        <span class="indent-2"><i>"Harnesses"</i>,</span>
+        <span class="indent-2"><i>"Models"</i></span>
         <span class="indent">],</span>
         <span class="indent"><b>"status"</b>: <strong>"online"</strong></span>
         <span>}</span>
@@ -47,9 +48,9 @@ layout: default
 
 <section class="signal-strip" aria-label="{% if is_zh %}博客特点{% else %}Blog highlights{% endif %}">
   <div class="shell signal-grid">
-    <span><b>01</b> REAL NOTES</span>
-    <span><b>02</b> DEEP DIVES</span>
-    <span><b>03</b> OPEN SOURCE</span>
+    <span><b>01</b> AI AGENTS</span>
+    <span><b>02</b> LLM HARNESSES</span>
+    <span><b>03</b> MODEL SYSTEMS</span>
   </div>
 </section>
 
@@ -98,6 +99,6 @@ layout: default
 
 <section class="manifesto shell">
   <p class="eyebrow"><span>//</span> README.md</p>
-  <blockquote>{% if is_zh %}“把踩过的坑写下来，<br>也把看见的光分享出去。”{% else %}“Document the pitfalls.<br>Share the breakthroughs.”{% endif %}</blockquote>
-  <p>{% if is_zh %}这个博客不是完美答案的陈列柜，而是一份持续更新的工程日志。{% else %}This isn't a showcase of perfect answers. It's a continuously evolving engineering log.{% endif %}</p>
+  <blockquote>{% if is_zh %}“构建智能背后的系统。”{% else %}“Build the systems<br>around intelligence.”{% endif %}</blockquote>
+  <p>{% if is_zh %}关于 AI Agent、Harness、模型，以及从实验走向生产的工程实践。{% else %}Notes on AI agents, harnesses, models, and the engineering path from experiment to production.{% endif %}</p>
 </section>
