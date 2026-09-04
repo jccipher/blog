@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daily AI Blog Digest"
+  short_description: "Build separate bilingual posts from AI lab blogs"
+  default_prompt: "Use $daily-ai-blog-digest to fetch the newest Anthropic and OpenAI articles, build a separate bilingual post for each source, verify them, and publish when authorized."
