@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "build:preview": "node scripts/preview-build.mjs",
-    "preview": "node scripts/preview-server.mjs"
+    "preview": "npm run build:preview && node scripts/preview-server.mjs",
+    "check": "npm run build:preview && node --check assets/js/engagement.js && node --check engagement-worker/src/index.js && node scripts/verify-build.mjs"
   },
   "devDependencies": {
     "gray-matter": "^4.0.3",

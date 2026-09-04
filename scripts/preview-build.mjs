@@ -68,10 +68,12 @@ await mkdir(outputRoot, { recursive: true });
 await writePage('index.html', await renderPage(path.join(root, 'index.md'), '/'));
 await writePage('archives/index.html', await renderPage(path.join(root, 'archives.md'), '/archives/'));
 await writePage('about/index.html', await renderPage(path.join(root, 'about.md'), '/about/'));
+await writePage('favorites/index.html', await renderPage(path.join(root, 'favorites.md'), '/favorites/'));
 await writePage('404.html', await renderPage(path.join(root, '404.html'), '/404.html'));
 await writePage('zh/index.html', await renderPage(path.join(root, 'zh', 'index.md'), '/zh/'));
 await writePage('zh/archives/index.html', await renderPage(path.join(root, 'zh', 'archives.md'), '/zh/archives/'));
 await writePage('zh/about/index.html', await renderPage(path.join(root, 'zh', 'about.md'), '/zh/about/'));
+await writePage('zh/favorites/index.html', await renderPage(path.join(root, 'zh', 'favorites.md'), '/zh/favorites/'));
 await writePage('zh/404.html', await renderPage(path.join(root, 'zh', '404.html'), '/zh/404.html'));
 
 for (const post of posts) {

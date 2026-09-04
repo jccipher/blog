@@ -16,7 +16,16 @@ layout: default
     <div class="article-meta">
       <time datetime="{{ page.date | date_to_xmlschema }}">{% if is_zh %}发布于{% else %}PUBLISHED{% endif %} {{ page.date | date: '%Y.%m.%d' }}</time>
       <span>{{ page.reading_time | default: '3' }} {% if is_zh %}分钟阅读{% else %}MIN READ{% endif %}</span>
+      <span><b data-inline-page-views>—</b> {% if is_zh %}次浏览{% else %}VIEWS{% endif %}</span>
       {% for tag in page.tags %}<span>#{{ tag }}</span>{% endfor %}
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="{{ page.url | escape }}" data-page-title="{{ page.title | escape }}" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>{% if is_zh %}收藏本文{% else %}Save article{% endif %}</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> {% if is_zh %}打赏{% else %}Donate{% endif %}</button>
     </div>
   </header>
   <div class="article-grid">
@@ -27,6 +36,7 @@ layout: default
         <div><dt>{% if is_zh %}作者{% else %}author{% endif %}</dt><dd>{{ site.author }}</dd></div>
         <div><dt>{% if is_zh %}格式{% else %}format{% endif %}</dt><dd>markdown</dd></div>
         <div><dt>{% if is_zh %}状态{% else %}status{% endif %}</dt><dd class="online">{% if is_zh %}已发布{% else %}published{% endif %}</dd></div>
+        <div><dt>{% if is_zh %}浏览{% else %}views{% endif %}</dt><dd data-inline-page-views>—</dd></div>
       </dl>
     </aside>
   </div>

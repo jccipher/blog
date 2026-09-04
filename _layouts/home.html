@@ -82,7 +82,12 @@ layout: default
               {% endif %}
             </div>
           </div>
-          <a class="post-arrow" href="{{ post.url | relative_url }}" aria-label="{% if is_zh %}阅读{% else %}Read{% endif %} {{ post.title }}">↗</a>
+          <div class="post-actions">
+            <button class="post-favorite" type="button" data-favorite-toggle data-page-id="{{ post.url | escape }}" data-page-title="{{ post.title | escape }}" aria-pressed="false" aria-label="{% if is_zh %}收藏{% else %}Save{% endif %} {{ post.title }}">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+            </button>
+            <a class="post-arrow" href="{{ post.url | relative_url }}" aria-label="{% if is_zh %}阅读{% else %}Read{% endif %} {{ post.title }}">↗</a>
+          </div>
         </article>
       {% endfor %}
     </div>

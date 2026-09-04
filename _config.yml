@@ -11,6 +11,17 @@ timezone: Asia/Shanghai
 github_username: jccipher
 show_excerpts: true
 
+# Engagement features work locally out of the box. Set api_endpoint to the
+# deployed Worker URL from docs/engagement-api.md for shared, durable counters.
+engagement:
+  api_endpoint: ""
+
+# Add a trusted payment page here when one is available. Until then the support
+# dialog offers non-monetary ways to help without linking to an invalid account.
+support:
+  donation_url: ""
+  donation_provider: ""
+
 theme: minima
 markdown: kramdown
 permalink: /posts/:title/
@@ -19,4 +30,6 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - README.md
+  - docs
+  - engagement-worker
   - vendor
