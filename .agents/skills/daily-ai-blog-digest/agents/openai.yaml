@@ -1,4 +1,0 @@
-interface:
-  display_name: "Daily AI Blog Digest"
-  short_description: "Build and publish bilingual AI blog digests"
-  default_prompt: "Use $daily-ai-blog-digest to fetch the newest Anthropic and OpenAI posts, build a bilingual digest, verify it, and publish it."
