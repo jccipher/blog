@@ -33,7 +33,7 @@ description: "One factual sentence describing this digest."
 sources:
   - publisher: Anthropic
     title: "Exact source title"
-    url: "https://www.anthropic.com/news/example"
+    url: "https://claude.com/blog/example"
     published_at: "YYYY-MM-DD"
     official_zh_url: null
     reuse_policy: summary-only

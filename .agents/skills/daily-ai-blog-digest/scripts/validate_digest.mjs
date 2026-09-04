@@ -20,8 +20,8 @@ function canonicalize(rawUrl) {
 
 function expectedPublisher(url) {
   const hostname = new URL(url).hostname.replace(/^www\./, '');
-  if (hostname === 'anthropic.com') return 'Anthropic';
-  if (hostname === 'openai.com') return 'OpenAI';
+  if (hostname === 'claude.com' || hostname === 'anthropic.com') return 'Anthropic';
+  if (hostname === 'developers.openai.com' || hostname === 'openai.com') return 'OpenAI';
   throw new Error(`unsupported source domain: ${hostname}`);
 }
 
@@ -126,8 +126,9 @@ async function findPriorSourceOwners(excludedFiles, candidateUrls) {
 }
 
 function runSelfTest() {
-  assert.equal(canonicalize('https://OpenAI.com/news/example/?utm_source=test#section'), 'https://openai.com/news/example');
-  assert.equal(expectedPublisher('https://www.anthropic.com/news/example'), 'Anthropic');
+  assert.equal(canonicalize('https://Developers.OpenAI.com/blog/example/?utm_source=test#section'), 'https://developers.openai.com/blog/example');
+  assert.equal(expectedPublisher('https://claude.com/blog/example'), 'Anthropic');
+  assert.equal(expectedPublisher('https://developers.openai.com/blog/example'), 'OpenAI');
   assert.throws(() => expectedPublisher('https://example.com/post'));
 
   const shared = {
@@ -141,7 +142,7 @@ function runSelfTest() {
       {
         publisher: 'Anthropic',
         title: 'Anthropic example',
-        url: 'https://www.anthropic.com/news/example',
+        url: 'https://claude.com/blog/example',
         published_at: '2026-09-05',
         official_zh_url: null,
         reuse_policy: 'summary-only',
@@ -149,7 +150,7 @@ function runSelfTest() {
       {
         publisher: 'OpenAI',
         title: 'OpenAI example',
-        url: 'https://openai.com/news/example',
+        url: 'https://developers.openai.com/blog/example',
         published_at: '2026-09-05',
         official_zh_url: 'https://openai.com/zh-Hans-CN/index/example',
         reuse_policy: 'summary-only',
@@ -165,7 +166,7 @@ function runSelfTest() {
       translation_url: '/zh/posts/ai-blog-digest-2026-09-05/',
       description: 'Example digest.',
     },
-    content: `> Deck\n\n## Editorial summary\n\nSummary.\n\n## Source material\n\n### Anthropic: Anthropic example\n\n[Read](https://www.anthropic.com/news/example)\n\n### OpenAI: OpenAI example\n\n[Read](https://openai.com/news/example)\n[中文](https://openai.com/zh-Hans-CN/index/example)\n`,
+    content: `> Deck\n\n## Editorial summary\n\nSummary.\n\n## Source material\n\n### Anthropic: Anthropic example\n\n[Read](https://claude.com/blog/example)\n\n### OpenAI: OpenAI example\n\n[Read](https://developers.openai.com/blog/example)\n[中文](https://openai.com/zh-Hans-CN/index/example)\n`,
   };
   const zh = {
     data: {
@@ -176,7 +177,7 @@ function runSelfTest() {
       translation_url: '/posts/ai-blog-digest-2026-09-05/',
       description: '示例摘要。',
     },
-    content: `> 导语\n\n## 编辑摘要\n\n摘要。\n\n## 来源材料\n\n### Anthropic：Anthropic example\n\n[原文](https://www.anthropic.com/news/example)\n\n### OpenAI：OpenAI example\n\n[原文](https://openai.com/news/example)\n[中文](https://openai.com/zh-Hans-CN/index/example)\n`,
+    content: `> 导语\n\n## 编辑摘要\n\n摘要。\n\n## 来源材料\n\n### Anthropic：Anthropic example\n\n[原文](https://claude.com/blog/example)\n\n### OpenAI：OpenAI example\n\n[原文](https://developers.openai.com/blog/example)\n[中文](https://openai.com/zh-Hans-CN/index/example)\n`,
   };
   assert.deepEqual(validatePost('_posts/2026-09-05-ai-blog-digest-2026-09-05.md', en, 'en'), shared.sources.map((source) => source.url));
   assert.deepEqual(validatePost('_posts/2026-09-05-ai-blog-digest-2026-09-05-zh.md', zh, 'zh'), shared.sources.map((source) => source.url));

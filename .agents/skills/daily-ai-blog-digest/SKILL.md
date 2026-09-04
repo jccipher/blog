@@ -1,6 +1,6 @@
 ---
 name: daily-ai-blog-digest
-description: Fetch the newest official Anthropic and OpenAI newsroom articles, create or update a sourced bilingual digest for this Jekyll blog, validate the rendered site, and publish it through Git. Use for the scheduled daily AI-blog roundup or an on-demand run of the same workflow.
+description: Fetch the newest official Claude by Anthropic and OpenAI developer blog posts, create or update a sourced bilingual digest for this Jekyll blog, validate the rendered site, and publish it through Git. Use for the scheduled daily AI-blog roundup or an on-demand run of the same workflow.
 ---
 
 # Daily AI Blog Digest
@@ -22,8 +22,8 @@ Read [references/blog-contract.md](references/blog-contract.md) before drafting 
 
 Use the official indexes as the starting points:
 
-- Anthropic: `https://www.anthropic.com/news`
-- OpenAI: `https://openai.com/news/`
+- Anthropic: `https://claude.com/blog`
+- OpenAI: `https://developers.openai.com/blog`
 
 For each publisher:
 
