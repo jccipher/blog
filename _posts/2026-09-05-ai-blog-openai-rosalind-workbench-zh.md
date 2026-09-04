@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Rosalind Workbench：从科学问题走向可复核证据"
-date: 2026-09-05 05:00:00 +0800
+date: 2026-09-05 03:12:00 +0800
 lang: zh
 slug: ai-blog-openai-rosalind-workbench
 permalink: /zh/posts/ai-blog-openai-rosalind-workbench/

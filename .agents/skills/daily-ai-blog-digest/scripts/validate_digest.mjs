@@ -68,6 +68,11 @@ function validatePost(filePath, document, expectedLang) {
   assert.equal(data.lang, expectedLang, `${filePath}: lang must be ${expectedLang}`);
   assert.match(data.slug, /^ai-blog-(anthropic|openai)-[a-z0-9]+(?:-[a-z0-9]+)*$/, `${filePath}: unexpected independent-post slug`);
   assert(['preview', 'published'].includes(data.run_mode), `${filePath}: run_mode must be preview or published`);
+  const postTime = new Date(data.date).getTime();
+  assert(!Number.isNaN(postTime), `${filePath}: date must be a valid timestamp`);
+  if (data.run_mode === 'published') {
+    assert(postTime <= Date.now() + 300_000, `${filePath}: published posts must not have a future timestamp`);
+  }
   const fileDate = path.basename(filePath).slice(0, 10);
   assert.match(fileDate, /^\d{4}-\d{2}-\d{2}$/, `${filePath}: filename must start with YYYY-MM-DD`);
   const expectedFileName = `${fileDate}-${data.slug}${expectedLang === 'zh' ? '-zh' : ''}.md`;
@@ -186,6 +191,7 @@ function runSelfTest() {
   assert.deepEqual(validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', en, 'en'), [source.url]);
   assert.deepEqual(validatePost('_posts/2026-09-05-ai-blog-anthropic-example-zh.md', zh, 'zh'), [source.url]);
   assert.throws(() => validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', { ...en, data: { ...en.data, run_mode: 'draft' } }, 'en'));
+  assert.throws(() => validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', { ...en, data: { ...en.data, run_mode: 'published', date: new Date('2999-01-01T00:00:00Z') } }, 'en'));
   assert.throws(() => validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', { ...en, data: { ...en.data, sources: [source, { ...source }] } }, 'en'));
   assert.throws(() => validateSource({ ...source, reuse_policy: 'full-text' }, 'source'));
   process.stdout.write('Digest validator self-test passed.\n');

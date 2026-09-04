@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "How Effective Commerce Agents Are Engineered"
-date: 2026-09-05 05:00:00 +0800
+date: 2026-09-05 03:12:00 +0800
 lang: en
 slug: ai-blog-anthropic-the-anatomy-of-effective-commerce-agents
 permalink: /posts/ai-blog-anthropic-the-anatomy-of-effective-commerce-agents/

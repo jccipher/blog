@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Rosalind Workbench: From a Scientific Question to Reviewable Evidence"
-date: 2026-09-05 05:00:00 +0800
+date: 2026-09-05 03:12:00 +0800
 lang: en
 slug: ai-blog-openai-rosalind-workbench
 permalink: /posts/ai-blog-openai-rosalind-workbench/

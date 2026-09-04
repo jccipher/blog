@@ -56,7 +56,7 @@ For each publisher independently:
 
 ## Prepare each independent post
 
-Use the current time in `Asia/Shanghai` for filenames and front matter. Inspect the three newest English/Chinese post pairs before drafting so the voice, density, headings, code formatting, and metadata stay consistent with the evolving blog.
+Use the current calendar date and actual execution time in `Asia/Shanghai` for filenames and front matter. Never assign a future timestamp: GitHub Pages may omit future-dated posts from the deployment. Inspect the three newest English/Chinese post pairs before drafting so the voice, density, headings, code formatting, and metadata stay consistent with the evolving blog.
 
 For each selected article independently:
 

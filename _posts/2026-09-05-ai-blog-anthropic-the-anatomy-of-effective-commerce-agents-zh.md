@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "商业智能体如何进入生产：架构、延迟、安全与评测"
-date: 2026-09-05 05:00:00 +0800
+date: 2026-09-05 03:12:00 +0800
 lang: zh
 slug: ai-blog-anthropic-the-anatomy-of-effective-commerce-agents
 permalink: /zh/posts/ai-blog-anthropic-the-anatomy-of-effective-commerce-agents/

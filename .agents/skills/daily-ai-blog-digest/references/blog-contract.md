@@ -44,7 +44,7 @@ The English file must follow this shape:
 ---
 layout: post
 title: "Concise source-specific English title"
-date: YYYY-MM-DD 05:00:00 +0800
+date: YYYY-MM-DD HH:MM:SS +0800
 lang: en
 slug: ai-blog-anthropic-source-key
 permalink: /posts/ai-blog-anthropic-source-key/
@@ -77,6 +77,8 @@ Translate the post title and description naturally. Preserve the exact original 
 For explicitly permitted full-text reuse, set `reuse_policy: full-text` and also add quoted `license_url` and `license_note` values. `license_note` must identify what permission covers and any required attribution. Do not use `full-text` when the permission does not cover redistribution, or when the Chinese post would require a translation that the permission does not allow.
 
 Estimate `reading_time` from the finished post, rounded up, using roughly 220 English words per minute for English and 400 Chinese characters per minute for Chinese. A close, honest estimate is sufficient.
+
+Use the actual Shanghai execution time for `date`; do not reuse the scheduled trigger time or assign a future timestamp. GitHub Pages may exclude future-dated posts even when the build succeeds.
 
 ## Body structure
 
