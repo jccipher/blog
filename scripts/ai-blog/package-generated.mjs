@@ -42,6 +42,7 @@ function validateResultShape(result) {
   assert(result && typeof result === 'object' && !Array.isArray(result), 'Codex result must be an object');
   assert(['generated', 'noop', 'blocked'].includes(result.status), 'invalid Codex result status');
   assert(typeof result.summary === 'string' && result.summary.trim(), 'Codex result summary is required');
+  assert(result.summary.length <= 2000, 'Codex result summary must be at most 2000 characters');
   assert(Array.isArray(result.sources) && result.sources.length <= 2, 'Codex result sources must be an array of at most two');
 }
 

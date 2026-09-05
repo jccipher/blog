@@ -10,8 +10,7 @@
     },
     "summary": {
       "type": "string",
-      "minLength": 1,
-      "maxLength": 2000
+      "pattern": "\\S"
     },
     "sources": {
       "type": "array",
@@ -35,11 +34,10 @@
           },
           "title": {
             "type": "string",
-            "minLength": 1
+            "pattern": "\\S"
           },
           "canonical_url": {
-            "type": "string",
-            "format": "uri"
+            "type": "string"
           },
           "published_at": {
             "type": "string",
