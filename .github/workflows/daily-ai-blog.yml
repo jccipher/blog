@@ -114,7 +114,7 @@ jobs:
           output-schema-file: .github/schemas/ai-blog-result.schema.json
           sandbox: workspace-write
           safety-strategy: drop-sudo
-          codex-args: '["--ephemeral", "--search"]'
+          codex-args: '["--ephemeral", "-c", "web_search=\"live\""]'
 
       - name: Package the bounded Codex patch
         id: package
