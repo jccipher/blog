@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Wiki Maintainer"
+  short_description: "Keep a project wiki accurate and synchronized"
+  default_prompt: "Use $github-wiki-maintainer to update this project wiki from verified repository sources, validate it locally, and publish only when authorized."
