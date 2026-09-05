@@ -1,4 +1,5 @@
 _site/
+.ai-blog/
 .sass-cache/
 .bundle/
 node_modules/

@@ -1,0 +1,418 @@
+name: Daily AI Blog Digest
+
+on:
+  schedule:
+    - cron: "17 7 * * *"
+      timezone: "Asia/Shanghai"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Generate a review artifact or publish after validation
+        type: choice
+        options:
+          - shadow
+          - publish
+        default: shadow
+      reason:
+        description: Optional audit note for a manual run
+        type: string
+        required: false
+
+permissions: {}
+
+concurrency:
+  group: daily-ai-blog-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      base_sha: ${{ steps.plan.outputs.base_sha }}
+      mode: ${{ steps.plan.outputs.mode }}
+      run_key: ${{ steps.plan.outputs.run_key }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare trusted run plan
+        id: plan
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          MANUAL_MODE: ${{ inputs.mode }}
+          SCHEDULE_MODE: ${{ vars.AI_BLOG_PUBLISH_MODE }}
+          MANUAL_REASON: ${{ inputs.reason }}
+        run: node scripts/ai-blog/prepare-run.mjs
+
+      - name: Upload run plan
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ai-blog-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .ai-blog/run-plan.json
+          if-no-files-found: error
+          retention-days: 14
+
+  generate:
+    needs: preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: ai-blog-generation
+    permissions:
+      contents: read
+    outputs:
+      has_patch: ${{ steps.package.outputs.has_patch }}
+      result_status: ${{ steps.package.outputs.result_status }}
+      sources_count: ${{ steps.package.outputs.sources_count }}
+    steps:
+      - name: Check out trusted base
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.preflight.outputs.base_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies before exposing the API key
+        run: npm ci
+
+      - name: Test automation helpers before exposing the API key
+        run: npm run test:ai-blog-automation
+
+      - name: Download trusted run plan
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: ai-blog-plan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .ai-blog
+
+      - name: Discover sources and generate bilingual post pairs
+        id: codex
+        uses: openai/codex-action@f367b1e9572fd064ea71ef925ca24ee0f01080af # v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: .github/codex/prompts/daily-ai-blog-generate.md
+          output-file: .ai-blog/codex-result.json
+          output-schema-file: .github/schemas/ai-blog-result.schema.json
+          sandbox: workspace-write
+          safety-strategy: drop-sudo
+          codex-args: '["--ephemeral", "--search"]'
+
+      - name: Package the bounded Codex patch
+        id: package
+        run: >-
+          node scripts/ai-blog/package-generated.mjs
+          --plan .ai-blog/run-plan.json
+          --result .ai-blog/codex-result.json
+
+      - name: Upload generation report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ai-blog-generation-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .ai-blog/run-plan.json
+            .ai-blog/codex-result.json
+            .ai-blog/generated-manifest.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload generated patch
+        if: steps.package.outputs.has_patch == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ai-blog-generated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .ai-blog/run-plan.json
+            .ai-blog/codex-result.json
+            .ai-blog/generated-manifest.json
+            .ai-blog/candidate.patch
+          if-no-files-found: error
+          retention-days: 14
+
+  validate:
+    needs: [preflight, generate]
+    if: needs.generate.outputs.has_patch == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Check out trusted base
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.preflight.outputs.base_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download generated patch
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: ai-blog-generated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .ai-blog
+
+      - name: Apply and validate generated content
+        run: >-
+          node scripts/ai-blog/validate-generated.mjs
+          --plan .ai-blog/run-plan.json
+          --manifest .ai-blog/generated-manifest.json
+          --patch .ai-blog/candidate.patch
+
+      - name: Build and validate the complete site
+        run: npm run check
+
+      - name: Verify every generated page
+        run: >-
+          node scripts/ai-blog/verify-generated-pages.mjs
+          --manifest .ai-blog/validated-manifest.json
+
+      - name: Upload validated content
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ai-blog-validated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .ai-blog/validated-content
+            .ai-blog/validated-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload validated Pages site
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ai-blog-site-${{ github.run_id }}-${{ github.run_attempt }}
+          path: _site/blog
+          if-no-files-found: error
+          retention-days: 14
+
+  shadow_complete:
+    needs: [preflight, generate, validate]
+    if: >-
+      always() &&
+      needs.preflight.result == 'success' &&
+      needs.generate.result == 'success' &&
+      needs.preflight.outputs.mode == 'shadow' &&
+      (needs.generate.outputs.result_status == 'noop' || needs.validate.result == 'success')
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Record shadow result
+        env:
+          RESULT_STATUS: ${{ needs.generate.outputs.result_status }}
+          SOURCES_COUNT: ${{ needs.generate.outputs.sources_count }}
+        run: |
+          echo "## Daily AI blog shadow run" >> "$GITHUB_STEP_SUMMARY"
+          echo "Status: $RESULT_STATUS" >> "$GITHUB_STEP_SUMMARY"
+          echo "Sources: ${SOURCES_COUNT:-0}" >> "$GITHUB_STEP_SUMMARY"
+          echo "No repository or Pages mutation was performed." >> "$GITHUB_STEP_SUMMARY"
+
+  publish:
+    needs: [preflight, generate, validate]
+    if: >-
+      needs.preflight.outputs.mode == 'publish' &&
+      needs.generate.outputs.has_patch == 'true' &&
+      needs.validate.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: ai-blog-production
+    permissions:
+      contents: write
+    outputs:
+      commit_sha: ${{ steps.push.outputs.commit_sha }}
+    steps:
+      - name: Check out current main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download validated content
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: ai-blog-validated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .ai-blog/publish
+
+      - name: Confirm remote main has not moved
+        env:
+          EXPECTED_BASE_SHA: ${{ needs.preflight.outputs.base_sha }}
+        run: |
+          remote_sha="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          test "$remote_sha" = "$EXPECTED_BASE_SHA"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_BASE_SHA"
+
+      - name: Prepare validated files for publication
+        run: >-
+          node scripts/ai-blog/prepare-publish.mjs
+          --content-dir .ai-blog/publish/validated-content
+          --manifest .ai-blog/publish/validated-manifest.json
+
+      - name: Rebuild before commit
+        run: npm run check
+
+      - name: Commit and push validated posts
+        id: push
+        env:
+          COMMIT_NAME: ${{ vars.AI_BLOG_COMMIT_NAME }}
+          COMMIT_EMAIL: ${{ vars.AI_BLOG_COMMIT_EMAIL }}
+        run: |
+          git config user.name "${COMMIT_NAME:-latentx-ai-blog-bot}"
+          git config user.email "${COMMIT_EMAIL:-41898282+github-actions[bot]@users.noreply.github.com}"
+          git commit -m "Publish AI blog posts for $(TZ=Asia/Shanghai date +%F)"
+          git push origin HEAD:main
+          echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  deploy_pages:
+    needs: [preflight, publish]
+    if: needs.publish.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download validated Pages site
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: ai-blog-site-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .ai-blog/site
+
+      - name: Configure Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+
+      - name: Upload Pages deployment artifact
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: .ai-blog/site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+
+  verify_public:
+    needs: [preflight, publish, deploy_pages]
+    if: needs.deploy_pages.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the published commit
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.publish.outputs.commit_sha }}
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+
+      - name: Download validated manifest
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: ai-blog-validated-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .ai-blog/verify
+
+      - name: Verify production URLs
+        env:
+          PAGE_URL: ${{ needs.deploy_pages.outputs.page_url }}
+          VERIFY_TIMEOUT_SECONDS: ${{ vars.AI_BLOG_VERIFY_TIMEOUT_SECONDS }}
+        run: >-
+          node scripts/ai-blog/verify-publication.mjs
+          --manifest .ai-blog/verify/validated-manifest.json
+          --base-url "${PAGE_URL:-https://jccipher.github.io/blog/}"
+          --timeout "${VERIFY_TIMEOUT_SECONDS:-600}"
+
+  final_status:
+    needs:
+      - preflight
+      - generate
+      - validate
+      - shadow_complete
+      - publish
+      - deploy_pages
+      - verify_public
+    if: always()
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Write final workflow summary
+        env:
+          MODE: ${{ needs.preflight.outputs.mode }}
+          GENERATE: ${{ needs.generate.result }}
+          RESULT_STATUS: ${{ needs.generate.outputs.result_status }}
+          VALIDATE: ${{ needs.validate.result }}
+          PUBLISH: ${{ needs.publish.result }}
+          DEPLOY: ${{ needs.deploy_pages.result }}
+          VERIFY: ${{ needs.verify_public.result }}
+          COMMIT_SHA: ${{ needs.publish.outputs.commit_sha }}
+          PAGE_URL: ${{ needs.deploy_pages.outputs.page_url }}
+        run: |
+          {
+            echo "## Daily AI blog result"
+            echo "- Mode: ${MODE:-unknown}"
+            echo "- Generation: $GENERATE (${RESULT_STATUS:-unknown})"
+            echo "- Validation: $VALIDATE"
+            echo "- Publish: $PUBLISH"
+            echo "- Pages deploy: $DEPLOY"
+            echo "- Public verification: $VERIFY"
+            if [ -n "$COMMIT_SHA" ]; then echo "- Commit: \`$COMMIT_SHA\`"; fi
+            if [ -n "$PAGE_URL" ]; then echo "- Site: $PAGE_URL"; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$MODE" = "publish" ] && [ "$RESULT_STATUS" = "noop" ]; then
+            exit 0
+          fi
+          if [ "$MODE" = "publish" ] && [ "$VERIFY" != "success" ]; then
+            exit 1
+          fi
+          if [ "$MODE" = "shadow" ] && [ "$RESULT_STATUS" = "generated" ] && [ "$VALIDATE" != "success" ]; then
+            exit 1
+          fi
+          if [ "$GENERATE" != "success" ]; then
+            exit 1
+          fi

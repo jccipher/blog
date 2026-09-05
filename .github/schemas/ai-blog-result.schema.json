@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "summary", "sources"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["generated", "noop", "blocked"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "sources": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "publisher",
+          "title",
+          "canonical_url",
+          "published_at",
+          "official_zh_url",
+          "english_path",
+          "chinese_path"
+        ],
+        "properties": {
+          "publisher": {
+            "type": "string",
+            "enum": ["OpenAI", "Anthropic"]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "canonical_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "published_at": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+          },
+          "official_zh_url": {
+            "type": ["string", "null"]
+          },
+          "english_path": {
+            "type": "string",
+            "pattern": "^_posts/[0-9]{4}-[0-9]{2}-[0-9]{2}-ai-blog-(openai|anthropic)-[a-z0-9-]+\\.md$"
+          },
+          "chinese_path": {
+            "type": "string",
+            "pattern": "^_posts/[0-9]{4}-[0-9]{2}-[0-9]{2}-ai-blog-(openai|anthropic)-[a-z0-9-]+-zh\\.md$"
+          }
+        }
+      }
+    }
+  }
+}
