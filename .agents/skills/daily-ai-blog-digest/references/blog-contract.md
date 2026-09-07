@@ -67,7 +67,9 @@ Every run appends exactly three new pairs per publisher. Assign them, newest sou
 
 The 03:00 prefetch task writes these queue files but never publishes or pushes them. The 05:00 publication task consumes only the current Shanghai date folder. If that folder is empty for a publisher, the publication task may perform one three-article fallback fetch for that publisher and assign the newest candidate to today before releasing it.
 
-Direct source fetches have one retry policy everywhere: a maximum of 20 total attempts, exactly 120 seconds between attempts caused by network timeouts, then abandonment. HTTP errors, invalid metadata, unsupported content, authentication failures, and other non-timeout errors fail immediately instead of consuming the timeout retry budget.
+Direct source fetches have one retry policy everywhere: a maximum of 20 total attempts, exactly 120 seconds between attempts caused by network timeouts, then abandonment. Official HTML and publisher-provided Markdown endpoints are valid cache inputs. HTTP errors, invalid metadata, unsupported content, authentication failures, and other non-timeout errors fail immediately instead of consuming the timeout retry budget.
+
+An official anti-bot denial from the direct downloader is not a network timeout. When the same canonical page remains completely readable through Codex's web reader, the run may use that official content and persist the finished queue pair as the offline publication artifact. It must report that the raw cache is unavailable. Unofficial mirrors, copied pages, and authenticated-session workarounds are not acceptable fallbacks.
 
 ## Front matter
 

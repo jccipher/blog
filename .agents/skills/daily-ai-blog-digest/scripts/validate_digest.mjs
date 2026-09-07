@@ -32,6 +32,13 @@ export function countsAsProcessed(data) {
   return data.run_mode !== 'preview';
 }
 
+function yamlDay(value, label) {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) return value.toISOString().slice(0, 10);
+  const day = String(value);
+  assert.match(day, /^\d{4}-\d{2}-\d{2}$/, `${label} must be YYYY-MM-DD`);
+  return day;
+}
+
 export function validateSource(source, label) {
   assert(source && typeof source === 'object', `${label} must be an object`);
   for (const field of ['publisher', 'title', 'url', 'published_at', 'reuse_policy']) {
@@ -78,7 +85,7 @@ export function validatePost(filePath, document, expectedLang, scope = { kind: '
   if (scope.kind === 'queue') {
     assert.match(scope.queueDate, /^\d{4}-\d{2}-\d{2}$/, `${filePath}: queue date must be YYYY-MM-DD`);
     assert.equal(data.run_mode, 'preview', `${filePath}: queue files must use run_mode: preview`);
-    assert.equal(String(data.queue_publish_date), scope.queueDate, `${filePath}: queue_publish_date must match its folder`);
+    assert.equal(yamlDay(data.queue_publish_date, `${filePath}: queue_publish_date`), scope.queueDate, `${filePath}: queue_publish_date must match its folder`);
     assert(['queued', 'published'].includes(data.queue_status), `${filePath}: queue_status must be queued or published`);
     if (data.queue_status === 'queued') {
       assert(data.published_path === undefined, `${filePath}: queued files must not declare published_path`);
@@ -183,6 +190,7 @@ function runSelfTest() {
   assert.equal(countsAsProcessed({ run_mode: 'preview' }), false);
   assert.equal(countsAsProcessed({ run_mode: 'published' }), true);
   assert.equal(countsAsProcessed({}), true);
+  assert.equal(yamlDay(new Date('2026-09-05T00:00:00Z'), 'queue date'), '2026-09-05');
 
   const source = {
     publisher: 'Anthropic',
@@ -271,7 +279,11 @@ export async function validatePair(englishPath, chinesePath, scope = { kind: 'po
   assert.deepEqual(chinese.document.data.categories, english.document.data.categories, 'post pair must carry identical categories');
   assert.deepEqual(chinese.document.data.tags, english.document.data.tags, 'post pair must carry identical tags');
   if (scope.kind === 'queue') {
-    assert.equal(english.document.data.queue_publish_date, chinese.document.data.queue_publish_date, 'queue pair must share queue_publish_date');
+    assert.equal(
+      yamlDay(english.document.data.queue_publish_date, `${englishPath}: queue_publish_date`),
+      yamlDay(chinese.document.data.queue_publish_date, `${chinesePath}: queue_publish_date`),
+      'queue pair must share queue_publish_date',
+    );
     assert.equal(english.document.data.queue_status, chinese.document.data.queue_status, 'queue pair must share queue_status');
   }
 

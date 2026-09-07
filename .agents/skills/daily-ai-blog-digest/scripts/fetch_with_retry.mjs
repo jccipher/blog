@@ -44,7 +44,7 @@ function validateOutput(rawOutput) {
   assert(!path.isAbsolute(rawOutput), '--output must be relative to the repository');
   const absolute = path.resolve(root, rawOutput);
   assert(absolute.startsWith(`${cacheRoot}${path.sep}`), '--output must be inside .ai-blog/fetch-cache');
-  assert.equal(path.extname(absolute), '.html', '--output must use an .html extension');
+  assert(['.html', '.md'].includes(path.extname(absolute)), '--output must use an .html or .md extension');
   return absolute;
 }
 
@@ -94,15 +94,18 @@ async function fetchOnce(url) {
     redirect: 'follow',
     signal: AbortSignal.timeout(requestTimeoutMs),
     headers: {
-      accept: 'text/html,application/xhtml+xml',
+      accept: 'text/html,application/xhtml+xml,text/markdown;q=0.9,text/plain;q=0.8',
       'user-agent': 'LATENTX-AI-Blog-Digest/1.0',
     },
   });
   assert(response.ok, `HTTP ${response.status} ${response.statusText}`);
   validateOfficialUrl(response.url);
   const contentType = response.headers.get('content-type') || '';
-  assert(/text\/html|application\/xhtml\+xml/i.test(contentType), `unexpected content type: ${contentType || 'missing'}`);
-  return { finalUrl: response.url, body: await readLimitedBody(response) };
+  assert(
+    /text\/html|application\/xhtml\+xml|text\/markdown|text\/plain/i.test(contentType),
+    `unexpected content type: ${contentType || 'missing'}`,
+  );
+  return { finalUrl: response.url, contentType, body: await readLimitedBody(response) };
 }
 
 async function fetchWithRetry(url) {
@@ -144,6 +147,8 @@ function selfTest() {
   assert.equal(isTimeout(new Error('HTTP 500')), false);
   assert.equal(maxAttempts, 20);
   assert.equal(retryIntervalMs, 120_000);
+  assert.doesNotThrow(() => validateOutput('.ai-blog/fetch-cache/article.md'));
+  assert.throws(() => validateOutput('.ai-blog/fetch-cache/article.txt'));
   process.stdout.write('Fetch retry helper self-test passed.\n');
 }
 
@@ -160,6 +165,7 @@ async function main() {
   process.stdout.write(`${JSON.stringify({
     requested_url: url.toString(),
     final_url: result.finalUrl,
+    content_type: result.contentType,
     output: path.relative(root, outputPath).split(path.sep).join('/'),
     attempts: result.attempts,
     bytes: Buffer.byteLength(result.body),
