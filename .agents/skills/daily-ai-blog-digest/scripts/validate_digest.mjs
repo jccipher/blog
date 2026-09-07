@@ -5,12 +5,13 @@ import { readFile, readdir } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import process from 'node:process';
+import { pathToFileURL } from 'node:url';
 
 const root = process.cwd();
 const requireFromProject = createRequire(path.join(root, 'package.json'));
 const matter = requireFromProject('gray-matter');
 
-function canonicalize(rawUrl) {
+export function canonicalize(rawUrl) {
   const value = new URL(rawUrl);
   assert.equal(value.protocol, 'https:', `source URL must use HTTPS: ${rawUrl}`);
   value.hash = '';
@@ -20,18 +21,18 @@ function canonicalize(rawUrl) {
   return value.toString();
 }
 
-function expectedPublisher(url) {
+export function expectedPublisher(url) {
   const hostname = new URL(url).hostname.replace(/^www\./, '');
   if (hostname === 'claude.com' || hostname === 'anthropic.com') return 'Anthropic';
   if (hostname === 'developers.openai.com' || hostname === 'openai.com') return 'OpenAI';
   throw new Error(`unsupported source domain: ${hostname}`);
 }
 
-function countsAsProcessed(data) {
+export function countsAsProcessed(data) {
   return data.run_mode !== 'preview';
 }
 
-function validateSource(source, label) {
+export function validateSource(source, label) {
   assert(source && typeof source === 'object', `${label} must be an object`);
   for (const field of ['publisher', 'title', 'url', 'published_at', 'reuse_policy']) {
     assert(source[field], `${label}.${field} is required`);
@@ -58,7 +59,7 @@ function validateSource(source, label) {
   return canonicalUrl;
 }
 
-function validatePost(filePath, document, expectedLang) {
+export function validatePost(filePath, document, expectedLang, scope = { kind: 'post' }) {
   const data = document.data;
   for (const field of ['layout', 'title', 'date', 'lang', 'slug', 'permalink', 'translation_url', 'reading_time', 'description', 'run_mode']) {
     assert(data[field] !== undefined && data[field] !== '', `${filePath}: ${field} is required`);
@@ -70,12 +71,34 @@ function validatePost(filePath, document, expectedLang) {
   assert(['preview', 'published'].includes(data.run_mode), `${filePath}: run_mode must be preview or published`);
   const postTime = new Date(data.date).getTime();
   assert(!Number.isNaN(postTime), `${filePath}: date must be a valid timestamp`);
-  if (data.run_mode === 'published') {
+  if (scope.kind === 'post' && data.run_mode === 'published') {
     assert(postTime <= Date.now() + 300_000, `${filePath}: published posts must not have a future timestamp`);
   }
-  const fileDate = path.basename(filePath).slice(0, 10);
-  assert.match(fileDate, /^\d{4}-\d{2}-\d{2}$/, `${filePath}: filename must start with YYYY-MM-DD`);
-  const expectedFileName = `${fileDate}-${data.slug}${expectedLang === 'zh' ? '-zh' : ''}.md`;
+  let expectedFileName;
+  if (scope.kind === 'queue') {
+    assert.match(scope.queueDate, /^\d{4}-\d{2}-\d{2}$/, `${filePath}: queue date must be YYYY-MM-DD`);
+    assert.equal(data.run_mode, 'preview', `${filePath}: queue files must use run_mode: preview`);
+    assert.equal(String(data.queue_publish_date), scope.queueDate, `${filePath}: queue_publish_date must match its folder`);
+    assert(['queued', 'published'].includes(data.queue_status), `${filePath}: queue_status must be queued or published`);
+    if (data.queue_status === 'queued') {
+      assert(data.published_path === undefined, `${filePath}: queued files must not declare published_path`);
+    } else {
+      assert.equal(typeof data.published_path, 'string', `${filePath}: published queue files require published_path`);
+      assert.match(
+        data.published_path,
+        new RegExp(`^_posts/${scope.queueDate}-${data.slug}${expectedLang === 'zh' ? '-zh' : ''}\\.md$`),
+        `${filePath}: published_path does not match queue date, slug, and language`,
+      );
+    }
+    expectedFileName = `${data.slug}${expectedLang === 'zh' ? '-zh' : ''}.md`;
+  } else {
+    const fileDate = path.basename(filePath).slice(0, 10);
+    assert.match(fileDate, /^\d{4}-\d{2}-\d{2}$/, `${filePath}: filename must start with YYYY-MM-DD`);
+    expectedFileName = `${fileDate}-${data.slug}${expectedLang === 'zh' ? '-zh' : ''}.md`;
+    for (const queueField of ['queue_publish_date', 'queue_status', 'published_path']) {
+      assert(data[queueField] === undefined, `${filePath}: published posts must omit ${queueField}`);
+    }
+  }
   assert.equal(path.basename(filePath), expectedFileName, `${filePath}: filename does not match slug and language`);
   assert(Number.isInteger(data.reading_time) && data.reading_time > 0, `${filePath}: reading_time must be a positive integer`);
   assert.deepEqual(data.categories, ['AI', 'Industry Digest'], `${filePath}: categories do not match the digest contract`);
@@ -114,10 +137,23 @@ function validatePost(filePath, document, expectedLang) {
   return urls;
 }
 
-async function readPost(filePath) {
+export async function readPost(filePath, scope = { kind: 'post' }) {
   const absolute = path.resolve(root, filePath);
-  const postsRoot = path.resolve(root, '_posts');
-  assert(absolute.startsWith(`${postsRoot}${path.sep}`), `${filePath}: post must be inside _posts`);
+  if (scope.kind === 'queue') {
+    const durableRoot = path.resolve(root, '.ai-blog/queue');
+    const previewRoot = path.resolve(root, '.ai-blog/preview-queue');
+    const stagingRoot = path.resolve(root, '.ai-blog/prefetch-staging');
+    assert(
+      absolute.startsWith(`${durableRoot}${path.sep}`)
+        || absolute.startsWith(`${previewRoot}${path.sep}`)
+        || absolute.startsWith(`${stagingRoot}${path.sep}`),
+      `${filePath}: queue file must be inside the durable, preview, or prefetch-staging queue`,
+    );
+    assert.equal(path.basename(path.dirname(absolute)), scope.queueDate, `${filePath}: queue folder must match --queue-date`);
+  } else {
+    const postsRoot = path.resolve(root, '_posts');
+    assert(absolute.startsWith(`${postsRoot}${path.sep}`), `${filePath}: post must be inside _posts`);
+  }
   return { absolute, document: matter(await readFile(absolute, 'utf8')) };
 }
 
@@ -194,37 +230,86 @@ function runSelfTest() {
   assert.throws(() => validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', { ...en, data: { ...en.data, run_mode: 'published', date: new Date('2999-01-01T00:00:00Z') } }, 'en'));
   assert.throws(() => validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', { ...en, data: { ...en.data, sources: [source, { ...source }] } }, 'en'));
   assert.throws(() => validateSource({ ...source, reuse_policy: 'full-text' }, 'source'));
+  const queuedEn = {
+    ...en,
+    data: {
+      ...en.data,
+      queue_publish_date: '2026-09-05',
+      queue_status: 'queued',
+    },
+  };
+  const queuedZh = {
+    ...zh,
+    data: {
+      ...zh.data,
+      queue_publish_date: '2026-09-05',
+      queue_status: 'queued',
+    },
+  };
+  assert.deepEqual(
+    validatePost('.ai-blog/queue/2026-09-05/ai-blog-anthropic-example.md', queuedEn, 'en', { kind: 'queue', queueDate: '2026-09-05' }),
+    [source.url],
+  );
+  assert.deepEqual(
+    validatePost('.ai-blog/queue/2026-09-05/ai-blog-anthropic-example-zh.md', queuedZh, 'zh', { kind: 'queue', queueDate: '2026-09-05' }),
+    [source.url],
+  );
   process.stdout.write('Digest validator self-test passed.\n');
 }
 
-if (process.argv.includes('--self-test')) {
-  runSelfTest();
-  process.exit(0);
+export async function validatePair(englishPath, chinesePath, scope = { kind: 'post' }) {
+  const english = await readPost(englishPath, scope);
+  const chinese = await readPost(chinesePath, scope);
+  const englishUrls = validatePost(englishPath, english.document, 'en', scope);
+  const chineseUrls = validatePost(chinesePath, chinese.document, 'zh', scope);
+
+  assert.equal(english.document.data.slug, chinese.document.data.slug, 'post pair must share a slug');
+  assert.equal(new Date(english.document.data.date).toISOString(), new Date(chinese.document.data.date).toISOString(), 'post pair must share a date');
+  assert.equal(english.document.data.run_mode, chinese.document.data.run_mode, 'post pair must share a run_mode');
+  assert.deepEqual(chineseUrls, englishUrls, 'post pair must list identical canonical sources in the same order');
+  assert.deepEqual(chinese.document.data.sources, english.document.data.sources, 'post pair must carry identical source metadata');
+  assert.deepEqual(chinese.document.data.categories, english.document.data.categories, 'post pair must carry identical categories');
+  assert.deepEqual(chinese.document.data.tags, english.document.data.tags, 'post pair must carry identical tags');
+  if (scope.kind === 'queue') {
+    assert.equal(english.document.data.queue_publish_date, chinese.document.data.queue_publish_date, 'queue pair must share queue_publish_date');
+    assert.equal(english.document.data.queue_status, chinese.document.data.queue_status, 'queue pair must share queue_status');
+  }
+
+  if (scope.kind === 'post') {
+    const duplicateOwners = await findPriorSourceOwners(
+      new Set([english.absolute, chinese.absolute]),
+      new Set(englishUrls),
+    );
+    assert.equal(duplicateOwners.length, 0, `source already published:\n${duplicateOwners.join('\n')}`);
+  }
+
+  return { english, chinese, urls: englishUrls };
 }
 
-const [englishPath, chinesePath] = process.argv.slice(2);
-if (!englishPath || !chinesePath) {
-  process.stderr.write('Usage: validate_digest.mjs <english-post> <chinese-post>\n');
-  process.exit(2);
+async function main() {
+  const args = process.argv.slice(2);
+  if (args.includes('--self-test')) {
+    runSelfTest();
+    return;
+  }
+
+  let scope = { kind: 'post' };
+  if (args[0] === '--queue-date') {
+    assert.match(args[1] || '', /^\d{4}-\d{2}-\d{2}$/, '--queue-date requires YYYY-MM-DD');
+    scope = { kind: 'queue', queueDate: args[1] };
+    args.splice(0, 2);
+  }
+  const [englishPath, chinesePath] = args;
+  if (!englishPath || !chinesePath || args.length !== 2) {
+    process.stderr.write('Usage: validate_digest.mjs [--queue-date YYYY-MM-DD] <english-file> <chinese-file>\n');
+    process.exitCode = 2;
+    return;
+  }
+
+  const { english } = await validatePair(englishPath, chinesePath, scope);
+  process.stdout.write(`Validated independent bilingual ${scope.kind} pair for ${english.document.data.slug} (${english.document.data.run_mode}).\n`);
 }
 
-const english = await readPost(englishPath);
-const chinese = await readPost(chinesePath);
-const englishUrls = validatePost(englishPath, english.document, 'en');
-const chineseUrls = validatePost(chinesePath, chinese.document, 'zh');
-
-assert.equal(english.document.data.slug, chinese.document.data.slug, 'post pair must share a slug');
-assert.equal(new Date(english.document.data.date).toISOString(), new Date(chinese.document.data.date).toISOString(), 'post pair must share a date');
-assert.equal(english.document.data.run_mode, chinese.document.data.run_mode, 'post pair must share a run_mode');
-assert.deepEqual(chineseUrls, englishUrls, 'post pair must list identical canonical sources in the same order');
-assert.deepEqual(chinese.document.data.sources, english.document.data.sources, 'post pair must carry identical source metadata');
-assert.deepEqual(chinese.document.data.categories, english.document.data.categories, 'post pair must carry identical categories');
-assert.deepEqual(chinese.document.data.tags, english.document.data.tags, 'post pair must carry identical tags');
-
-const duplicateOwners = await findPriorSourceOwners(
-  new Set([english.absolute, chinese.absolute]),
-  new Set(englishUrls),
-);
-assert.equal(duplicateOwners.length, 0, `source already published:\n${duplicateOwners.join('\n')}`);
-
-process.stdout.write(`Validated independent bilingual post pair for ${english.document.data.slug} (${english.document.data.run_mode}).\n`);
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  await main();
+}
