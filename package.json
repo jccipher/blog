@@ -5,7 +5,9 @@
   "scripts": {
     "build:preview": "node scripts/preview-build.mjs",
     "preview": "npm run build:preview && node scripts/preview-server.mjs",
-    "check": "npm run build:preview && node --check assets/js/engagement.js && node --check engagement-worker/src/index.js && node scripts/verify-build.mjs && npm run check:ai-blog",
+    "check": "npm run build:preview && node --check assets/js/engagement.js && node --check assets/js/summary-audio.js && node --check engagement-worker/src/index.js && node scripts/verify-build.mjs && npm run check:ai-blog",
+    "nightly": "node .agents/skills/nightly-blog-pipeline/scripts/nightly.mjs",
+    "test:nightly": "node --test .agents/skills/nightly-blog-pipeline/tests/*.test.mjs",
     "check:ai-blog": "node scripts/ai-blog/validate-all.mjs",
     "test:ai-blog-automation": "node scripts/ai-blog/lib.mjs --self-test && node .agents/skills/daily-ai-blog-digest/scripts/validate_digest.mjs --self-test && node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs --self-test && node .agents/skills/daily-ai-blog-digest/scripts/fetch_with_retry.mjs --self-test"
   },

@@ -5,6 +5,7 @@ import { access, mkdir, readFile, readdir, rename, unlink, writeFile } from 'nod
 import path from 'node:path';
 import process from 'node:process';
 import matter from 'gray-matter';
+import { pathToFileURL } from 'node:url';
 import { canonicalize, validatePair, validatePost } from './validate_digest.mjs';
 
 const root = process.cwd();
@@ -175,14 +176,14 @@ async function readManifest(queueRoot) {
   return JSON.parse(await readFile(manifestPath, 'utf8'));
 }
 
-async function syncManifest(queueRoot) {
+export async function syncManifest(queueRoot) {
   const entries = await scanQueue(queueRoot);
   const manifest = manifestFrom(entries);
   await writeAtomic(path.join(queueRoot, 'queue.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   return { entries, manifest };
 }
 
-async function status(queueRoot, today) {
+export async function status(queueRoot, today) {
   const entries = await scanQueue(queueRoot);
   const due = Object.fromEntries(publishers.map((publisher) => {
     const entry = entries.find((candidate) => candidate.publisher === publisher && candidate.scheduled_for === today);
@@ -351,4 +352,4 @@ async function main() {
   process.stdout.write(`${JSON.stringify(await status(queueRoot, options.date), null, 2)}\n`);
 }
 
-await main();
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) await main();

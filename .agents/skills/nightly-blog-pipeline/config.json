@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "timezone": "Asia/Shanghai",
+  "window_start": "01:00",
+  "publish_at": "05:00",
+  "stop_new_work": "05:25",
+  "window_end": "05:30",
+  "prefetch_per_publisher": 7,
+  "audio": {
+    "model": "mlx-community/Qwen3-TTS-12Hz-1.7B-CustomVoice-8bit",
+    "voices": {"zh": "Serena", "en": "Ryan"},
+    "bitrate_kbps": 48,
+    "protect_days": 7,
+    "budget_bytes": 600000000,
+    "site_budget_bytes": 850000000,
+    "release_tag": "blog-audio"
+  },
+  "summary_model": "mlx-community/Qwen3-14B-4bit",
+  "python": ".ai-blog/runtime/venv/bin/python",
+  "sources": {
+    "Anthropic": "https://claude.com/blog",
+    "OpenAI": "https://developers.openai.com/blog"
+  }
+}

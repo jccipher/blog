@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bilingual Summary Narrator"
+  short_description: "Prepare offline English and Chinese summary audio"
+  default_prompt: "Use $bilingual-blog-narrator to preview the next LATENTX post summaries in English and Chinese without publishing."

@@ -30,5 +30,8 @@ jobs:
       - name: Test AI blog automation helpers
         run: npm run test:ai-blog-automation
 
+      - name: Test nightly scheduling and audio policies
+        run: npm run test:nightly
+
       - name: Build and validate the site
         run: npm run check

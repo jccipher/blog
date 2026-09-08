@@ -82,6 +82,8 @@ If authentication, network access, a concurrent update, or GitHub initialization
 
 ## Scheduled maintenance
 
+For this LATENTX project, use the sibling `nightly-blog-pipeline` as the scheduling owner. Wiki work, network retries and validation share the 01:00–05:30 Asia/Shanghai resource window. Do not start new publication at or after 05:25. Every newly initiated daytime manual test requires fresh human confirmation; a preview exception never permits a Wiki push. The local runner updates only its managed nightly-operations page after an accepted project revision; broader Wiki edits still require this full evidence-backed workflow. No changes means no commit, and Wiki failure must not roll back published blog text.
+
 For a recurring task, include the target repository, intended mode, accepted source branches, language policy, and publication authorization in the saved prompt. Each run should:
 
 - compare the validated revision marker with the current accepted project revision;

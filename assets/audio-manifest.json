@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "slug": "ai-blog-anthropic-claude-in-chrome-generally-available",
+      "lang": "en",
+      "published_on": "2026-09-08",
+      "asset": "2026-09-08_ai-blog-anthropic-claude-in-chrome-generally-available.en.7e38c95cdf144a0e.mp3",
+      "bytes": 1300413,
+      "sha256": "bab8b755567975d1ef22053d84afc4476a8f85d2ac68f03620781e903053a323",
+      "summary_sha256": "48216fdcc3efd8f3563b6e1d4e6c9a1001fd59b25df0b91886f3e2eb88f36838",
+      "duration_seconds": 216.63
+    },
+    {
+      "slug": "ai-blog-anthropic-claude-in-chrome-generally-available",
+      "lang": "zh",
+      "published_on": "2026-09-08",
+      "asset": "2026-09-08_ai-blog-anthropic-claude-in-chrome-generally-available.zh.6786e35ed916f09a.mp3",
+      "bytes": 1080813,
+      "sha256": "d882d5d108eadde28c53b8845c1e293a4c20dea7b772d6bec53670663d26cee5",
+      "summary_sha256": "2f6e342f66bbd4958ba033a27adda0450fa7f89618d13d72cfd3d97b7eac5f4f",
+      "duration_seconds": 180.04
+    },
+    {
+      "slug": "ai-blog-anthropic-how-warp-builds-self-improving-agents-on-claude",
+      "lang": "en",
+      "published_on": "2026-09-08",
+      "asset": "2026-09-08_ai-blog-anthropic-how-warp-builds-self-improving-agents-on-claude.en.e10c9e49e02bcf3d.mp3",
+      "bytes": 1329501,
+      "sha256": "bd90f14cc4365cb8a24371cd8ba1ed184958037cd322de0bb1bcd2266554c589",
+      "summary_sha256": "cedf2d77ce90c77131255f1593d8f2f3517358fb2c89590807da5b7b80cbbfab",
+      "duration_seconds": 221.48
+    },
+    {
+      "slug": "ai-blog-anthropic-how-warp-builds-self-improving-agents-on-claude",
+      "lang": "zh",
+      "published_on": "2026-09-08",
+      "asset": "2026-09-08_ai-blog-anthropic-how-warp-builds-self-improving-agents-on-claude.zh.bf20812ed009354e.mp3",
+      "bytes": 1117389,
+      "sha256": "a0fec2bdb23cfe70fabfc3264eae3a857bf360750a93b0c9d7969ca28e595bad",
+      "summary_sha256": "2909601e26ed63cd883b09a3562286f85d473768862eb932f8db625f979cff26",
+      "duration_seconds": 186.14
+    },
+    {
+      "slug": "ai-blog-openai-build-week-winners",
+      "lang": "en",
+      "published_on": "2026-09-08",
+      "asset": "2026-09-08_ai-blog-openai-build-week-winners.en.3ebf88fb6da48c71.mp3",
+      "bytes": 1523325,
+      "sha256": "c373b70c83a6fd6b398521280e7991c7bd917e4e727eb57c0ef6d3b0f9f4a064",
+      "summary_sha256": "ffd457e75b5ed269cca869b0f2bb3543969075d5f102b8f6cd7dc1b5fa5b5b35",
+      "duration_seconds": 253.8
+    },
+    {
+      "slug": "ai-blog-openai-build-week-winners",
+      "lang": "zh",
+      "published_on": "2026-09-08",
+      "asset": "2026-09-08_ai-blog-openai-build-week-winners.zh.4d66e17ed092965c.mp3",
+      "bytes": 1321437,
+      "sha256": "5c6e41a6664a8473a79cc0e953e1fe5a88be1785464999c9c82de7fb9e2f5634",
+      "summary_sha256": "ae9daa0d5cbbe6d96f89de26c3df18e985032369562508535508dadd0c3166e1",
+      "duration_seconds": 220.14
+    },
+    {
+      "slug": "ai-blog-openai-scaling-cyber-defenders-with-daybreak",
+      "lang": "en",
+      "published_on": "2026-09-08",
+      "asset": "2026-09-08_ai-blog-openai-scaling-cyber-defenders-with-daybreak.en.04a33d8f3db5fda2.mp3",
+      "bytes": 1602813,
+      "sha256": "8d3b9dd7f64b87527a5bf369e6c3227750031a3280c138067169c4ddabf96de0",
+      "summary_sha256": "837d68d51ddbab3f1bca3d32899417a03877c46d690cf1f90e78a40d1cbdaea5",
+      "duration_seconds": 267.04
+    },
+    {
+      "slug": "ai-blog-openai-scaling-cyber-defenders-with-daybreak",
+      "lang": "zh",
+      "published_on": "2026-09-08",
+      "asset": "2026-09-08_ai-blog-openai-scaling-cyber-defenders-with-daybreak.zh.d0605e884f24721e.mp3",
+      "bytes": 1297101,
+      "sha256": "943effab70b0df776f5fba111135b379e419794aeefa80c1333cd0324803a639",
+      "summary_sha256": "e76da0480611a869ffe993d72491ed6f70d1cc78321483b2e3c213185d24909f",
+      "duration_seconds": 216.08
+    }
+  ]
+}

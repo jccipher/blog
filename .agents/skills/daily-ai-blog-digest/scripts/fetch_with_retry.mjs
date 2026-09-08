@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { mkdir, rename, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+import { pathToFileURL } from 'node:url';
 
 const root = process.cwd();
 const cacheRoot = path.resolve(root, '.ai-blog/fetch-cache');
@@ -48,7 +49,7 @@ function validateOutput(rawOutput) {
   return absolute;
 }
 
-function isTimeout(error) {
+export function isTimeout(error) {
   const timeoutNames = new Set(['AbortError', 'TimeoutError']);
   const timeoutCodes = new Set([
     'ETIMEDOUT',
@@ -108,10 +109,11 @@ async function fetchOnce(url) {
   return { finalUrl: response.url, contentType, body: await readLimitedBody(response) };
 }
 
-async function fetchWithRetry(url) {
+export async function fetchWithRetry(url, { deadline = Infinity, onRetry = () => {}, attemptFetch = fetchOnce, sleep = delay, clock = Date.now } = {}) {
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    assert(clock() + requestTimeoutMs < deadline, 'Fetch phase deadline reached; defer without extending the resource window');
     try {
-      const result = await fetchOnce(url);
+      const result = await attemptFetch(url);
       return { ...result, attempts: attempt };
     } catch (error) {
       if (!isTimeout(error)) throw error;
@@ -119,7 +121,9 @@ async function fetchWithRetry(url) {
         throw new Error(`network timeout after ${maxAttempts} attempts; fetch abandoned`, { cause: error });
       }
       process.stderr.write(`Network timeout on attempt ${attempt}/${maxAttempts}; retrying in 120 seconds.\n`);
-      await delay(retryIntervalMs);
+      assert(clock() + retryIntervalMs + requestTimeoutMs < deadline, 'Insufficient time for another timeout retry');
+      onRetry({ attempt, retry_after_ms: retryIntervalMs });
+      await sleep(retryIntervalMs);
     }
   }
   throw new Error('unreachable retry state');
@@ -172,4 +176,4 @@ async function main() {
   }, null, 2)}\n`);
 }
 
-await main();
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) await main();

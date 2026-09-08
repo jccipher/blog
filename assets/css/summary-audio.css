@@ -1,0 +1,8 @@
+.summary-audio { margin: 1.5rem 0; padding: 1.2rem; border: 1px solid #354b3c; border-radius: 8px; background: #111b15; color: #dde9e0; }
+.summary-audio h2 { margin: 0 0 .4rem; font-size: 1rem; }
+.summary-audio p { margin: .3rem 0 .8rem; font-size: .85rem; color: #aebdb3; }
+.summary-audio audio { width: 100%; display: block; }
+.summary-audio-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; margin-top: .8rem; }
+.summary-audio-tools button, .summary-audio-tools select { border: 1px solid #526958; border-radius: 4px; padding: .4rem .65rem; background: #15231a; color: #eef8f1; font: inherit; }
+.summary-audio-tools button:focus-visible, .summary-audio-tools select:focus-visible { outline: 2px solid #b2f993; outline-offset: 3px; }
+.summary-audio [data-audio-error] { color: #ffcc99; }

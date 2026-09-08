@@ -1,0 +1,4 @@
+interface:
+  display_name: "LATENTX Nightly Pipeline"
+  short_description: "Run bounded nightly bilingual blog and audio jobs"
+  default_prompt: "Use $nightly-blog-pipeline to preview and validate the next LATENTX publication without publishing."

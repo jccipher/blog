@@ -14,17 +14,33 @@ const mimeTypes = {
   '.js': 'text/javascript; charset=utf-8',
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
+  '.mp3': 'audio/mpeg',
+  '.json': 'application/json; charset=utf-8',
 };
 
 const server = createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
     let filePath = path.resolve(root, `.${pathname}`);
-    if (!filePath.startsWith(root)) throw new Error('Invalid path');
+    if (filePath !== root && !filePath.startsWith(root + path.sep)) throw new Error('Invalid path');
     const fileStat = await stat(filePath);
     if (fileStat.isDirectory()) filePath = path.join(filePath, 'index.html');
-    response.writeHead(200, { 'Content-Type': mimeTypes[path.extname(filePath)] || 'application/octet-stream' });
-    createReadStream(filePath).pipe(response);
+    const size = (await stat(filePath)).size;
+    const headers = { 'Content-Type': mimeTypes[path.extname(filePath)] || 'application/octet-stream', 'Accept-Ranges': 'bytes' };
+    const range = request.headers.range;
+    if (range) {
+      const match = /^bytes=(\d*)-(\d*)$/.exec(range);
+      const start = match?.[1] ? Number(match[1]) : Math.max(0, size - Number(match?.[2]));
+      const end = match?.[1] && match?.[2] ? Math.min(Number(match[2]), size - 1) : size - 1;
+      if (!match || (!match[1] && !match[2]) || !Number.isFinite(start) || start > end || start >= size) {
+        response.writeHead(416, { 'Content-Range': `bytes */${size}` }); response.end(); return;
+      }
+      response.writeHead(206, { ...headers, 'Content-Range': `bytes ${start}-${end}/${size}`, 'Content-Length': end - start + 1 });
+      if (request.method === 'HEAD') response.end(); else createReadStream(filePath, { start, end }).pipe(response);
+    } else {
+      response.writeHead(200, { ...headers, 'Content-Length': size });
+      if (request.method === 'HEAD') response.end(); else createReadStream(filePath).pipe(response);
+    }
   } catch {
     response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     response.end('Not found');

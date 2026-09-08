@@ -5,6 +5,8 @@ import matter from 'gray-matter';
 import yaml from 'js-yaml';
 import { Liquid } from 'liquidjs';
 import { marked } from 'marked';
+import { summaryText } from '../.agents/skills/bilingual-blog-narrator/scripts/audio.mjs';
+import { json, sha256 } from '../.agents/skills/nightly-blog-pipeline/scripts/runtime.mjs';
 
 const root = process.cwd();
 const outputRoot = path.join(root, '_site', 'blog');
@@ -19,19 +21,38 @@ engine.registerFilter('normalize_whitespace', (value) => String(value ?? '').rep
 const stripHtml = (value) => String(value ?? '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 const postFiles = (await readdir(path.join(root, '_posts'))).filter((name) => name.endsWith('.md')).sort().reverse();
 const posts = [];
+const audioManifest = await json(path.join(root, process.env.BLOG_AUDIO_MANIFEST || 'assets/audio-manifest.json'), { entries: [] });
+const pronunciation = await json('.agents/skills/bilingual-blog-narrator/pronunciation.json');
+const previewFiles = [];
+if (process.env.BLOG_PREVIEW_QUEUE) {
+  const previewRoot = path.resolve(root, process.env.BLOG_PREVIEW_QUEUE);
+  if (!previewRoot.startsWith(path.join(root, '.ai-blog', 'preview-queue') + path.sep)) throw new Error('Preview overlay must be inside .ai-blog/preview-queue');
+  for (const name of await readdir(previewRoot)) if (name.endsWith('.md')) previewFiles.push(path.join(previewRoot, name));
+}
 
-for (const fileName of postFiles) {
-  const source = matter(await readFile(path.join(root, '_posts', fileName), 'utf8'));
+for (const sourcePath of [...postFiles.map(name => path.join(root, '_posts', name)), ...previewFiles]) {
+  const fileName = path.basename(sourcePath);
+  const source = matter(await readFile(sourcePath, 'utf8'));
   const slug = fileName.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.md$/, '');
   const html = marked.parse(source.content);
   const firstParagraph = html.match(/<p>(.*?)<\/p>/s)?.[1] || '';
-  posts.push({
+  let summaryAudio;
+  const audio = audioManifest.entries.find(e => e.slug === source.data.slug && e.lang === source.data.lang);
+  if (audio && /^\d{4}-\d{2}-\d{2}_ai-blog-(?:anthropic|openai)-[a-z0-9-]+\.(?:en|zh)\.[a-f0-9]{16}\.mp3$/.test(audio.asset)) {
+    try {
+      if (sha256(summaryText(source.content, source.data.lang, pronunciation[source.data.lang])) === audio.summary_sha256) summaryAudio = `/assets/audio/${audio.asset}`;
+    } catch { /* A missing/legacy boundary must never enable full-article narration. */ }
+  }
+  const record = {
     ...source.data,
     slug: source.data.slug || slug,
     url: source.data.permalink || `/posts/${slug}/`,
     content: html,
     excerpt: stripHtml(firstParagraph),
-  });
+    summary_audio: summaryAudio,
+  };
+  const prior = posts.findIndex(p => p.url === record.url);
+  if (prior >= 0) posts[prior] = record; else posts.push(record);
 }
 
 const site = { ...config, posts };
@@ -82,4 +103,15 @@ for (const post of posts) {
 }
 
 await cp(path.join(root, 'assets'), path.join(outputRoot, 'assets'), { recursive: true });
+if (process.env.BLOG_AUDIO_MANIFEST) {
+  await mkdir(path.join(outputRoot, 'assets/audio'), { recursive: true });
+  for (const e of audioManifest.entries) {
+    if (!posts.some(p => p.summary_audio === `/assets/audio/${e.asset}`)) continue;
+    const file = path.resolve(root, e.file || '');
+    if (!file.startsWith(path.join(root, '.ai-blog') + path.sep)) throw new Error('Preview audio must remain local');
+    const bytes = await readFile(file);
+    if (sha256(bytes) !== e.sha256) throw new Error('Preview audio checksum mismatch');
+    await writeFile(path.join(outputRoot, 'assets/audio', e.asset), bytes);
+  }
+}
 process.stdout.write(`Preview built at ${outputRoot}\n`);

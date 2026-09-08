@@ -65,7 +65,7 @@ The queue also has an ordered index at `.ai-blog/queue/queue.json`. Each publish
 
 Every run appends exactly seven new pairs per publisher. Assign them, newest source first, to the first seven unoccupied dates after that publisher's queue tail. Each date may contain at most one pair per publisher. A cold-start batch uses today and the following six days; later runs deliberately extend the queue by seven more dates. The trial may therefore grow the queue faster than it publishes it.
 
-The 03:00 prefetch task writes these queue files but never publishes or pushes them. The 05:00 publication task consumes only the current Shanghai date folder. If that folder is empty for a publisher, the publication task may perform one seven-article fallback fetch for that publisher, assign the newest candidate to today, and append the remaining six after that publisher's queue tail before releasing today's pair.
+The unified 01:00–05:30 runner prepares queue files locally and starts text uploads at 05:00. Its publication phase consumes only the current Shanghai date folder. If that folder is empty for a publisher, the publication task may perform one seven-article fallback fetch for that publisher, assign the newest candidate to today, and append the remaining six after that publisher's queue tail before releasing today's pair.
 
 Direct source fetches have one retry policy everywhere: a maximum of 20 total attempts, exactly 120 seconds between attempts caused by network timeouts, then abandonment. Official HTML and publisher-provided Markdown endpoints are valid cache inputs. HTTP errors, invalid metadata, unsupported content, authentication failures, and other non-timeout errors fail immediately instead of consuming the timeout retry budget.
 
@@ -110,7 +110,7 @@ permalink: /zh/posts/ai-blog-anthropic-source-key/
 translation_url: /posts/ai-blog-anthropic-source-key/
 ```
 
-Translate the post title and description naturally. Preserve the exact original source title in `sources`. For OpenAI, use `ai-blog-openai-...` and tags `[OpenAI, AI Research]`. If there is an official Chinese edition, set `official_zh_url` to its canonical HTTPS URL in both files.
+Only the summary, post title, description and editorial deck require both languages. Keep original source attribution/text in its source language; do not translate or narrate the original. Set `bilingual_scope: summary` on new pairs. Translate the post title and description naturally. Preserve the exact original source title in `sources`. For OpenAI, use `ai-blog-openai-...` and tags `[OpenAI, AI Research]`. If there is an official Chinese edition, set `official_zh_url` to its canonical HTTPS URL in both files.
 
 `content_format: summary-source-v2` declares the visible two-part layout. Both language files must insert the exact horizontal-rule and source-boundary pattern shown below. Legacy posts without this field remain valid, but every newly prepared or released post must use it.
 
@@ -118,7 +118,7 @@ For explicitly permitted full-text reuse, set `reuse_policy: full-text` and also
 
 Estimate `reading_time` from the finished post, rounded up, using roughly 220 English words per minute for English and 400 Chinese characters per minute for Chinese. A close, honest estimate is sufficient.
 
-For durable queue files, use their planned publication date at `03:00:00 +0800`; future dates are allowed because queue files are not Jekyll posts. On release, replace `date` with the actual Shanghai execution time. Do not reuse the scheduled trigger time or assign a future timestamp to `_posts`; GitHub Pages may exclude future-dated posts even when the build succeeds.
+For durable queue files, use their planned publication date at `01:00:00 +0800`; future dates are allowed because queue files are not Jekyll posts. On release, replace `date` with the actual Shanghai execution time. Do not reuse the scheduled trigger time or assign a future timestamp to `_posts`; GitHub Pages may exclude future-dated posts even when the build succeeds.
 
 ## Body structure
 
@@ -175,7 +175,7 @@ Chinese:
 
 #### 原文要点
 
-中文转述；没有官方中文版时也不得冒充官方翻译。
+新生成的文章无需再次翻译来源材料。保留原文语言的出处信息与链接；仅上方编辑摘要需要中英双语和语音。
 ```
 
 When `reuse_policy` is `full-text`, keep the divider and the bold `Source boundary:` / `来源分界：` label, change the notice text to describe the verified full-text permission, replace the final coverage subsection with an accurately labeled full-text section, and reproduce the required license notice in both languages. Preserve the editorial summary as the opening section. Without such permission, the second part remains a clearly labeled paraphrase plus canonical source link; it must not reproduce the complete article or an unauthorized translation.
@@ -198,3 +198,9 @@ _site/blog/zh/posts/SLUG/index.html
 ```
 
 The public paths are the same under `https://jccipher.github.io/blog`.
+
+## Nightly audio and permanent text
+
+Published text is never automatically deleted or rewritten. Missing audio must not block 05:00 text publication. Audio may be attached per language later in the allowed window. Cache summary-only audio in the planned date folder under `audio/`, recording text hash, model revision, voice, duration, bytes and audio hash. Never commit binaries into Git history.
+
+At least the latest seven calendar days of audio by actual article publication date are protected. Keep older audio while under the configured budget; prune oldest unprotected audio only under capacity pressure. Preview artifacts never reserve or consume production sources. Every new daytime manual test requires fresh human confirmation; production runs cannot use an exception. See the sibling nightly skill for the single scheduler, runtime checks and human acceptance gate.

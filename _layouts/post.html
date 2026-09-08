@@ -28,6 +28,24 @@ layout: default
       <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> {% if is_zh %}打赏{% else %}Donate{% endif %}</button>
     </div>
   </header>
+  {% if page.summary_audio %}
+  <link rel="stylesheet" href="{{ '/assets/css/summary-audio.css' | relative_url }}">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">{% if is_zh %}听摘要 · 中文{% else %}Listen to the summary · English{% endif %}</h2>
+    <p>{% if is_zh %}AI 合成语音，仅朗读编辑摘要，不包含原文。{% else %}AI-generated narration of the editorial summary only, not the original article.{% endif %}</p>
+    <audio controls preload="none" aria-label="{% if is_zh %}中文摘要语音{% else %}English summary audio{% endif %}">
+      <source src="{{ page.summary_audio | relative_url }}" type="audio/mpeg">
+      {% if is_zh %}你的浏览器不支持音频播放。{% else %}Your browser does not support audio playback.{% endif %}
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">{% if is_zh %}后退 15 秒{% else %}Back 15s{% endif %}</button>
+      <button type="button" data-audio-seek="15">{% if is_zh %}前进 15 秒{% else %}Forward 15s{% endif %}</button>
+      <label>{% if is_zh %}语速{% else %}Speed{% endif %} <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">{% if is_zh %}语音暂不可用，你仍可阅读下方完整文字。{% else %}Audio is temporarily unavailable. The full text remains available below.{% endif %}</p>
+  </section>
+  <script src="{{ '/assets/js/summary-audio.js' | relative_url }}" defer></script>
+  {% endif %}
   <div class="article-grid">
     <div class="article-copy prose">{{ content }}</div>
     <aside class="article-aside">

@@ -1,9 +1,7 @@
 name: Daily AI Blog Digest
 
 on:
-  schedule:
-    - cron: "17 7 * * *"
-      timezone: "Asia/Shanghai"
+  # Manual legacy/shadow workflow only. The free local nightly runner owns scheduling.
   workflow_dispatch:
     inputs:
       mode:
