@@ -1,4 +1,4 @@
 interface:
   display_name: "Daily AI Blog Digest"
   short_description: "Prefetch AI articles and publish one daily per source"
-  default_prompt: "Use $daily-ai-blog-digest to prefetch three Anthropic and three OpenAI articles into the local ordered date queue, or publish only today's independent bilingual pair for each source when publication is requested."
+  default_prompt: "Use $daily-ai-blog-digest to prefetch seven Anthropic and seven OpenAI articles into the local ordered date queue, or publish only today's independent bilingual pair for each source when publication is requested."

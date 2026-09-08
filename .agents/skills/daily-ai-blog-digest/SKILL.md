@@ -1,11 +1,11 @@
 ---
 name: daily-ai-blog-digest
-description: Prefetch three unprocessed official Claude by Anthropic and OpenAI developer articles per publisher into a local date-folder queue, then publish one queued bilingual pair per publisher per day with local validation and authorized Git delivery. Use for the scheduled AI-blog prefetch/publication workflow or an on-demand preview or publication run.
+description: Prefetch seven unprocessed official Claude by Anthropic and OpenAI developer articles per publisher into a local date-folder queue, then publish one queued bilingual pair per publisher per day with local validation and authorized Git delivery. Use for the scheduled AI-blog prefetch/publication workflow or an on-demand preview or publication run.
 ---
 
 # Daily AI Blog Digest
 
-On every prefetch run, fetch exactly three new eligible articles from each publisher and append their independent English/Chinese pairs to an ordered, date-folder publication queue. Never combine Anthropic and OpenAI material in one personal post. A publication run publishes only the pair due today for each publisher, so the daily output remains one Anthropic pair and one OpenAI pair. Publish only after the local site passes its checks and the current request authorizes publication. The user's explicit instructions take precedence over this workflow.
+On every prefetch run, fetch exactly seven new eligible articles from each publisher and append their independent English/Chinese pairs to an ordered, date-folder publication queue. Never combine Anthropic and OpenAI material in one personal post. A publication run publishes only the pair due today for each publisher, so the daily output remains one Anthropic pair and one OpenAI pair. Publish only after the local site passes its checks and the current request authorizes publication. The user's explicit instructions take precedence over this workflow.
 
 Read [references/blog-contract.md](references/blog-contract.md) before drafting or changing a post. Run the bundled validator once for every bilingual pair.
 
@@ -17,9 +17,9 @@ Read [references/blog-contract.md](references/blog-contract.md) before drafting 
 
 ## Scheduled orchestration
 
-- The `03:00 Asia/Shanghai` Codex task is the prefetch phase. It fetches exactly three new articles per publisher, prepares six bilingual pairs, appends them to the ordered date-folder queue, and stops without committing, pushing, deploying, or releasing a post.
+- The `03:00 Asia/Shanghai` Codex task is the prefetch phase. It fetches exactly seven new articles per publisher, prepares fourteen bilingual pairs, appends them to the ordered date-folder queue, and stops without committing, pushing, deploying, or releasing a post.
 - The `05:00 Asia/Shanghai` Codex task is the publication phase. It first looks only in today's queue folder, releases one bilingual pair per publisher, validates, commits only today's four post files, pushes, deploys, and verifies. Local queue-state changes remain ignored.
-- If today's folder has no publishable pair for a publisher, the 05:00 task invokes the same three-article prefetch flow for that missing publisher, assigns its first candidate to today, and then retries today's release. Do not fetch merely because later queue dates are empty.
+- If today's folder has no publishable pair for a publisher, the 05:00 task invokes the same seven-article prefetch flow for that missing publisher, assigns its first candidate to today, and then retries today's release. Do not fetch merely because later queue dates are empty.
 - At the start of every scheduled run, rename the current Codex task to the Shanghai execution date in the exact form `YYYY-MM-DD_cron_task`.
 
 ## Operating boundary
@@ -47,12 +47,12 @@ Use the actual `Asia/Shanghai` date as day D. For each publisher independently:
 
 1. Inspect the ordered queue and its last assigned publication date. Existing queued pairs do not reduce this run's selection count.
 2. Inspect the live official index in newest-first order. Do not assume the hero or featured card is newest; featured content may be pinned.
-3. Walk entries from newest to oldest, following pagination or loading more results when necessary. Skip processed and reserved canonical URLs and continue until exactly three eligible articles have been selected for that publisher.
+3. Walk entries from newest to oldest, following pagination or loading more results when necessary. Skip processed and reserved canonical URLs and continue until exactly seven eligible articles have been selected for that publisher.
 4. Accept an HTML article on the publisher's own domain. Exclude index pages, category pages, event listings, external press coverage, PDFs/system cards, and links without a substantive article body. An unprocessed but ineligible entry does not end the search; continue to the next entry.
 5. Open every newly selected candidate and verify its title, original publication date, publisher or named author, canonical URL, and substantive body. Store the canonical URL without query strings, fragments, tracking parameters, or a trailing slash.
 6. Look for an official Chinese edition. Verify that it represents the same article rather than merely a related page.
-7. Preserve newest-first order when appending the three new articles: the newest candidate takes the publisher's first available date after its queue tail, the next candidate the following date, and so on. If source dates are tied, use the order on the complete chronological listing.
-8. If the archive cannot be traversed far enough to select three articles, report the refill as blocked; do not silently reduce the requested batch.
+7. Preserve newest-first order when appending the seven new articles: the newest candidate takes the publisher's first available date after its queue tail, the next candidate the following date, and so on. If source dates are tied, use the order on the complete chronological listing.
+8. If the archive cannot be traversed far enough to select seven articles, report the refill as blocked; do not silently reduce the requested batch.
 9. Never invent missing metadata. Omit an optional field or state that it is unavailable.
 
 ## Queue and daily output
@@ -61,9 +61,9 @@ Use the actual `Asia/Shanghai` date as day D. For each publisher independently:
 - Each date folder may contain exactly one English/Chinese pair for Anthropic and one for OpenAI. Filenames must be readable canonical slugs such as `ai-blog-openai-building-agents.md` and `ai-blog-openai-building-agents-zh.md`.
 - Maintain `.ai-blog/queue/queue.json` as the ordered index. Its publisher arrays are ordered by `scheduled_for`; every entry names the canonical source URL and both queue paths. Queue data and raw fetch cache are local runtime state and must never be staged or pushed.
 - Queue files declare `run_mode: preview`, `queue_publish_date: YYYY-MM-DD`, and `queue_status: queued`. They remain in their date folder after release, change to `queue_status: published`, and record `published_path`.
-- In the 03:00 prefetch phase, run `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs status --date YYYY-MM-DD`, select exactly three new articles per publisher, write six bilingual pairs across the reported `next_dates`, then run `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs sync --date YYYY-MM-DD` to validate and refresh `queue.json`.
-- Draft a complete fetch batch under `.ai-blog/prefetch-staging/RUN-KEY/YYYY-MM-DD/` first. Validate all six bilingual pairs before moving any explicit file into `.ai-blog/queue/YYYY-MM-DD/`; on failure, leave the existing durable queue unchanged.
-- In the 05:00 publication phase, run `status` first and consume today's folder before doing any source-site work. Invoke prefetch only for a publisher whose `due` value is missing; a cold-start fallback assigns its newest candidate to today and the remaining two to the next available dates.
+- In the 03:00 prefetch phase, run `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs status --date YYYY-MM-DD`, select exactly seven new articles per publisher, write fourteen bilingual pairs across the reported `next_dates`, then run `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs sync --date YYYY-MM-DD` to validate and refresh `queue.json`.
+- Draft a complete fetch batch under `.ai-blog/prefetch-staging/RUN-KEY/YYYY-MM-DD/` first. Validate all fourteen bilingual pairs before moving any of the 28 explicit Markdown files into `.ai-blog/queue/YYYY-MM-DD/`; on failure, leave the existing durable queue unchanged.
+- In the 05:00 publication phase, run `status` first and consume today's folder before doing any source-site work. Invoke prefetch only for a publisher whose `due` value is missing; a cold-start fallback assigns its newest candidate to today and the remaining six to the next available dates.
 - Each selected article is one bilingual pair with exactly one `sources` entry. A pair may occupy only one queue date and a canonical source URL may occupy only one queue pair.
 - Release only D's one pair per publisher with `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs release --date YYYY-MM-DD --time "YYYY-MM-DD HH:MM:SS +0800"`. Do not release later dates early.
 - If today's pair for either publisher cannot be prepared safely, do not publish a partial daily batch. A 03:00 prefetch failure must leave the previous queue usable. A 05:00 fallback-fetch failure is a publication blocker and must stop after the 20-attempt timeout limit.
@@ -78,7 +78,7 @@ For each newly queued article independently:
 
 1. Create one English/Chinese queue pair using the publisher and canonical source slug specified in the contract. Keep it in the assigned date folder until release.
 2. Write that article's editorial summary first. Explain its central claims, strongest supporting evidence, practical implications, and relevant limitations. Clearly separate source claims from your analysis.
-3. After the editorial summary, add the source-material section with publisher, exact original title, publication date, canonical URL, and official Chinese URL when one exists.
+3. After the editorial summary, insert a Markdown horizontal rule and a bold source-boundary notice, then add the source-material section with publisher, exact original title, publication date, canonical URL, and official Chinese URL when one exists. Set `content_format: summary-source-v2` in both files. This divider is required so the rendered post has two unmistakable parts.
 4. In `summary-only` mode, provide an original structured account and optionally one short attributed quotation within the limit above.
 5. In licensed `full-text` mode, place the complete permitted source text after the summary, visibly attribute it, reproduce the required license notice, and link the permission. Do not silently edit or abridge text labeled as complete.
 
@@ -91,19 +91,19 @@ Create both language versions:
 
 ## Verify locally
 
-Preview mode may start with existing preview artifacts from this skill, but preserve unrelated user changes and stop if they overlap the intended paths. Published mode must start from a clean repository root synchronized with `origin/main` by a non-destructive fast-forward update. If a published run is dirty, diverged, offline, or unauthenticated, stop before mutation and report the blocker.
+Preview mode may start with existing preview artifacts from this skill, but preserve unrelated user changes and stop if they overlap the intended paths. Published mode must start with no staged changes and no tracked modifications, synchronized with `origin/main` by a non-destructive fast-forward update. Inventory pre-existing untracked files: preserve them, allow the run only when they do not overlap today's four intended `_posts` paths, and stage only explicit post paths. If tracked content is dirty, paths overlap, the branch diverged, or the repository is offline or unauthenticated, stop before mutation and report the blocker.
 
 For the 03:00 prefetch phase:
 
 1. Run `node .agents/skills/daily-ai-blog-digest/scripts/validate_digest.mjs --queue-date YYYY-MM-DD <english-queue-file> <chinese-queue-file>` for every new queue pair before moving it out of staging.
-2. After all six pairs are installed, run `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs sync --date YYYY-MM-DD`, then `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs validate --date YYYY-MM-DD`; confirm `queue.json` contains three newly appended entries for each publisher.
+2. After all fourteen pairs are installed, run `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs sync --date YYYY-MM-DD`, then `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs validate --date YYYY-MM-DD`; confirm `queue.json` contains seven newly appended entries for each publisher.
 3. Confirm `git status --short` is still clean because `.ai-blog` is ignored, then stop without Git or Pages mutation.
 
 For the 05:00 publication phase:
 
 1. Run `node .agents/skills/daily-ai-blog-digest/scripts/validate_digest.mjs <english-post> <chinese-post>` for both released pairs.
 2. Run `npm run check` once and inspect every generated page for the expected title, headings, one source link, language navigation, and absence of raw Liquid.
-3. Run `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs validate --date YYYY-MM-DD`, then `git diff --check`; review the full diff and confirm Git sees only today's independent post files. Local queue files and `queue.json` must remain ignored.
+3. Run `node .agents/skills/daily-ai-blog-digest/scripts/queue_digest.mjs validate --date YYYY-MM-DD`, then `git diff --check`; review the full tracked diff and confirm it contains only today's independent post files. Confirm any pre-existing unrelated untracked paths are unchanged. Local queue files and `queue.json` must remain ignored.
 4. In `preview` mode, start the local preview, return all local English/Chinese URLs, and stop. Do not stage, commit, push, reserve a durable slot, or mark a source as processed.
 
 ## Publish
@@ -115,4 +115,4 @@ These steps apply only to the 05:00 task in `published` mode. If today's queue e
 3. Commit with `Publish AI blog posts for YYYY-MM-DD`, then push the current `main` commit to `origin/main`. Never force-push.
 4. Confirm the GitHub Pages deployment and every public English/Chinese URL with bounded retries for up to ten minutes. A pushed commit is not the same as a verified publication. If verification times out or fails, keep the commit, report the commit SHA and failure, and do not create a second commit or repeat the push.
 
-For a 03:00 run, report the three appended queue dates per publisher, all six new source URLs, official-Chinese status, retry counts, and validation results. For a 05:00 run, report the two consumed sources, released paths, checks, commit SHA, and English/Chinese public URLs; include fallback-fetch details only when it ran. For a preview, no-op, or blocked run, say explicitly whether anything was committed or pushed.
+For a 03:00 run, report the seven appended queue dates per publisher, all fourteen new source URLs, official-Chinese status, retry counts, and validation results. For a 05:00 run, report the two consumed sources, released paths, checks, commit SHA, and English/Chinese public URLs; include fallback-fetch details only when it ran. For a preview, no-op, or blocked run, say explicitly whether anything was committed or pushed.

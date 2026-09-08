@@ -10,6 +10,7 @@ import { canonicalize, validatePair, validatePost } from './validate_digest.mjs'
 const root = process.cwd();
 const defaultQueueRoot = '.ai-blog/queue';
 const publishers = ['Anthropic', 'OpenAI'];
+const prefetchCount = 7;
 const dayPattern = /^\d{4}-\d{2}-\d{2}$/;
 const englishNamePattern = /^ai-blog-(anthropic|openai)-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/;
 
@@ -165,7 +166,7 @@ function nextDates(entries, publisher, today) {
   const publisherEntries = entries.filter((entry) => entry.publisher === publisher);
   const tail = publisherEntries.at(-1)?.scheduled_for;
   const first = tail && tail >= today ? addDays(tail, 1) : today;
-  return [first, addDays(first, 1), addDays(first, 2)];
+  return Array.from({ length: prefetchCount }, (_, index) => addDays(first, index));
 }
 
 async function readManifest(queueRoot) {
@@ -216,12 +217,27 @@ async function validateManifest(queueRoot) {
   return { entries, manifest: expected };
 }
 
-function publishedDocument(queueDocument, actualTime) {
-  const data = { ...queueDocument.data, date: actualTime, run_mode: 'published' };
+function withSourceBoundary(content, lang) {
+  const heading = lang === 'zh' ? '## 来源材料' : '## Source material';
+  const marker = lang === 'zh'
+    ? '> **来源分界：** 下方是基于原文的转述与出处信息。除非元数据记录了兼容的明确许可，完整原文请通过官方链接阅读。'
+    : '> **Source boundary:** The section below contains a sourced paraphrase and attribution. Unless the metadata records explicit compatible permission, read the complete original at the official link.';
+  if (content.includes(`\n---\n\n${marker}\n\n${heading}\n`)) return content;
+  assert(content.includes(`\n${heading}\n`), `queued ${lang} post is missing ${heading}`);
+  return content.replace(`\n${heading}\n`, `\n---\n\n${marker}\n\n${heading}\n`);
+}
+
+function publishedDocument(queueDocument, actualTime, lang) {
+  const data = {
+    ...queueDocument.data,
+    date: actualTime,
+    run_mode: 'published',
+    content_format: 'summary-source-v2',
+  };
   delete data.queue_publish_date;
   delete data.queue_status;
   delete data.published_path;
-  return { data, content: queueDocument.content };
+  return { data, content: withSourceBoundary(queueDocument.content, lang) };
 }
 
 async function releaseEntry(entry, actualTime) {
@@ -239,7 +255,7 @@ async function releaseEntry(entry, actualTime) {
     assert.equal(published.urls[0], entry.canonical_url, `${englishOutput}: existing post belongs to a different source`);
   } else {
     const rendered = outputPairs.map(([queued, output, lang]) => {
-      const document = publishedDocument(queued.document, actualTime);
+      const document = publishedDocument(queued.document, actualTime, lang);
       validatePost(output, document, lang, { kind: 'post' });
       return [path.join(root, output), matter.stringify(document.content, document.data)];
     });
@@ -283,8 +299,25 @@ function selfTest() {
     { scheduled_for: '2026-09-09', publisher: 'OpenAI' },
   ];
   assert.equal(addDays('2026-12-31', 1), '2027-01-01');
-  assert.deepEqual(nextDates(sample, 'Anthropic', '2026-09-07'), ['2026-09-11', '2026-09-12', '2026-09-13']);
-  assert.deepEqual(nextDates(sample, 'OpenAI', '2026-09-11'), ['2026-09-11', '2026-09-12', '2026-09-13']);
+  assert.deepEqual(nextDates(sample, 'Anthropic', '2026-09-07'), [
+    '2026-09-11', '2026-09-12', '2026-09-13', '2026-09-14', '2026-09-15', '2026-09-16', '2026-09-17',
+  ]);
+  assert.deepEqual(nextDates(sample, 'OpenAI', '2026-09-11'), [
+    '2026-09-11', '2026-09-12', '2026-09-13', '2026-09-14', '2026-09-15', '2026-09-16', '2026-09-17',
+  ]);
+  const migrated = publishedDocument({
+    data: {
+      run_mode: 'preview',
+      queue_publish_date: '2026-09-11',
+      queue_status: 'queued',
+      published_path: '_posts/example.md',
+    },
+    content: '> Deck\n\n## Editorial summary\n\nSummary.\n\n## Source material\n\nSource.\n',
+  }, '2026-09-11 05:00:00 +0800', 'en');
+  assert.equal(migrated.data.run_mode, 'published');
+  assert.equal(migrated.data.content_format, 'summary-source-v2');
+  assert.equal(migrated.data.queue_publish_date, undefined);
+  assert.match(migrated.content, /\n---\n\n> \*\*Source boundary:\*\*[^\n]+\n\n## Source material\n/);
   assert.throws(() => addDays('not-a-date', 1));
   process.stdout.write('Queue helper self-test passed.\n');
 }

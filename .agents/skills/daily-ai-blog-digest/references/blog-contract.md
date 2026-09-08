@@ -63,9 +63,9 @@ Published `_posts` files use `run_mode: published` and omit `queue_publish_date`
 
 The queue also has an ordered index at `.ai-blog/queue/queue.json`. Each publisher has its own array ordered by `scheduled_for`; entries record the canonical URL, title, status, and English/Chinese paths. The entire `.ai-blog` tree is local ignored runtime state and must not be committed.
 
-Every run appends exactly three new pairs per publisher. Assign them, newest source first, to the first three unoccupied dates after that publisher's queue tail. Each date may contain at most one pair per publisher. A cold-start batch uses today, tomorrow, and the following day; later runs deliberately extend the queue by three more dates. The trial may therefore grow the queue faster than it publishes it.
+Every run appends exactly seven new pairs per publisher. Assign them, newest source first, to the first seven unoccupied dates after that publisher's queue tail. Each date may contain at most one pair per publisher. A cold-start batch uses today and the following six days; later runs deliberately extend the queue by seven more dates. The trial may therefore grow the queue faster than it publishes it.
 
-The 03:00 prefetch task writes these queue files but never publishes or pushes them. The 05:00 publication task consumes only the current Shanghai date folder. If that folder is empty for a publisher, the publication task may perform one three-article fallback fetch for that publisher and assign the newest candidate to today before releasing it.
+The 03:00 prefetch task writes these queue files but never publishes or pushes them. The 05:00 publication task consumes only the current Shanghai date folder. If that folder is empty for a publisher, the publication task may perform one seven-article fallback fetch for that publisher, assign the newest candidate to today, and append the remaining six after that publisher's queue tail before releasing today's pair.
 
 Direct source fetches have one retry policy everywhere: a maximum of 20 total attempts, exactly 120 seconds between attempts caused by network timeouts, then abandonment. Official HTML and publisher-provided Markdown endpoints are valid cache inputs. HTTP errors, invalid metadata, unsupported content, authentication failures, and other non-timeout errors fail immediately instead of consuming the timeout retry budget.
 
@@ -89,6 +89,7 @@ tags: [Anthropic, AI Research]
 reading_time: 8
 description: "One factual sentence describing this source-specific post."
 run_mode: preview
+content_format: summary-source-v2
 queue_publish_date: YYYY-MM-DD # queue files only
 queue_status: queued           # queue files only
 sources:
@@ -111,6 +112,8 @@ translation_url: /posts/ai-blog-anthropic-source-key/
 
 Translate the post title and description naturally. Preserve the exact original source title in `sources`. For OpenAI, use `ai-blog-openai-...` and tags `[OpenAI, AI Research]`. If there is an official Chinese edition, set `official_zh_url` to its canonical HTTPS URL in both files.
 
+`content_format: summary-source-v2` declares the visible two-part layout. Both language files must insert the exact horizontal-rule and source-boundary pattern shown below. Legacy posts without this field remain valid, but every newly prepared or released post must use it.
+
 For explicitly permitted full-text reuse, set `reuse_policy: full-text` and also add quoted `license_url` and `license_note` values. `license_note` must identify what permission covers and any required attribution. Do not use `full-text` when the permission does not cover redistribution, or when the Chinese post would require a translation that the permission does not allow.
 
 Estimate `reading_time` from the finished post, rounded up, using roughly 220 English words per minute for English and 400 Chinese characters per minute for Chinese. A close, honest estimate is sufficient.
@@ -127,6 +130,10 @@ English:
 ## Editorial summary
 
 Original analysis of this source comes first.
+
+---
+
+> **Source boundary:** The section below contains a sourced paraphrase and attribution. Unless the metadata records explicit compatible permission, read the complete original at the official link.
 
 ## Source material
 
@@ -153,6 +160,10 @@ Chinese:
 
 该来源的原创中文分析置于最前。
 
+---
+
+> **来源分界：** 下方是基于原文的转述与出处信息。除非元数据记录了兼容的明确许可，完整原文请通过官方链接阅读。
+
 ## 来源材料
 
 ### Publisher：Exact original title
@@ -167,7 +178,7 @@ Chinese:
 中文转述；没有官方中文版时也不得冒充官方翻译。
 ```
 
-When `reuse_policy` is `full-text`, replace the final coverage subsection with an accurately labeled full-text section and reproduce the required license notice in both languages. Preserve the editorial summary as the opening section.
+When `reuse_policy` is `full-text`, keep the divider and the bold `Source boundary:` / `来源分界：` label, change the notice text to describe the verified full-text permission, replace the final coverage subsection with an accurately labeled full-text section, and reproduce the required license notice in both languages. Preserve the editorial summary as the opening section. Without such permission, the second part remains a clearly labeled paraphrase plus canonical source link; it must not reproduce the complete article or an unauthorized translation.
 
 ## Style and rendering
 

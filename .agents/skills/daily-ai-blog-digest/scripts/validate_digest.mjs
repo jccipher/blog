@@ -76,6 +76,9 @@ export function validatePost(filePath, document, expectedLang, scope = { kind: '
   assert.equal(data.lang, expectedLang, `${filePath}: lang must be ${expectedLang}`);
   assert.match(data.slug, /^ai-blog-(anthropic|openai)-[a-z0-9]+(?:-[a-z0-9]+)*$/, `${filePath}: unexpected independent-post slug`);
   assert(['preview', 'published'].includes(data.run_mode), `${filePath}: run_mode must be preview or published`);
+  if (data.content_format !== undefined) {
+    assert.equal(data.content_format, 'summary-source-v2', `${filePath}: unsupported content_format`);
+  }
   const postTime = new Date(data.date).getTime();
   assert(!Number.isNaN(postTime), `${filePath}: date must be a valid timestamp`);
   if (scope.kind === 'post' && data.run_mode === 'published') {
@@ -123,11 +126,25 @@ export function validatePost(filePath, document, expectedLang, scope = { kind: '
     assert.equal(data.translation_url, `/zh/posts/${data.slug}/`, `${filePath}: translation_url does not match slug`);
     assert.match(document.content, /^>[\s\S]*?## Editorial summary/m, `${filePath}: editorial summary must be the opening section`);
     assert.match(document.content, /\n## Source material\s*\n/, `${filePath}: missing Source material section`);
+    if (data.content_format === 'summary-source-v2') {
+      assert.match(
+        document.content,
+        /\n---\n\n> \*\*Source boundary:\*\*[^\n]+\n\n## Source material\s*\n/,
+        `${filePath}: summary-source-v2 requires a visible source boundary before Source material`,
+      );
+    }
   } else {
     assert.equal(data.permalink, `/zh/posts/${data.slug}/`, `${filePath}: permalink does not match slug`);
     assert.equal(data.translation_url, `/posts/${data.slug}/`, `${filePath}: translation_url does not match slug`);
     assert.match(document.content, /^>[\s\S]*?## 编辑摘要/m, `${filePath}: 编辑摘要 must be the opening section`);
     assert.match(document.content, /\n## 来源材料\s*\n/, `${filePath}: missing 来源材料 section`);
+    if (data.content_format === 'summary-source-v2') {
+      assert.match(
+        document.content,
+        /\n---\n\n> \*\*来源分界：\*\*[^\n]+\n\n## 来源材料\s*\n/,
+        `${filePath}: summary-source-v2 requires a visible source boundary before 来源材料`,
+      );
+    }
   }
 
   for (const source of data.sources) {
@@ -208,6 +225,7 @@ function runSelfTest() {
     tags: ['Anthropic', 'AI Research'],
     reading_time: 3,
     run_mode: 'preview',
+    content_format: 'summary-source-v2',
     sources: [source],
   };
   const en = {
@@ -219,7 +237,7 @@ function runSelfTest() {
       translation_url: '/zh/posts/ai-blog-anthropic-example/',
       description: 'Example digest.',
     },
-    content: `> Deck\n\n## Editorial summary\n\nSummary.\n\n## Source material\n\n### Anthropic: Anthropic example\n\n[Read](https://claude.com/blog/example)\n`,
+    content: `> Deck\n\n## Editorial summary\n\nSummary.\n\n---\n\n> **Source boundary:** Read the complete original at the official link.\n\n## Source material\n\n### Anthropic: Anthropic example\n\n[Read](https://claude.com/blog/example)\n`,
   };
   const zh = {
     data: {
@@ -230,11 +248,16 @@ function runSelfTest() {
       translation_url: '/posts/ai-blog-anthropic-example/',
       description: '示例摘要。',
     },
-    content: `> 导语\n\n## 编辑摘要\n\n摘要。\n\n## 来源材料\n\n### Anthropic：Anthropic example\n\n[原文](https://claude.com/blog/example)\n`,
+    content: `> 导语\n\n## 编辑摘要\n\n摘要。\n\n---\n\n> **来源分界：** 完整原文请通过官方链接阅读。\n\n## 来源材料\n\n### Anthropic：Anthropic example\n\n[原文](https://claude.com/blog/example)\n`,
   };
   assert.deepEqual(validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', en, 'en'), [source.url]);
   assert.deepEqual(validatePost('_posts/2026-09-05-ai-blog-anthropic-example-zh.md', zh, 'zh'), [source.url]);
   assert.throws(() => validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', { ...en, data: { ...en.data, run_mode: 'draft' } }, 'en'));
+  assert.throws(() => validatePost(
+    '_posts/2026-09-05-ai-blog-anthropic-example.md',
+    { ...en, content: en.content.replace('\n---\n\n> **Source boundary:** Read the complete original at the official link.\n', '') },
+    'en',
+  ));
   assert.throws(() => validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', { ...en, data: { ...en.data, run_mode: 'published', date: new Date('2999-01-01T00:00:00Z') } }, 'en'));
   assert.throws(() => validatePost('_posts/2026-09-05-ai-blog-anthropic-example.md', { ...en, data: { ...en.data, sources: [source, { ...source }] } }, 'en'));
   assert.throws(() => validateSource({ ...source, reuse_policy: 'full-text' }, 'source'));
