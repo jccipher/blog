@@ -25,7 +25,7 @@ const path = require('node:path');
         const source = await page.locator('audio source').getAttribute('src');
         const response = await page.request.get(`${base}${source}`, { headers: { Range: 'bytes=0-1023' } });
         assert.equal(response.status(), 206); assert.equal((await response.body()).length, 1024);
-        assert.equal(response.headers()['content-type'], 'audio/mpeg');
+        assert(['audio/mpeg', 'audio/mp3'].includes(response.headers()['content-type'].split(';')[0]), 'Expected an MP3 content type from the local server or GitHub Pages');
         await page.locator('audio').evaluate(async a => { a.muted = true; await a.play(); });
         await page.waitForFunction(() => document.querySelector('audio').currentTime > 0.1);
         await page.selectOption('[data-audio-rate]', '1.5');
