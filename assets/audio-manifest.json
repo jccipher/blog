@@ -80,6 +80,46 @@
       "sha256": "943effab70b0df776f5fba111135b379e419794aeefa80c1333cd0324803a639",
       "summary_sha256": "e76da0480611a869ffe993d72491ed6f70d1cc78321483b2e3c213185d24909f",
       "duration_seconds": 216.08
+    },
+    {
+      "slug": "ai-blog-anthropic-claudes-memory-works-everywhere-and-you-decide-whats-in-it",
+      "lang": "en",
+      "published_on": "2026-09-11",
+      "asset": "2026-09-11_ai-blog-anthropic-claudes-memory-works-everywhere-and-you-decide-whats-in-it.en.b9ea2bd12f811c34.mp3",
+      "bytes": 1367805,
+      "sha256": "7a40b952f3acac9d9f9270ff5f8d9338971f7079838ef96c43a9d9cf9e301eca",
+      "summary_sha256": "858282c1080d0246b18a5dc61e2741318b551071f795060d6030cdcdaae0663e",
+      "duration_seconds": 227.86
+    },
+    {
+      "slug": "ai-blog-anthropic-claudes-memory-works-everywhere-and-you-decide-whats-in-it",
+      "lang": "zh",
+      "published_on": "2026-09-11",
+      "asset": "2026-09-11_ai-blog-anthropic-claudes-memory-works-everywhere-and-you-decide-whats-in-it.zh.fbd543a326740fb7.mp3",
+      "bytes": 1063101,
+      "sha256": "dee5d851c84c7987a158a3806dc7589366cdbcf21bc102dcf720e6a837272b62",
+      "summary_sha256": "f5fccdc6386283a9b9ac5c132373dcdcd44efab453abeb66f319d269fcfc7a39",
+      "duration_seconds": 177.09
+    },
+    {
+      "slug": "ai-blog-openai-connect-private-mcp-servers-to-openai-products",
+      "lang": "en",
+      "published_on": "2026-09-11",
+      "asset": "2026-09-11_ai-blog-openai-connect-private-mcp-servers-to-openai-products.en.9937bd994c6bd7df.mp3",
+      "bytes": 1499421,
+      "sha256": "987427762f59bfb14dea8961fb1c0c00fca97b2e7bc978c2cadcd697abd210ab",
+      "summary_sha256": "496dd7119400e8c0c8aa61c0a3a877f1223916ee1f6b2d8a60368ace13c96472",
+      "duration_seconds": 249.81
+    },
+    {
+      "slug": "ai-blog-openai-connect-private-mcp-servers-to-openai-products",
+      "lang": "zh",
+      "published_on": "2026-09-11",
+      "asset": "2026-09-11_ai-blog-openai-connect-private-mcp-servers-to-openai-products.zh.d531e08d12cd39fc.mp3",
+      "bytes": 1235325,
+      "sha256": "23a3420aeb6a4dce2e0bccd01a13bafa1d535d1ea499dd594eb1a44caaccab83",
+      "summary_sha256": "9ee216ed12532cba4807d90ff46126507ee03f4e900be929801cd578f4b6c357",
+      "duration_seconds": 205.79
     }
   ]
 }
