@@ -42,7 +42,8 @@ def extract(html, url):
     article = next((r for r in records if r.get('datePublished') and r.get('headline')), {})
     date_meta = soup.select_one('meta[property="article:published_time"]')
     date_time = soup.select_one('time[datetime]')
-    raw_date = str(article.get('datePublished') or (date_meta.get('content') if date_meta else '') or (date_time.get('datetime') if date_time else '')).strip()
+    visible_date = soup.find(string=re.compile(r'^(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{1,2}, [0-9]{4}$'))
+    raw_date = str(article.get('datePublished') or (date_meta.get('content') if date_meta else '') or (date_time.get('datetime') if date_time else '') or visible_date or '').strip()
     date = ''
     for fmt in ('%Y-%m-%d', '%b %d, %Y', '%B %d, %Y'):
         try:

@@ -31,5 +31,10 @@ class ExtractionTests(unittest.TestCase):
         self.assertEqual(r['published_at'], '')
         self.assertIsNone(r['official_zh_url'])
 
+    def test_visible_openai_date_is_extracted_without_structured_metadata(self):
+        html = '<span class="text-default font-medium">Sep 11, 2026</span><h1>New post</h1><article>Complete article body.</article>'
+        r = module.extract(html, 'https://developers.openai.com/blog/new-post')
+        self.assertEqual(r['published_at'], '2026-09-11')
+
 if __name__ == '__main__':
     unittest.main()

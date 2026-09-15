@@ -90,12 +90,18 @@ async function readLimitedBody(response) {
   return new TextDecoder().decode(body);
 }
 
+export function sourceAccept(url) {
+  return url.pathname.endsWith('.md')
+    ? 'text/markdown,text/plain;q=0.8'
+    : 'text/html,application/xhtml+xml';
+}
+
 async function fetchOnce(url) {
   const response = await fetch(url, {
     redirect: 'follow',
     signal: AbortSignal.timeout(requestTimeoutMs),
     headers: {
-      accept: 'text/html,application/xhtml+xml,text/markdown;q=0.9,text/plain;q=0.8',
+      accept: sourceAccept(url),
       'user-agent': 'LATENTX-AI-Blog-Digest/1.0',
     },
   });
