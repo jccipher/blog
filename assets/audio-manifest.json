@@ -160,6 +160,46 @@
       "sha256": "d4564c819580186a5b3bc2f71fc39c642aba0cfbeb6f04dc39876c8bba3ebb79",
       "summary_sha256": "664bfb4f7bb5d85d7e0fb3fe8a097c722107272ace3e440db4b16b5774e9d234",
       "duration_seconds": 201.08
+    },
+    {
+      "slug": "ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform",
+      "lang": "en",
+      "published_on": "2026-09-17",
+      "asset": "2026-09-17_ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform.en.dbc0363b3d8041c2.mp3",
+      "bytes": 982173,
+      "sha256": "780ae573edff1614e6f41be686a5619de1b7b26b2e46431fc9c70024a59f507b",
+      "summary_sha256": "8afd123fe9d0b31d425add19f7c52d22782b0971096a53f959ea3bfcb7007884",
+      "duration_seconds": 163.6
+    },
+    {
+      "slug": "ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform",
+      "lang": "zh",
+      "published_on": "2026-09-17",
+      "asset": "2026-09-17_ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform.zh.13cdce1a289174f1.mp3",
+      "bytes": 932925,
+      "sha256": "faa0c1670732a78a6d1eeacfb79f7f8e8bb3b699b98a897793d72867bc741fc9",
+      "summary_sha256": "ea90d88d4aa1630431a92a57750b6240e75f49c571bde362ca4c3e43b82cadfd",
+      "duration_seconds": 155.4
+    },
+    {
+      "slug": "ai-blog-openai-designing-delightful-frontends-with-gpt-5-4",
+      "lang": "en",
+      "published_on": "2026-09-17",
+      "asset": "2026-09-17_ai-blog-openai-designing-delightful-frontends-with-gpt-5-4.en.bfe2eb0ef610688e.mp3",
+      "bytes": 636285,
+      "sha256": "551add2b152a1b7b9a80aca5c90bace5f79f87895b944e854ad80636f75edc2d",
+      "summary_sha256": "a2e487d0cd03e687fbc90bf16bac2b202bc1d07bbc35ae023bab7350636f1d6c",
+      "duration_seconds": 105.95
+    },
+    {
+      "slug": "ai-blog-openai-designing-delightful-frontends-with-gpt-5-4",
+      "lang": "zh",
+      "published_on": "2026-09-17",
+      "asset": "2026-09-17_ai-blog-openai-designing-delightful-frontends-with-gpt-5-4.zh.2f42fdbb848c7f85.mp3",
+      "bytes": 539229,
+      "sha256": "10f433549bed4e69061f6caa9388d1ed44334b69b75f8aab58123c1f63efd4ce",
+      "summary_sha256": "f42faa62a80a238685b85b62cf60a5841cfc00cc2f2f1f01a4a37f16b07ce001",
+      "duration_seconds": 89.78
     }
   ]
 }
