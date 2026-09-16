@@ -120,6 +120,46 @@
       "sha256": "23a3420aeb6a4dce2e0bccd01a13bafa1d535d1ea499dd594eb1a44caaccab83",
       "summary_sha256": "9ee216ed12532cba4807d90ff46126507ee03f4e900be929801cd578f4b6c357",
       "duration_seconds": 205.79
+    },
+    {
+      "slug": "ai-blog-anthropic-bain-company-joins-the-claude-partner-network-as-a-global-premier-partner",
+      "lang": "en",
+      "published_on": "2026-09-14",
+      "asset": "2026-09-14_ai-blog-anthropic-bain-company-joins-the-claude-partner-network-as-a-global-premier-partner.en.093b662525ef73d5.mp3",
+      "bytes": 1290477,
+      "sha256": "2952519969b4fd95c47a4f20c26bf30f8ab4bd9c74f029bd476fb13164a83f91",
+      "summary_sha256": "4015c55b9375f93530354a57f4deecb647539754a103b7aa47313f4ac934b76c",
+      "duration_seconds": 214.97
+    },
+    {
+      "slug": "ai-blog-anthropic-bain-company-joins-the-claude-partner-network-as-a-global-premier-partner",
+      "lang": "zh",
+      "published_on": "2026-09-14",
+      "asset": "2026-09-14_ai-blog-anthropic-bain-company-joins-the-claude-partner-network-as-a-global-premier-partner.zh.a05f6837d2d8480b.mp3",
+      "bytes": 1010253,
+      "sha256": "6fd334e7e06f23f5bb438b8d13d86822d7f8efc6e87c089ef541ce11c9a395bc",
+      "summary_sha256": "df606ee03700c27514f0063cbd3e3027604fd1fd4bd6fdf1f8eaf21b29e52077",
+      "duration_seconds": 168.27
+    },
+    {
+      "slug": "ai-blog-openai-custom-code-review-rules-for-codex",
+      "lang": "en",
+      "published_on": "2026-09-14",
+      "asset": "2026-09-14_ai-blog-openai-custom-code-review-rules-for-codex.en.289d670a4bfbc1a2.mp3",
+      "bytes": 1438941,
+      "sha256": "23aecba2ecef6b2e0d3eccb957dca4e0f9d5592ecfde57f07b6f07b670879ec8",
+      "summary_sha256": "619699c78a220b65d8296e226d1acf1820562975f116d1ec8c5cc5cf07f44590",
+      "duration_seconds": 239.72
+    },
+    {
+      "slug": "ai-blog-openai-custom-code-review-rules-for-codex",
+      "lang": "zh",
+      "published_on": "2026-09-14",
+      "asset": "2026-09-14_ai-blog-openai-custom-code-review-rules-for-codex.zh.a3276f91e7e472a8.mp3",
+      "bytes": 1207101,
+      "sha256": "d4564c819580186a5b3bc2f71fc39c642aba0cfbeb6f04dc39876c8bba3ebb79",
+      "summary_sha256": "664bfb4f7bb5d85d7e0fb3fe8a097c722107272ace3e440db4b16b5774e9d234",
+      "duration_seconds": 201.08
     }
   ]
 }
