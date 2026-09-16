@@ -25,7 +25,7 @@ Run the project's free local workflow; do not substitute paid model APIs. Read [
 - Local preview: `npm run nightly -- preview`, adding `--approval-file PATH` only for the specifically human-approved daytime run.
 - Deterministic verification: `npm run nightly -- test`; this invokes the policy tests, existing automation tests and site build.
 - Model setup: `npm run nightly -- setup`; model downloads are a separate explicit setup operation, never an implicit synthesis side effect.
-- Production: `npm run nightly -- run`, only after the user accepts tests and authorizes activation. The ignored production approval must bind the repository and exact configuration hash. Do not create it just because implementation was authorized.
+- Scheduled production entry point: `npm run nightly:native`, only after the user accepts tests and authorizes activation. It performs the GitHub repository and permission preflight before invoking `npm run nightly -- run`. The ignored production approval must bind the repository and exact configuration hash. Do not create it just because implementation was authorized.
 
 Record each run as `YYYY-MM-DD_cron_task` in its local report. When a human invokes this through Codex, use that name for the task if requested; a native local runner does not pretend to create a Codex chat.
 

@@ -3,7 +3,7 @@
 <plist version="1.0"><dict>
   <key>Label</key><string>com.latentx.nightly-blog</string>
   <key>WorkingDirectory</key><string>PROJECT_ROOT</string>
-  <key>ProgramArguments</key><array><string>NODE_EXECUTABLE</string><string>PROJECT_ROOT/.agents/skills/nightly-blog-pipeline/scripts/nightly.mjs</string><string>run</string></array>
+  <key>ProgramArguments</key><array><string>NODE_EXECUTABLE</string><string>PROJECT_ROOT/scripts/ai-blog/native-nightly.mjs</string></array>
   <key>StartCalendarInterval</key><dict><key>Hour</key><integer>1</integer><key>Minute</key><integer>0</integer></dict>
   <key>RunAtLoad</key><false/>
   <key>ProcessType</key><string>Background</string>
