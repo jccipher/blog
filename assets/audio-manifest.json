@@ -2,6 +2,166 @@
   "schema_version": 1,
   "entries": [
     {
+      "slug": "ai-blog-anthropic-claude-for-commerce-agents",
+      "lang": "en",
+      "published_on": "2026-09-05",
+      "asset": "2026-09-05_ai-blog-anthropic-claude-for-commerce-agents.en.690f70b67de23d64.mp3",
+      "bytes": 1669485,
+      "sha256": "5ccc2826350f2293bce121bde8d6e7738420bbb8d8d81dd19ec81a87d2e2aab6",
+      "summary_sha256": "4209605bebb3f5c19ff5a7c51b80ab363acc53088a5d3016160d2ad12617a9cd",
+      "duration_seconds": 278.15
+    },
+    {
+      "slug": "ai-blog-anthropic-claude-for-commerce-agents",
+      "lang": "zh",
+      "published_on": "2026-09-05",
+      "asset": "2026-09-05_ai-blog-anthropic-claude-for-commerce-agents.zh.0276d519335a9b09.mp3",
+      "bytes": 1454781,
+      "sha256": "d321e44e6590929675ed0e9080ff989410aae81a91872047b76afadf79b4082d",
+      "summary_sha256": "f1723805a94cfa97faae01b5e50f733c2a2149b227e38ed058dfbb4f25c1271e",
+      "duration_seconds": 242.36
+    },
+    {
+      "slug": "ai-blog-anthropic-the-anatomy-of-effective-commerce-agents",
+      "lang": "en",
+      "published_on": "2026-09-05",
+      "asset": "2026-09-05_ai-blog-anthropic-the-anatomy-of-effective-commerce-agents.en.0a16fce206291d58.mp3",
+      "bytes": 1524909,
+      "sha256": "276f65275bc82e1fe9cdbb46016925dd3613527ae6bfba4cba5e57664e42a137",
+      "summary_sha256": "bf386562282f79f0ecd89c5bfaeb37b9fcffd7343ac58f6dd056fa1b0809cb37",
+      "duration_seconds": 254.05
+    },
+    {
+      "slug": "ai-blog-anthropic-the-anatomy-of-effective-commerce-agents",
+      "lang": "zh",
+      "published_on": "2026-09-05",
+      "asset": "2026-09-05_ai-blog-anthropic-the-anatomy-of-effective-commerce-agents.zh.61bdbeb1e5a93bb9.mp3",
+      "bytes": 1344765,
+      "sha256": "959372c8a5e7b1285be491507d8598b28961169461e2d3cae8df26e4984af327",
+      "summary_sha256": "fbb4bed9d500a0410492825cd48012ff3c748051b965320c088f6e3f357b7a60",
+      "duration_seconds": 224.04
+    },
+    {
+      "slug": "ai-blog-openai-architectural-visualization-with-astra",
+      "lang": "en",
+      "published_on": "2026-09-05",
+      "asset": "2026-09-05_ai-blog-openai-architectural-visualization-with-astra.en.d2c51ea512d79b53.mp3",
+      "bytes": 2187165,
+      "sha256": "64c5ffec51413193dbb856b425552b149dba54b817bb02a1cdb56927d477f085",
+      "summary_sha256": "b8b65592dc2ee43403b0169ec5837ca2aaad0bf803c4985c9ec24ebb2c6cb614",
+      "duration_seconds": 364.42
+    },
+    {
+      "slug": "ai-blog-openai-architectural-visualization-with-astra",
+      "lang": "zh",
+      "published_on": "2026-09-05",
+      "asset": "2026-09-05_ai-blog-openai-architectural-visualization-with-astra.zh.137f1e155e80d2da.mp3",
+      "bytes": 1820685,
+      "sha256": "401774f80dba8bfbff7e1f2313c25f4a7e8754ff72dd6e864840643b91acecac",
+      "summary_sha256": "3c7d24a440cb47d582546445d088667326c423ad8729fb5c9228332d32451972",
+      "duration_seconds": 303.34
+    },
+    {
+      "slug": "ai-blog-openai-rosalind-workbench",
+      "lang": "en",
+      "published_on": "2026-09-05",
+      "asset": "2026-09-05_ai-blog-openai-rosalind-workbench.en.5a50ab11c33a35ef.mp3",
+      "bytes": 1508493,
+      "sha256": "1aa2ac8872bdd2e7c0423f2e7d977d12fd0847fd1b461b8a6218c4ce1911891b",
+      "summary_sha256": "0a5084a2f317573cf4e85790866f189ddb16e8aa09b8889366787ae23a25cb95",
+      "duration_seconds": 251.31
+    },
+    {
+      "slug": "ai-blog-openai-rosalind-workbench",
+      "lang": "zh",
+      "published_on": "2026-09-05",
+      "asset": "2026-09-05_ai-blog-openai-rosalind-workbench.zh.685bd5a73cb6eff5.mp3",
+      "bytes": 1256493,
+      "sha256": "ea0bdedcaa79e3332fd76cbef60b24d87df56bc685eda37f95f7a282b70e8271",
+      "summary_sha256": "a27de9e3d41d9f43dbced5d9bb3a02b10202d1b0ed2fbde5473175e7f06c240e",
+      "duration_seconds": 209.32
+    },
+    {
+      "slug": "ai-blog-anthropic-how-anthropic-employees-use-claude-tag",
+      "lang": "en",
+      "published_on": "2026-09-06",
+      "asset": "2026-09-06_ai-blog-anthropic-how-anthropic-employees-use-claude-tag.en.04e37580c744f677.mp3",
+      "bytes": 2008173,
+      "sha256": "8d1753479fce77d854954552de604fa6735e113ecb247b49e7d6825d9e603221",
+      "summary_sha256": "8a92e897834c39e84bce7a8a9929c220040a259982d17d0c5f0cd84effd13a2b",
+      "duration_seconds": 334.6
+    },
+    {
+      "slug": "ai-blog-anthropic-how-anthropic-employees-use-claude-tag",
+      "lang": "zh",
+      "published_on": "2026-09-06",
+      "asset": "2026-09-06_ai-blog-anthropic-how-anthropic-employees-use-claude-tag.zh.60f0cd8183508bd8.mp3",
+      "bytes": 1713981,
+      "sha256": "2071026d27fb2629dc85c3771972ab1575f884ce14cbe6db0e2428d3427abe41",
+      "summary_sha256": "8cd5665dacec9b48232971a6072496d8e763694cf0823baa4815d2c0677d8734",
+      "duration_seconds": 285.57
+    },
+    {
+      "slug": "ai-blog-openai-how-to-build-games-with-astra",
+      "lang": "en",
+      "published_on": "2026-09-06",
+      "asset": "2026-09-06_ai-blog-openai-how-to-build-games-with-astra.en.7459bdb18d820abc.mp3",
+      "bytes": 2303517,
+      "sha256": "ac2aaf6e5ace10ceb66a8b32549256f70f7053cdcd4be0185b9238f4a9794181",
+      "summary_sha256": "d4c9855efc2a430f60310836a4334ea521c03e9971f4f2ef6d5d12a2af77fa7a",
+      "duration_seconds": 383.82
+    },
+    {
+      "slug": "ai-blog-openai-how-to-build-games-with-astra",
+      "lang": "zh",
+      "published_on": "2026-09-06",
+      "asset": "2026-09-06_ai-blog-openai-how-to-build-games-with-astra.zh.d49c07b070b24323.mp3",
+      "bytes": 2212509,
+      "sha256": "81e62f3f218634af18b920a3b96abc9d9adaa75028955bd267185a8b906a60f0",
+      "summary_sha256": "647725feab6773402c1d4efc458c0e20e00e95a94c02493cc2c91febec777ffc",
+      "duration_seconds": 368.65
+    },
+    {
+      "slug": "ai-blog-anthropic-claude-for-teachers-now-available-for-schools-and-districts",
+      "lang": "en",
+      "published_on": "2026-09-07",
+      "asset": "2026-09-07_ai-blog-anthropic-claude-for-teachers-now-available-for-schools-and-districts.en.cb23e8ad38443807.mp3",
+      "bytes": 1993773,
+      "sha256": "3fe9f0499bb01668a13c03304b72da097473f094d76a0d4c750662568d6b2123",
+      "summary_sha256": "15b90a5727c7d663cce4a388942fe235428f335cddf48c104a841735cedd55e6",
+      "duration_seconds": 332.19
+    },
+    {
+      "slug": "ai-blog-anthropic-claude-for-teachers-now-available-for-schools-and-districts",
+      "lang": "zh",
+      "published_on": "2026-09-07",
+      "asset": "2026-09-07_ai-blog-anthropic-claude-for-teachers-now-available-for-schools-and-districts.zh.270ebb144152a6c1.mp3",
+      "bytes": 1905069,
+      "sha256": "c4b8820ffac6eba2f0f8fa2650c3930b703861d27ad6c482f0eaaa3dfc1655d5",
+      "summary_sha256": "84a4cb766335e358d3d5f3a1fced9246e73a2db66de65b485b45e74aa499964c",
+      "duration_seconds": 317.42
+    },
+    {
+      "slug": "ai-blog-openai-automating-repetitive-work-at-openai-with-codex",
+      "lang": "en",
+      "published_on": "2026-09-07",
+      "asset": "2026-09-07_ai-blog-openai-automating-repetitive-work-at-openai-with-codex.en.a4aabe342c72bffa.mp3",
+      "bytes": 1818381,
+      "sha256": "cdaa9c1e900a6edb46f10427688d80efb9c4f3c3c772ea23af5f9d65fb75e458",
+      "summary_sha256": "8d8bbe25e95ec5496aac4df530aa1c6055f542d0be70a2a80164069e6980b1cb",
+      "duration_seconds": 302.97
+    },
+    {
+      "slug": "ai-blog-openai-automating-repetitive-work-at-openai-with-codex",
+      "lang": "zh",
+      "published_on": "2026-09-07",
+      "asset": "2026-09-07_ai-blog-openai-automating-repetitive-work-at-openai-with-codex.zh.a447c21425eaf7a8.mp3",
+      "bytes": 1586541,
+      "sha256": "cc7b6f7f3c540d76e5645b85c29256e2372a9f9ccc8054e766e925a88ee6799f",
+      "summary_sha256": "03fbd6423e33314b70d3e15014f5b8fb0e1f777aed6ff3ebaba3e6a0d08b6e49",
+      "duration_seconds": 264.32
+    },
+    {
       "slug": "ai-blog-anthropic-claude-in-chrome-generally-available",
       "lang": "en",
       "published_on": "2026-09-08",
@@ -160,6 +320,46 @@
       "sha256": "d4564c819580186a5b3bc2f71fc39c642aba0cfbeb6f04dc39876c8bba3ebb79",
       "summary_sha256": "664bfb4f7bb5d85d7e0fb3fe8a097c722107272ace3e440db4b16b5774e9d234",
       "duration_seconds": 201.08
+    },
+    {
+      "slug": "ai-blog-anthropic-what-1-000-small-business-owners-taught-us-about-ai",
+      "lang": "en",
+      "published_on": "2026-09-16",
+      "asset": "2026-09-16_ai-blog-anthropic-what-1-000-small-business-owners-taught-us-about-ai.en.47d8d265bd950271.mp3",
+      "bytes": 489117,
+      "sha256": "343c188f75a83e096d0e8a04f406a23b90b8e8d497c368be2c7ea9a76f26770d",
+      "summary_sha256": "07d7f1a380d9847d9bb8110f58a2191ff2e9241b812fe529b4034e82a228f666",
+      "duration_seconds": 81.43
+    },
+    {
+      "slug": "ai-blog-anthropic-what-1-000-small-business-owners-taught-us-about-ai",
+      "lang": "zh",
+      "published_on": "2026-09-16",
+      "asset": "2026-09-16_ai-blog-anthropic-what-1-000-small-business-owners-taught-us-about-ai.zh.052379602b863ac7.mp3",
+      "bytes": 386589,
+      "sha256": "2e0ee3143ac60649c6b74bd06aff6b3e0c900c51e52ce0204ba4985d0d5c493f",
+      "summary_sha256": "7915d4d5cf23b37169a88217bd3a12268f43a4a2fb60482fef0ea018fc025bfd",
+      "duration_seconds": 64.34
+    },
+    {
+      "slug": "ai-blog-openai-realtime-perplexity-computer",
+      "lang": "en",
+      "published_on": "2026-09-16",
+      "asset": "2026-09-16_ai-blog-openai-realtime-perplexity-computer.en.588e804ad6ef4a5f.mp3",
+      "bytes": 1113357,
+      "sha256": "2843721dd4a96db77dca037abd09f4a93807d4fd0c99d51df284d2e0e3c1088e",
+      "summary_sha256": "42d6b2126073dd4f68fa9bda15a43796573298450a17fc9d341c8b625eadfcc2",
+      "duration_seconds": 185.47
+    },
+    {
+      "slug": "ai-blog-openai-realtime-perplexity-computer",
+      "lang": "zh",
+      "published_on": "2026-09-16",
+      "asset": "2026-09-16_ai-blog-openai-realtime-perplexity-computer.zh.c1ff16a68728c144.mp3",
+      "bytes": 1020909,
+      "sha256": "2a6d8f2d2a753607f259eb25a784614a8cef24b466801dff76d5f4c3d6f66bb6",
+      "summary_sha256": "180700c14c546bf9ca94c1c6a385d5319ff45cddeaf4857fa27ef1e48c4c5978",
+      "duration_seconds": 170.05
     },
     {
       "slug": "ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform",
