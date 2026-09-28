@@ -400,6 +400,326 @@
       "sha256": "10f433549bed4e69061f6caa9388d1ed44334b69b75f8aab58123c1f63efd4ce",
       "summary_sha256": "f42faa62a80a238685b85b62cf60a5841cfc00cc2f2f1f01a4a37f16b07ce001",
       "duration_seconds": 89.78
+    },
+    {
+      "slug": "ai-blog-anthropic-artifacts-in-claude-code",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-artifacts-in-claude-code.en.c4938f9300a505a5.mp3",
+      "bytes": 644925,
+      "sha256": "b4e01fc49c86decce5d6463d469ca7bf95cdcb0ed5d884e165f3ba4766ccda22",
+      "summary_sha256": "f3d4cc37000f4b3453fefe8b1946f6229ee8a3c4549a969036a83f85441e8a26",
+      "duration_seconds": 107.4
+    },
+    {
+      "slug": "ai-blog-anthropic-artifacts-in-claude-code",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-artifacts-in-claude-code.zh.06100891f5d9c971.mp3",
+      "bytes": 617997,
+      "sha256": "c26d73658401f107600fa44512974236c7027ce2d28c6b2c8f8b3769d6f23543",
+      "summary_sha256": "3206945e12051f04d651fb1749be3e4d7d44b3eedaae5276c8d2074fe0c5c7f8",
+      "duration_seconds": 102.9
+    },
+    {
+      "slug": "ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders.en.d97ee0fb24bfb280.mp3",
+      "bytes": 563565,
+      "sha256": "2b45376f71fbfb447084e994d8a4c01e370c75925af5cb23076b5bbbd83fa146",
+      "summary_sha256": "e8a4a01ef2cb5702388448d2fc2b338ca3c776c1aca25f56106e3b2af4022f15",
+      "duration_seconds": 93.84
+    },
+    {
+      "slug": "ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders.zh.a5a6108c04b04b84.mp3",
+      "bytes": 572349,
+      "sha256": "77c2deccceefa85564ad3df886daad440c3c3b7f361b627bb444c8a159d7adab",
+      "summary_sha256": "9623e5741f58a0f69bdf85e70a8cf98d821482e4bef87fc2fbb59ca66b4a9166",
+      "duration_seconds": 95.3
+    },
+    {
+      "slug": "ai-blog-anthropic-claude-for-foundation-models",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-claude-for-foundation-models.en.f21d81dcf60782bb.mp3",
+      "bytes": 732189,
+      "sha256": "624ea2cd071060c7c0f0f3db4e6ed2b0a863eb792acdd9338faf04c9b030d898",
+      "summary_sha256": "90bac0f970f1560a5a9b6edbaa61f6b4770d31add809c440a4eb102c7fb6c2ec",
+      "duration_seconds": 121.94
+    },
+    {
+      "slug": "ai-blog-anthropic-claude-for-foundation-models",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-claude-for-foundation-models.zh.3f623aa19fd7d5e9.mp3",
+      "bytes": 674157,
+      "sha256": "0c257d8f914c9885da00d1a62b72ee7042f7b510f52a8c533fe0eeb596a78366",
+      "summary_sha256": "3e876020b854afa7b9274872751f43b1d2aeb118401ee49279facae6ff7ea47d",
+      "duration_seconds": 112.26
+    },
+    {
+      "slug": "ai-blog-anthropic-cowork-built-in-browser",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-cowork-built-in-browser.en.4ab46dd2cd8bbaf7.mp3",
+      "bytes": 1205229,
+      "sha256": "acc53ab15b117132f397ecde14666bc0cf29b3ca6b47912ba3d13c8e547188de",
+      "summary_sha256": "8e9437e678689ee6ccd1af64df32351f1883ddb863d2a7bf6a140143cf4eb527",
+      "duration_seconds": 200.78
+    },
+    {
+      "slug": "ai-blog-anthropic-cowork-built-in-browser",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-cowork-built-in-browser.zh.e390f03dfc77e879.mp3",
+      "bytes": 1074765,
+      "sha256": "a1688599d8f120dc3f21d845e5d0c3a9206d367e043a116ae4c71aa05fc16643",
+      "summary_sha256": "d4540928854f6861186ef49884363a7b96e81f087d92c9c74d145b8308f306fd",
+      "duration_seconds": 179.03
+    },
+    {
+      "slug": "ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep.en.3f0724cc7828b60a.mp3",
+      "bytes": 1304877,
+      "sha256": "721bd3115fd8c33aa23031ba7976dd0a570eedebccc77d513fb6d33ab37ca612",
+      "summary_sha256": "7ccf578d0424c35c94cc65f0da4e67f57c4805eea77d27308af0d5f9e11582ed",
+      "duration_seconds": 217.38
+    },
+    {
+      "slug": "ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep.zh.cda594bba692ddb9.mp3",
+      "bytes": 1196445,
+      "sha256": "e95b5b890e9d67b3b6a45ff96757d5616b03eb4782f0361fe8611d9d0d46fe1f",
+      "summary_sha256": "826bf799455cbc2d6a219172cc43285f0c67848b1c40092ad060d396f6fd889d",
+      "duration_seconds": 199.3
+    },
+    {
+      "slug": "ai-blog-anthropic-salesforce-in-claude",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-salesforce-in-claude.en.45a1f69d29e1cf2a.mp3",
+      "bytes": 562269,
+      "sha256": "eae2bdca503567f50973cc96e1c4c3c0e6690ecb64d5272335656a87763ebb1d",
+      "summary_sha256": "cc2681a2a0939ea94841e72255bcca6c0d6daaf6b1ab32446021fe0d6fd68935",
+      "duration_seconds": 93.62
+    },
+    {
+      "slug": "ai-blog-anthropic-salesforce-in-claude",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-salesforce-in-claude.zh.17b0edf429acba31.mp3",
+      "bytes": 512445,
+      "sha256": "f124692fe5e8d42aaf73308bbe5d5e0e138309be726e4614022b6e726b4ee8bb",
+      "summary_sha256": "1cc2370dd79da4b4b8ef8a9511e7fe49cd0fab624c672d503a3093b8f7c7db58",
+      "duration_seconds": 85.32
+    },
+    {
+      "slug": "ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process.en.3495ac333fb73791.mp3",
+      "bytes": 624333,
+      "sha256": "38b20306ba0813683614c420a513630cf587b241cc9a57b96ba2cdce1f2859a9",
+      "summary_sha256": "acb23703714de2749993b635d238da12d8c7d0846dccf014a61d1c6a34e7ecea",
+      "duration_seconds": 103.96
+    },
+    {
+      "slug": "ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process.zh.26647b4453b07abf.mp3",
+      "bytes": 524109,
+      "sha256": "b9653258e708f1ca9508f1a7efaf0782baa2d415eca41de436b1f9cf5f6e6a4c",
+      "summary_sha256": "d03b5ec461408d35871016d07ba14fcb82521af3ed213b8659ad4f32676495b7",
+      "duration_seconds": 87.26
+    },
+    {
+      "slug": "ai-blog-anthropic-the-ai-native-sdlc-playbook",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-the-ai-native-sdlc-playbook.en.34cd30ae51430939.mp3",
+      "bytes": 657741,
+      "sha256": "61fc7240d6265276ff9bed28992545916853141e921af2d701db17bcef472fc3",
+      "summary_sha256": "9eefea82111264f2493d5aa95eb3b070c1da384d41f49c81abae50a8c064bd19",
+      "duration_seconds": 109.52
+    },
+    {
+      "slug": "ai-blog-anthropic-the-ai-native-sdlc-playbook",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-anthropic-the-ai-native-sdlc-playbook.zh.3241069ed0767de6.mp3",
+      "bytes": 520077,
+      "sha256": "ff733c023d2bf41b8f430f522f5099aac8f5875ff8c14741cb5d9b171b0f515f",
+      "summary_sha256": "351db9986c492f9f9235de3b48a27382ab012593ccff6d5c9ddd5e6938f75cdd",
+      "duration_seconds": 86.58
+    },
+    {
+      "slug": "ai-blog-openai-building-frontend-uis-with-codex-and-figma",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-building-frontend-uis-with-codex-and-figma.en.767d5d262fc442d4.mp3",
+      "bytes": 779421,
+      "sha256": "9534e0527c4a5e76400fdad822b291fc03fb0b0ae73344c1684b45d8061345c2",
+      "summary_sha256": "a7d94fd322f97209e3ee9795b83c6a040b3647cf3f0b3cdf00767d77230fd8c4",
+      "duration_seconds": 129.81
+    },
+    {
+      "slug": "ai-blog-openai-building-frontend-uis-with-codex-and-figma",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-building-frontend-uis-with-codex-and-figma.zh.e1cc7247bde00635.mp3",
+      "bytes": 652989,
+      "sha256": "fad009da300c0238daca5d6efd146576cb6cd096df0ad4d83cae7fe006519830",
+      "summary_sha256": "c54666b50e3c61dff6b60b4542a742308c45e91c5ab672419143c496e30a873d",
+      "duration_seconds": 108.74
+    },
+    {
+      "slug": "ai-blog-openai-codex-as-a-platform",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-codex-as-a-platform.en.01cc0500fdb69b0a.mp3",
+      "bytes": 1663437,
+      "sha256": "5a691b1987383b0d568e7e5d24fcd2c5f5fe663cec2f313ad8f4303b3de5c052",
+      "summary_sha256": "2b22969cdbee5d33e843acdcc9bd935d671ca69a0ab05a4a223f259ddef9d3ef",
+      "duration_seconds": 277.13
+    },
+    {
+      "slug": "ai-blog-openai-codex-as-a-platform",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-codex-as-a-platform.zh.52b610898c49643d.mp3",
+      "bytes": 1458957,
+      "sha256": "e6c9c82ab27f290e3aa0e5d6bdce2a7bbff3b7c31113cfec6fbae025ae949027",
+      "summary_sha256": "17328f0e224b68e998c440824f74f50b6ea6d97c9a755a447b979ac9e0126ed9",
+      "duration_seconds": 243.05
+    },
+    {
+      "slug": "ai-blog-openai-mastering-codex-remote-for-engineering",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-mastering-codex-remote-for-engineering.en.aa6cd15ad270278a.mp3",
+      "bytes": 1504749,
+      "sha256": "f3552e70d2fee5344205c3ccdf1d1dd621eb13849d848070e325976da7087ac4",
+      "summary_sha256": "56c9c6d5dc9f3f3109bd109877cdcfcdfa63a023329e0594f92e56dd3c37221f",
+      "duration_seconds": 250.7
+    },
+    {
+      "slug": "ai-blog-openai-mastering-codex-remote-for-engineering",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-mastering-codex-remote-for-engineering.zh.82dd8b00e62df321.mp3",
+      "bytes": 1396893,
+      "sha256": "1566bf2f1844e3702973c80eac75ed3c4f01308dd7d1587733bc3e5827fa90bf",
+      "summary_sha256": "ab8c5385168f991bf828245dadeb4e37ae9b17070639a14e257cfd2d8469a74c",
+      "duration_seconds": 232.72
+    },
+    {
+      "slug": "ai-blog-openai-one-year-of-responses",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-one-year-of-responses.en.464f0c33491b647b.mp3",
+      "bytes": 536781,
+      "sha256": "63bbb121ac878e1f18f1325b8b877cb3142b091b81731c2f73cd6f9db54f074e",
+      "summary_sha256": "5619e8c9bebd8804c4922baa4ea0507f5a417d0d90d2cf7a6c9d4bbe4ee61f02",
+      "duration_seconds": 89.36
+    },
+    {
+      "slug": "ai-blog-openai-one-year-of-responses",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-one-year-of-responses.zh.b51b9aadc0894c1e.mp3",
+      "bytes": 516765,
+      "sha256": "fcbe485c95e9ea06db35658db51bcc2503b12c5d0a29869b20ed16e733ec6b83",
+      "summary_sha256": "0fae6ff54c325c8f31aa7ffef19c2f1aa32dd3604664ae176592d8e33b478254",
+      "duration_seconds": 86.02
+    },
+    {
+      "slug": "ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra.en.c910bc2907fab8f1.mp3",
+      "bytes": 751485,
+      "sha256": "c317dc7b2b1ebd3b93b2765af5769590c0f4bd29f1e11b98711f0e00cdec5b6d",
+      "summary_sha256": "55c65e11370bffa472842b2423cf7efe30dd63808e3bcb9326d524e8ce78ad62",
+      "duration_seconds": 125.14
+    },
+    {
+      "slug": "ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra.zh.1cd54797aa265f38.mp3",
+      "bytes": 625629,
+      "sha256": "452b7ee105d088aa6aa7d441ec1657fbf5f18e2ca4afa5068bd8ed18f8081629",
+      "summary_sha256": "945df9083f21cd84930df9851046f342b39e8488dcf669fcb262a125082f073a",
+      "duration_seconds": 104.18
+    },
+    {
+      "slug": "ai-blog-openai-run-long-horizon-tasks-with-codex",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-run-long-horizon-tasks-with-codex.en.04616a66dd95bd5b.mp3",
+      "bytes": 526989,
+      "sha256": "607e91878ada67cb0eb957914b7b94fd8484e760f6b8304dbbc8252361c4183b",
+      "summary_sha256": "142a45f1cd2d31493f5b628c011c04f3a36a3d78bb854e7428d11396bc90a98e",
+      "duration_seconds": 87.74
+    },
+    {
+      "slug": "ai-blog-openai-run-long-horizon-tasks-with-codex",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-run-long-horizon-tasks-with-codex.zh.3eb40000391103cb.mp3",
+      "bytes": 386157,
+      "sha256": "9d41159b29893cef2e6072d272342c2c1f12406c30340c25f3ac46a3ab5bcaae",
+      "summary_sha256": "89c94c5a327d3f15b9f6699be6bfac24d8c22b6565d1c37a3a7fb4e7889993c7",
+      "duration_seconds": 64.25
+    },
+    {
+      "slug": "ai-blog-openai-skills-agents-sdk",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-skills-agents-sdk.en.8c3f75cb6f289deb.mp3",
+      "bytes": 508845,
+      "sha256": "50d4456e0575c3b70627a28c9d6c6c99e112464e05ed29fdbe6538adcdc12eed",
+      "summary_sha256": "fb821425fa86f1cec42da9ef85cada05ece623ee36466b6049b03615cfc965c7",
+      "duration_seconds": 84.72
+    },
+    {
+      "slug": "ai-blog-openai-skills-agents-sdk",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-skills-agents-sdk.zh.68f482a3735e714f.mp3",
+      "bytes": 426909,
+      "sha256": "b1d1d65a9fb9b4c07e0f092814366f7dcddf9f58cf3a51ddcf1e8195ecaacd8d",
+      "summary_sha256": "91697e91f0f527eb983a4bc3490cddcc2f344cf61242446a5fdf22c2830f4af0",
+      "duration_seconds": 71.06
+    },
+    {
+      "slug": "ai-blog-openai-skills-shell-tips",
+      "lang": "en",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-skills-shell-tips.en.85e02cde5f21ca11.mp3",
+      "bytes": 505245,
+      "sha256": "079795cdf41c0f932ea4561b1fb644f6922637e080083106f3b64b6513035b0a",
+      "summary_sha256": "dd619499f1990803d7a75dbc0f1540fbf32564c1f92ef46413520b9a18d1a404",
+      "duration_seconds": 84.1
+    },
+    {
+      "slug": "ai-blog-openai-skills-shell-tips",
+      "lang": "zh",
+      "published_on": "2026-09-28",
+      "asset": "2026-09-28_ai-blog-openai-skills-shell-tips.zh.64006e890f765e56.mp3",
+      "bytes": 399693,
+      "sha256": "e97ba4952ee140614be520e48006d940d5d025ec4a703b071cd681044dc3a954",
+      "summary_sha256": "10963bc950c2e70241514771c4662110c6a90b85b9c6df143e12b48b513ab87e",
+      "duration_seconds": 66.52
     }
   ]
 }
