@@ -2,6 +2,7 @@
 layout: post
 title: IDE 上下文可以缩短智能体反馈回路
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-27'
 lang: zh
 slug: ai-blog-openai-skyscanner-codex-jetbrains-mcp
 permalink: /zh/posts/ai-blog-openai-skyscanner-codex-jetbrains-mcp/

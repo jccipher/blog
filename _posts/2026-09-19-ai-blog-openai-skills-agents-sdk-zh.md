@@ -6,6 +6,7 @@ description: >-
   Actions定义仓库特定的工作流程，自动化重复性的工程任务，如验证、发布准备、集成测试和PR审查。该方法显著提高了Python和TypeScript
   SDK的开发吞吐量，PR合并数量显著增加。然而，该系统依赖于明确的定义、条件执行以及模型和脚本职责的清晰划分。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-21'
 lang: zh
 slug: ai-blog-openai-skills-agents-sdk
 permalink: /zh/posts/ai-blog-openai-skills-agents-sdk/

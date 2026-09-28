@@ -7,6 +7,7 @@ description: >-
   enhance the capacity of portfolio managers and analysts by leveraging Claude
   for research, multi-step processes, and tool development.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-19'
 lang: en
 slug: ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process
 permalink: >-

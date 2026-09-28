@@ -2,6 +2,7 @@
 layout: post
 title: 'A Great ChatGPT App Adds Knowledge, Action, or a Better View'
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-30'
 lang: en
 slug: ai-blog-openai-what-makes-a-great-chatgpt-app
 permalink: /posts/ai-blog-openai-what-makes-a-great-chatgpt-app/

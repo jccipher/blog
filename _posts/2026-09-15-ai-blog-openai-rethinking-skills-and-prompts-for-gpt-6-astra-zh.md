@@ -3,6 +3,7 @@ layout: post
 title: 重新思考 GPT-6 Astra 的技能与提示
 description: 本编辑摘要探讨了 OpenAI 对 GPT-6 Astra 的技能和提示优化的指导，强调了清晰、上下文感知的指令的重要性，以提高模型性能并减少低效。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-19'
 lang: zh
 slug: ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra
 permalink: /zh/posts/ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra/

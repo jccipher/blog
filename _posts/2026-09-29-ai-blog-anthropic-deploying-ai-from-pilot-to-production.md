@@ -2,6 +2,7 @@
 layout: post
 title: Moving AI From Pilot to Production Requires Ownership Before Scale
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-30'
 lang: en
 slug: ai-blog-anthropic-deploying-ai-from-pilot-to-production
 permalink: /posts/ai-blog-anthropic-deploying-ai-from-pilot-to-production/

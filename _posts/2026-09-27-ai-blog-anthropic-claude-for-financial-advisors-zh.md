@@ -2,6 +2,7 @@
 layout: post
 title: Claude for Financial Advisors 把准备工作连接到受治理的动作
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-28'
 lang: zh
 slug: ai-blog-anthropic-claude-for-financial-advisors
 permalink: /zh/posts/ai-blog-anthropic-claude-for-financial-advisors/

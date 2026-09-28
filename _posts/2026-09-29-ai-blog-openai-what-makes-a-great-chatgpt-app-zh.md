@@ -2,6 +2,7 @@
 layout: post
 title: 优秀 ChatGPT App 应增加知识、行动或更好的呈现
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-30'
 lang: zh
 slug: ai-blog-openai-what-makes-a-great-chatgpt-app
 permalink: /zh/posts/ai-blog-openai-what-makes-a-great-chatgpt-app/

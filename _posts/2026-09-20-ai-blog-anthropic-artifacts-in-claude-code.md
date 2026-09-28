@@ -7,6 +7,7 @@ description: >-
   artifacts can include PR walkthroughs, system explainers, dashboards, and
   release checklists, which update automatically as the session progresses.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-22'
 lang: en
 slug: ai-blog-anthropic-artifacts-in-claude-code
 permalink: /posts/ai-blog-anthropic-artifacts-in-claude-code/

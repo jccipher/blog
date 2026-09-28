@@ -2,6 +2,7 @@
 layout: post
 title: Cowork's Built-In Browser Separates Delegation from Your Personal Session
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-10-01'
 lang: en
 slug: ai-blog-anthropic-cowork-built-in-browser
 permalink: /posts/ai-blog-anthropic-cowork-built-in-browser/

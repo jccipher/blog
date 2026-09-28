@@ -2,6 +2,7 @@
 layout: post
 title: ChatGPT Apps 需要模型、界面与用户之间的三方契约
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-25'
 lang: zh
 slug: ai-blog-openai-15-lessons-building-chatgpt-apps
 permalink: /zh/posts/ai-blog-openai-15-lessons-building-chatgpt-apps/

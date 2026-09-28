@@ -6,6 +6,7 @@ description: >-
   的开发和应用。报告展示了五个开发者使用 API
   构建代理系统的案例，包括监控平台、深度推理工作流程、黑胶唱片收藏者的对话界面、交互式产品演示和品牌可见性工具。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-20'
 lang: zh
 slug: ai-blog-openai-one-year-of-responses
 permalink: /zh/posts/ai-blog-openai-one-year-of-responses/

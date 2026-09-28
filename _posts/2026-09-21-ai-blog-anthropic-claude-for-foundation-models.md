@@ -8,6 +8,7 @@ description: >-
   Models framework, enabling developers to integrate Claude into their Apple
   apps for complex workflows.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-23'
 lang: en
 slug: ai-blog-anthropic-claude-for-foundation-models
 permalink: /posts/ai-blog-anthropic-claude-for-foundation-models/

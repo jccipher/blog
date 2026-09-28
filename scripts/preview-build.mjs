@@ -13,6 +13,16 @@ const outputRoot = path.join(root, '_site', 'blog');
 const config = yaml.load(await readFile(path.join(root, '_config.yml'), 'utf8'));
 const engine = new Liquid({ strictVariables: false, strictFilters: false });
 
+function publicationDay(value) {
+  if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) throw new Error(`Invalid publication date: ${value}`);
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(date).map(part => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
 engine.registerFilter('relative_url', (value) => `${config.baseurl || ''}${value}`.replace(/\/+/g, '/'));
 engine.registerFilter('absolute_url', (value) => `${config.url || ''}${config.baseurl || ''}${value}`.replace(/([^:]\/)\/+/g, '$1'));
 engine.registerFilter('date_to_xmlschema', (value) => new Date(value).toISOString());
@@ -50,10 +60,16 @@ for (const sourcePath of [...postFiles.map(name => path.join(root, '_posts', nam
     content: html,
     excerpt: stripHtml(firstParagraph),
     summary_audio: summaryAudio,
+    publication_day: publicationDay(source.data.publication_date || source.data.date),
   };
+  record.publication_label = record.publication_day.replaceAll('-', '.');
   const prior = posts.findIndex(p => p.url === record.url);
   if (prior >= 0) posts[prior] = record; else posts.push(record);
 }
+
+posts.sort((left, right) => right.publication_day.localeCompare(left.publication_day)
+  || new Date(right.date) - new Date(left.date)
+  || left.slug.localeCompare(right.slug));
 
 const site = { ...config, posts };
 

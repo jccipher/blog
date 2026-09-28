@@ -5,6 +5,7 @@ description: >-
   OpenAI 展示了 Codex 在执行长期任务方面的进展，通过一个持续 25 小时的实验，GPT-5.3-Codex
   从零开始构建了一个设计工具。重点在于代理能够遵循指令、保持任务焦点并自我纠正，强调了从一次性智能向长期自主工作的转变。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-23'
 lang: zh
 slug: ai-blog-openai-run-long-horizon-tasks-with-codex
 permalink: /zh/posts/ai-blog-openai-run-long-horizon-tasks-with-codex/

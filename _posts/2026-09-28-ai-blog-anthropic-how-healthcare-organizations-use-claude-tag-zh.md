@@ -2,6 +2,7 @@
 layout: post
 title: 医疗团队在无 PHI 工作流中试用 Claude Tag
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-29'
 lang: zh
 slug: ai-blog-anthropic-how-healthcare-organizations-use-claude-tag
 permalink: /zh/posts/ai-blog-anthropic-how-healthcare-organizations-use-claude-tag/

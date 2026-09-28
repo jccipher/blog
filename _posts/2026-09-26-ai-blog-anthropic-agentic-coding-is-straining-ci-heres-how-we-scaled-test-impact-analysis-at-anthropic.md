@@ -2,6 +2,7 @@
 layout: post
 title: Agentic Coding Moves the Bottleneck From Writing Code to Scaling CI
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-27'
 lang: en
 slug: >-
   ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic

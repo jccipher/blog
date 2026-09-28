@@ -5,6 +5,7 @@ description: >-
   全球投资管理公司 T. Rowe Price 已将 Anthropic 的 Claude 扩展至其投资运营中。该整合旨在通过利用 Claude
   的功能，提升投资经理和分析师的效率，支持研究、多步骤流程和工具开发。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-19'
 lang: zh
 slug: ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process
 permalink: >-

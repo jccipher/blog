@@ -2,6 +2,7 @@
 layout: post
 title: 'ChatGPT Apps Require a Three-Way Contract Between Model, UI, and User'
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-25'
 lang: en
 slug: ai-blog-openai-15-lessons-building-chatgpt-apps
 permalink: /posts/ai-blog-openai-15-lessons-building-chatgpt-apps/

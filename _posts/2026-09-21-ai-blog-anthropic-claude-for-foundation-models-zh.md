@@ -5,6 +5,7 @@ description: >-
   Anthropic宣布支持其Claude模型在Apple的Foundation
   Models框架中，使开发者能够将Claude集成到Apple应用中，以处理复杂的任务。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-23'
 lang: zh
 slug: ai-blog-anthropic-claude-for-foundation-models
 permalink: /zh/posts/ai-blog-anthropic-claude-for-foundation-models/

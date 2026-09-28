@@ -7,6 +7,7 @@ description: >-
   integration allows for bidirectional movement of UI elements between Figma and
   code, supporting a more fluid development workflow.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-22'
 lang: en
 slug: ai-blog-openai-building-frontend-uis-with-codex-and-figma
 permalink: /posts/ai-blog-openai-building-frontend-uis-with-codex-and-figma/

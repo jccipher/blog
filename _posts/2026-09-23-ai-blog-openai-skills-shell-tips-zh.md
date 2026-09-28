@@ -2,6 +2,7 @@
 layout: post
 title: 长时运行智能体需要流程、执行与记忆控制
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-24'
 lang: zh
 slug: ai-blog-openai-skills-shell-tips
 permalink: /zh/posts/ai-blog-openai-skills-shell-tips/

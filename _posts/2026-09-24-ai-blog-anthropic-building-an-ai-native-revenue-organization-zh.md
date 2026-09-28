@@ -2,6 +2,7 @@
 layout: post
 title: AI 原生营收运营是一套采用系统，而不只是提示词库
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-25'
 lang: zh
 slug: ai-blog-anthropic-building-an-ai-native-revenue-organization
 permalink: /zh/posts/ai-blog-anthropic-building-an-ai-native-revenue-organization/

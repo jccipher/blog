@@ -9,6 +9,7 @@ description: >-
   platforms, deep reasoning workflows, conversational interfaces, interactive
   product demos, and brand visibility tools.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-20'
 lang: en
 slug: ai-blog-openai-one-year-of-responses
 permalink: /posts/ai-blog-openai-one-year-of-responses/

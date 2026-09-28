@@ -2,6 +2,7 @@
 layout: post
 title: AI 从试点走向生产，必须先建立责任制
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-30'
 lang: zh
 slug: ai-blog-anthropic-deploying-ai-from-pilot-to-production
 permalink: /zh/posts/ai-blog-anthropic-deploying-ai-from-pilot-to-production/

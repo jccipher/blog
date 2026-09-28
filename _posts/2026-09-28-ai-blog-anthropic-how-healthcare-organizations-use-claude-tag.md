@@ -2,6 +2,7 @@
 layout: post
 title: Healthcare Teams Test Claude Tag in PHI-Free Workflows
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-29'
 lang: en
 slug: ai-blog-anthropic-how-healthcare-organizations-use-claude-tag
 permalink: /posts/ai-blog-anthropic-how-healthcare-organizations-use-claude-tag/

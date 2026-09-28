@@ -2,6 +2,7 @@
 layout: post
 title: 'Long-Running Agents Need Procedures, Execution, and Memory Control'
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-24'
 lang: en
 slug: ai-blog-openai-skills-shell-tips
 permalink: /posts/ai-blog-openai-skills-shell-tips/

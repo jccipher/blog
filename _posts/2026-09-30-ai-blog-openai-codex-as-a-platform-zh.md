@@ -2,6 +2,7 @@
 layout: post
 title: Codex 作为平台：智能体循环正在成为基础设施
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-10-01'
 lang: zh
 slug: ai-blog-openai-codex-as-a-platform
 permalink: /zh/posts/ai-blog-openai-codex-as-a-platform/

@@ -5,6 +5,7 @@ description: >-
   OpenAI 推出了 Codex 和 Figma 的新集成，用户可以通过 Figma MCP 服务器从 Codex 生成 Figma
   设计文件。该集成允许用户在 Figma 和代码之间无缝移动 UI 元素，支持更流畅的开发工作流程。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-22'
 lang: zh
 slug: ai-blog-openai-building-frontend-uis-with-codex-and-figma
 permalink: /zh/posts/ai-blog-openai-building-frontend-uis-with-codex-and-figma/

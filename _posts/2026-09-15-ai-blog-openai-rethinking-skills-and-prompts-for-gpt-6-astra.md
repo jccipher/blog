@@ -7,6 +7,7 @@ description: >-
   context-aware instructions to improve model performance and reduce
   inefficiencies.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-19'
 lang: en
 slug: ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra
 permalink: /posts/ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra/

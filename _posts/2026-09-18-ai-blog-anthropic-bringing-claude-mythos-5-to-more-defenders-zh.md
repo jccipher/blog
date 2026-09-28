@@ -5,6 +5,7 @@ description: >-
   Anthropic 正在通过将 Claude Mythos 5
   模型集成到现有工具中，推出支持开源安全的基金，并扩展其网络安全验证计划，以扩大其网络安全能力的使用范围。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-20'
 lang: zh
 slug: ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders
 permalink: /zh/posts/ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders/

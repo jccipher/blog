@@ -10,6 +10,7 @@ description: >-
   need to adapt the SDLC to leverage AI's capabilities, ensuring human oversight
   remains central to governance.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-21'
 lang: en
 slug: ai-blog-anthropic-the-ai-native-sdlc-playbook
 permalink: /posts/ai-blog-anthropic-the-ai-native-sdlc-playbook/

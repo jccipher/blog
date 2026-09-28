@@ -2,6 +2,7 @@
 layout: post
 title: Cowork 内置浏览器：把委托任务与个人会话分开
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-10-01'
 lang: zh
 slug: ai-blog-anthropic-cowork-built-in-browser
 permalink: /zh/posts/ai-blog-anthropic-cowork-built-in-browser/

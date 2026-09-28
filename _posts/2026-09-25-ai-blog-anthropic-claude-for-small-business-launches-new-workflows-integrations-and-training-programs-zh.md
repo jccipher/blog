@@ -2,6 +2,7 @@
 layout: post
 title: Claude for Small Business 从后台任务扩展到经营节奏
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-26'
 lang: zh
 slug: >-
   ai-blog-anthropic-claude-for-small-business-launches-new-workflows-integrations-and-training-programs

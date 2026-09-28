@@ -2,6 +2,7 @@
 layout: post
 title: Codex Remote：把手机当作工程控制平面
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-18'
 lang: zh
 slug: ai-blog-openai-mastering-codex-remote-for-engineering
 permalink: /zh/posts/ai-blog-openai-mastering-codex-remote-for-engineering/

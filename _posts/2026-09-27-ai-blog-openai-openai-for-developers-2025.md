@@ -2,6 +2,7 @@
 layout: post
 title: OpenAI’s 2025 Developer Stack Converged Around Multimodal Agents
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-28'
 lang: en
 slug: ai-blog-openai-openai-for-developers-2025
 permalink: /posts/ai-blog-openai-openai-for-developers-2025/

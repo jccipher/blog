@@ -2,6 +2,7 @@
 layout: post
 title: Salesforce 进入 Claude：把销售行政工作放进智能体循环
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-24'
 lang: zh
 slug: ai-blog-anthropic-salesforce-in-claude
 permalink: /zh/posts/ai-blog-anthropic-salesforce-in-claude/

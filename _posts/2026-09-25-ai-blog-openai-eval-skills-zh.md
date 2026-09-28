@@ -2,6 +2,7 @@
 layout: post
 title: 智能体 Skills 需要行为测试，而不只是写得好的说明
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-26'
 lang: zh
 slug: ai-blog-openai-eval-skills
 permalink: /zh/posts/ai-blog-openai-eval-skills/

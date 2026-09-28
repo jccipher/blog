@@ -2,6 +2,7 @@
 layout: post
 title: 智能体编程把瓶颈从写代码推向 CI 扩展
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-27'
 lang: zh
 slug: >-
   ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic

@@ -2,6 +2,7 @@
 layout: post
 title: 'Codex Remote: Treat the Phone as an Engineering Control Plane'
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-18'
 lang: en
 slug: ai-blog-openai-mastering-codex-remote-for-engineering
 permalink: /posts/ai-blog-openai-mastering-codex-remote-for-engineering/

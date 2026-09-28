@@ -4,6 +4,7 @@ title: AI原生的SDLC操作手册
 description: >-
   本文编辑摘要探讨了Anthropic发布的《AI原生的SDLC操作手册》。该手册提出了一种新的软件开发生命周期（SDLC）方法，将AI集成到每个阶段。文章认为，传统的SDLC流程已不再适用于现代开发，因为AI可以比人类开发者更快地生成代码。它强调了适应AI能力的必要性，确保人类监督在治理中保持核心地位。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-21'
 lang: zh
 slug: ai-blog-anthropic-the-ai-native-sdlc-playbook
 permalink: /zh/posts/ai-blog-anthropic-the-ai-native-sdlc-playbook/

@@ -2,6 +2,7 @@
 layout: post
 title: 语音模型更新瞄准演示与生产之间的差距
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-29'
 lang: zh
 slug: ai-blog-openai-updates-audio-models
 permalink: /zh/posts/ai-blog-openai-updates-audio-models/

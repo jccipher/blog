@@ -2,6 +2,7 @@
 layout: post
 title: 'Codex as a Platform: The Agent Loop Becomes Infrastructure'
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-10-01'
 lang: en
 slug: ai-blog-openai-codex-as-a-platform
 permalink: /posts/ai-blog-openai-codex-as-a-platform/

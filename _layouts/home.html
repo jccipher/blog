@@ -70,7 +70,7 @@ layout: default
           <div class="post-index">0{{ forloop.index }}</div>
           <div class="post-content">
             <div class="post-meta">
-              <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>
+              <time datetime="{{ post.publication_day }}">{{ post.publication_label }}</time>
               <span>{{ post.reading_time | default: '3' }} MIN READ</span>
             </div>
             <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>

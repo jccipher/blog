@@ -2,6 +2,7 @@
 layout: post
 title: OpenAI 2025 开发者栈向多模态智能体汇聚
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-28'
 lang: zh
 slug: ai-blog-openai-openai-for-developers-2025
 permalink: /zh/posts/ai-blog-openai-openai-for-developers-2025/

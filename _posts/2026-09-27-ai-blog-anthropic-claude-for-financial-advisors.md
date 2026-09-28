@@ -2,6 +2,7 @@
 layout: post
 title: Claude for Financial Advisors Connects Preparation to Governed Action
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-28'
 lang: en
 slug: ai-blog-anthropic-claude-for-financial-advisors
 permalink: /posts/ai-blog-anthropic-claude-for-financial-advisors/

@@ -2,6 +2,7 @@
 layout: post
 title: 'AI-Native Revenue Operations Are an Adoption System, Not a Prompt Library'
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-25'
 lang: en
 slug: ai-blog-anthropic-building-an-ai-native-revenue-organization
 permalink: /posts/ai-blog-anthropic-building-an-ai-native-revenue-organization/

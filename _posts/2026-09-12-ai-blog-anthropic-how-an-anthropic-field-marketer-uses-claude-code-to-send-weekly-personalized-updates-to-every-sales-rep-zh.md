@@ -2,6 +2,7 @@
 layout: post
 title: Claude Code 销售简报：让反馈成为规格
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-18'
 lang: zh
 slug: >-
   ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep

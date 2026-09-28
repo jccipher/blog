@@ -12,6 +12,7 @@ description: >-
   conditional execution, and careful separation of model and script
   responsibilities.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-21'
 lang: en
 slug: ai-blog-openai-skills-agents-sdk
 permalink: /posts/ai-blog-openai-skills-agents-sdk/

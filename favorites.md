@@ -15,7 +15,7 @@ description: "Articles saved on this device."
 {% for post in localized_posts %}
 <article class="saved-post" data-favorite-item data-page-id="{{ post.url | escape }}" hidden>
 <div>
-<time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>
+<time datetime="{{ post.publication_day }}">{{ post.publication_label }}</time>
 <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
 <p>{{ post.excerpt | strip_html | normalize_whitespace | truncate: 135 }}</p>
 </div>

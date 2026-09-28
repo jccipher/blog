@@ -2,6 +2,7 @@
 layout: post
 title: Voice Model Updates Target the Gap Between Demos and Production
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-29'
 lang: en
 slug: ai-blog-openai-updates-audio-models
 permalink: /posts/ai-blog-openai-updates-audio-models/

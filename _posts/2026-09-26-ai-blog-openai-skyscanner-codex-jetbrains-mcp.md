@@ -2,6 +2,7 @@
 layout: post
 title: IDE Context Can Shorten the Agent Feedback Loop
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-27'
 lang: en
 slug: ai-blog-openai-skyscanner-codex-jetbrains-mcp
 permalink: /posts/ai-blog-openai-skyscanner-codex-jetbrains-mcp/

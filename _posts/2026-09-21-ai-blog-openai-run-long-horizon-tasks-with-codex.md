@@ -8,6 +8,7 @@ description: >-
   task, and self-correct, emphasizing the shift from one-shot intelligence to
   extended autonomous work.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-23'
 lang: en
 slug: ai-blog-openai-run-long-horizon-tasks-with-codex
 permalink: /posts/ai-blog-openai-run-long-horizon-tasks-with-codex/

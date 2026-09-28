@@ -6,6 +6,7 @@ description: >-
   applications, integrating it into existing tools and launching initiatives to
   support open-source security.
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-20'
 lang: en
 slug: ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders
 permalink: /posts/ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders/

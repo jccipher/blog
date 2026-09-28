@@ -2,6 +2,7 @@
 layout: post
 title: 'Salesforce in Claude: Administrative Work Moves Into the Agent Loop'
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-24'
 lang: en
 slug: ai-blog-anthropic-salesforce-in-claude
 permalink: /posts/ai-blog-anthropic-salesforce-in-claude/

@@ -5,6 +5,7 @@ description: >-
   Anthropic 宣布 Claude Code 现在支持工件功能，允许用户从他们的会话中生成实时、可共享的网页。这些工件可以包括 PR
   演示、系统说明、仪表板和发布检查清单，并且会随着会话的进行自动更新。
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-22'
 lang: zh
 slug: ai-blog-anthropic-artifacts-in-claude-code
 permalink: /zh/posts/ai-blog-anthropic-artifacts-in-claude-code/

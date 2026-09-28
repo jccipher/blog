@@ -2,6 +2,7 @@
 layout: post
 title: 'Claude Code for Sales Briefings: Feedback Becomes the Specification'
 date: '2026-09-28 07:53:00 +0800'
+publication_date: '2026-09-18'
 lang: en
 slug: >-
   ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep
