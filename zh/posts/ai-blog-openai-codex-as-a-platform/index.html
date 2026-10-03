@@ -1,0 +1,259 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Codex 作为平台：智能体循环正在成为基础设施 · LATENTX</title>
+    <meta name="description" content="解析开放的 Codex harness、不同集成层，以及领域应用为何仍应掌管上下文、同意与正式记录。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Codex 作为平台：智能体循环正在成为基础设施 · LATENTX">
+    <meta property="og:description" content="解析开放的 Codex harness、不同集成层，以及领域应用为何仍应掌管上下文、同意与正式记录。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/ai-blog-openai-codex-as-a-platform/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-blog-openai-codex-as-a-platform/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-blog-openai-codex-as-a-platform/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-blog-openai-codex-as-a-platform/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/ai-blog-openai-codex-as-a-platform/"
+    data-page-title="Codex 作为平台：智能体循环正在成为基础设施"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/ai-blog-openai-codex-as-a-platform/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-blog-openai-codex-as-a-platform/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-blog-openai-codex-as-a-platform.md</div>
+    <h1>Codex 作为平台：智能体循环正在成为基础设施</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-01">发布于 2026.10.01</time>
+      <span>5 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#OpenAI</span><span>#AI Research</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-openai-codex-as-a-platform/" data-page-title="Codex 作为平台：智能体循环正在成为基础设施" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-09-28_ai-blog-openai-codex-as-a-platform.zh.52b610898c49643d.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>OpenAI 的平台论点是：真正可复用的产品不是统一聊天界面，而是 Codex 下方的智能体循环——上下文、工具、状态、进度、沙箱、批准与恢复——并把它嵌入本来就理解业务的界面。</p>
+</blockquote>
+<h2>编辑摘要</h2>
+<p>Codex 应用、CLI 与 IDE 扩展，是同一套开源 harness 的不同表面。OpenAI 把 harness 描述为执行层：帮助模型理解任务，保留并压缩上下文，使用工具，流式报告进度，处理失败，请求批准，并让工作跨多个回合持续。</p>
+<p>这个区别很重要，因为一次强大的模型调用还不是完整的智能体产品。专业工作流还需要持久状态、可观察事件、权限边界，以及从建议到动作的受控路径。OpenAI 引用 ARC-AGI-3 结果说明 harness 设计会实质影响表现：保留推理与上下文压缩让 GPT-5.6 Sol 的得分从 13.3% 提升到 38.3%，同时把输出 token 降低到原来的六分之一。</p>
+<p>文章给出三种集成层。<code>codex exec</code> 适合边界明确的脚本、CI 任务和非交互后台工作；Codex SDK 适合由应用代码创建、恢复并流式接收智能体任务；Codex app-server 则向需要持久会话、工具事件、中断和批准处理的产品开放更完整的生命周期与客户端协议。</p>
+<p>开源让开发者能够检查应用与模型之间的执行层，但不代表服务的所有部分都在本地或全部开放。已发布的 CLI、SDK 与 app-server 提供 harness 和集成界面；模型访问与托管服务仍然是独立部分。</p>
+<p>最关键的架构边界，是把宿主应用和 harness 的责任分开。应用掌管领域上下文、业务规则、正式记录、界面状态与用户同意，并可暴露严格限定的 MCP 数据和动作；Codex 掌管智能体循环与沙箱执行。工具修改记录后，应用应刷新自己的业务视图，而不能把聊天记录当作系统事实来源。</p>
+<p>OpenAI 的 Relay 示例把分工具体化。用户在虚构的运输仪表盘中选择延误货件，再点击比较恢复方案。应用提供货件上下文，Codex 获取最新数据并解释选项；重新订舱必须获得人工批准。智能体进入原有领域界面，而不是要求操作人员在空白对话框里重建整个案例。</p>
+<p>由此可以得到四条产品原则：</p>
+<ol>
+<li><strong>从工作流的原生对象开始。</strong> 货件、事故、客户账号或文档应成为任务锚点。</li>
+<li><strong>暴露窄工具，而不是环境级权限。</strong> 宿主决定有哪些数据和动作，以及哪些必须批准。</li>
+<li><strong>让正式记录留在对话之外。</strong> 智能体事件解释过程，领域记录定义运营事实。</li>
+<li><strong>选择满足需求的最小集成层。</strong> 后台命令不必承担 app-server 的复杂度，持久产品也不该被塞进一次性进程。</li>
+</ol>
+<p>这是一篇平台介绍，案例展示的是推荐架构，没有比较部署成本、可靠性或跨供应商可迁移性。身份认证、多租户、审计保留、错误恢复、模型升级与降级路径，仍需每个团队按自己的风险设计。</p>
+<p>我的结论是，开放 harness 把智能体行为变成了一种集成原语，但周围的产品仍然是治理者。机会并不是用聊天框替代所有界面，而是把一条能力强、边界清晰的循环，放进人们本来就能理解上下文并行使权限的视图中。</p>
+<hr>
+<blockquote>
+<p><strong>来源分界：</strong> 下方是基于原文的转述与出处信息。除非元数据记录了兼容的明确许可，完整原文请通过官方链接阅读。</p>
+</blockquote>
+<h2>来源材料</h2>
+<h3>OpenAI：Codex as a platform: build on the open agent harness</h3>
+<ul>
+<li><strong>发布日期：</strong> 2026 年 8 月 19 日</li>
+<li><strong>作者：</strong> Nicolas Bonamy、Derrick Choi</li>
+<li><strong>英文原文：</strong> <a href="https://developers.openai.com/blog/codex-as-a-platform">阅读原文</a></li>
+<li><strong>官方中文版：</strong> 未找到</li>
+<li><strong>转载说明：</strong> 本文仅作摘要与出处标注，原文版权归 OpenAI 所有。</li>
+</ul>
+<h4>原文要点</h4>
+<p>原文定义了 Codex harness，说明上下文保留、工具使用、流式事件、沙箱、批准和多回合状态为什么不同于一次模型调用，并把 CLI、SDK 和 app-server 对应到不同类型的集成需求。</p>
+<p>文章主张领域应用继续掌管界面上下文、正式记录、业务规则、工具和用户同意，Codex 则提供智能体循环。Relay 运输运营示例展示了带上下文的任务启动、MCP 数据获取、可见进度与关键写操作前的人工批准。结尾把模式扩展到运营、客服、安全、销售和税务等非工程场景。</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-openai-codex-as-a-platform/" data-page-title="Codex 作为平台：智能体循环正在成为基础设施" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

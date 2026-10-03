@@ -1,0 +1,241 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Codex Remote: Treat the Phone as an Engineering Control Plane · LATENTX</title>
+    <meta name="description" content="An analysis of OpenAI&#39;s Codex Remote field guide across task scoping, steering, side chats, goals, review, permissions, and context management.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Codex Remote: Treat the Phone as an Engineering Control Plane · LATENTX">
+    <meta property="og:description" content="An analysis of OpenAI&#39;s Codex Remote field guide across task scoping, steering, side chats, goals, review, permissions, and context management.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/ai-blog-openai-mastering-codex-remote-for-engineering/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-blog-openai-mastering-codex-remote-for-engineering/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-blog-openai-mastering-codex-remote-for-engineering/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-blog-openai-mastering-codex-remote-for-engineering/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/ai-blog-openai-mastering-codex-remote-for-engineering/"
+    data-page-title="Codex Remote: Treat the Phone as an Engineering Control Plane"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/ai-blog-openai-mastering-codex-remote-for-engineering/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-blog-openai-mastering-codex-remote-for-engineering/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-blog-openai-mastering-codex-remote-for-engineering.md</div>
+    <h1>Codex Remote: Treat the Phone as an Engineering Control Plane</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-18">PUBLISHED 2026.09.18</time>
+      <span>6 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#OpenAI</span><span>#AI Research</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/ai-blog-openai-mastering-codex-remote-for-engineering/" data-page-title="Codex Remote: Treat the Phone as an Engineering Control Plane" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">Listen to the summary · English</h2>
+    <p>AI-generated narration of the editorial summary only, not the original article.</p>
+    <audio controls preload="none" aria-label="English summary audio">
+      <source src="/blog/assets/audio/2026-09-28_ai-blog-openai-mastering-codex-remote-for-engineering.en.aa6cd15ad270278a.mp3" type="audio/mpeg">
+      Your browser does not support audio playback.
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">Back 15s</button>
+      <button type="button" data-audio-seek="15">Forward 15s</button>
+      <label>Speed <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">Audio is temporarily unavailable. The full text remains available below.</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>OpenAI&#39;s Remote guide argues that a phone should not imitate a tiny terminal. It should expose the few decisions that keep remote agent work correctly scoped, safely authorized, and easy to review while computation stays on the connected development machine.</p>
+</blockquote>
+<h2>Editorial summary</h2>
+<p>Thomas Ricouard frames the ChatGPT mobile app as a control plane for Codex work running on a Mac, Windows machine, devbox, or other connected host. The phone selects the repository and environment, starts or redirects work, answers approvals, inspects changes, and organizes tasks. This mental model is more useful than remote desktop because it optimizes for decisions rather than reproducing every desktop affordance.</p>
+<p>The workflow begins with execution context. A user chooses the host, workspace, branch, or isolated worktree before the first prompt and lets environment setup complete. Files, photos, screenshots, skills, and plugins can accompany the prompt when they remove ambiguity. The principle is simple: ten seconds spent choosing the right boundary can prevent cleanup after work starts in the wrong place.</p>
+<p>The article makes a sharp distinction between Queue and Steer. Queue holds a follow-up until the current turn completes; Steer injects direction into active work. Queue is the safer default for additional tasks or tests. Steer is appropriate when the current trajectory is becoming costly or incorrect. Treating every new thought as steering can fragment execution, so Remote also provides side chats for questions that need current context without taking ownership of the main task.</p>
+<p>Plan and Goal serve different time horizons. A plan proposes the path for a risky or underspecified change. A goal preserves the completion condition across multiple iterations. Ricouard recommends inspecting a plan first and then making the accepted outcome durable when implementation, tests, review, and cleanup will span several turns.</p>
+<p>Remote&#39;s review loop exposes changed-file summaries, diffs, source context, inline comments, and branch comparisons. It is not presented as a replacement for a large screen. Its advantage is that many reviews are blocked by one or two decisions, which can be made promptly from a phone. Likewise, approval controls should be scoped: grant the narrowest permission that keeps trusted work moving, and ask for explanation when effects are unclear.</p>
+<p>The field guide also treats conversation state as an operational resource. Status reveals workspace and context information; compaction preserves the same objective while reducing accumulated history; forking creates a new primary task when direction diverges; side chats remain lightweight questions. Renaming, pinning, archiving, notifications, and a command palette help turn the task list into a small operations desk.</p>
+<p>Five example patterns—release captain, interrupt-driven bug fix, mobile reviewer, long-running objective, and multi-machine operator—show where the interface is strongest. Each depends on good boundaries and review points rather than unattended autonomy.</p>
+<p>The article is a practitioner guide, not a productivity or safety study. It does not measure completion time, interruption cost, approval error rates, or mobile review defects against desktop workflows. Availability also depends on host, app version, and account configuration. My takeaway is that Remote&#39;s useful abstraction is delegated execution with human control over consequential transitions. The phone works best when it carries decisions and evidence, not the entire development environment.</p>
+<hr>
+<blockquote>
+<p><strong>Source boundary:</strong> The section below contains a sourced paraphrase and attribution. Unless the metadata records explicit compatible permission, read the complete original at the official link.</p>
+</blockquote>
+<h2>Source material</h2>
+<h3>OpenAI: Mastering remote engineering work from your phone</h3>
+<ul>
+<li><strong>Published:</strong> June 23, 2026</li>
+<li><strong>Author:</strong> Thomas Ricouard</li>
+<li><strong>Original:</strong> <a href="https://developers.openai.com/blog/mastering-codex-remote-for-engineering">Read the article</a></li>
+<li><strong>Official Chinese edition:</strong> Not found</li>
+<li><strong>Reuse:</strong> Summary and attribution; original copyright remains with OpenAI.</li>
+</ul>
+<h4>What the original covers</h4>
+<p>The field guide covers host and worktree selection, attachments, skills and plugins, Queue versus Steer, side chats, plans, durable goals, mobile diff review, inline comments, approvals, context status, compaction, forks, task organization, notifications, shortcuts, and the command palette.</p>
+<p>It closes with five mobile workflow patterns and a larger design lesson: mobile software should surface the decisions that matter away from a desk instead of shrinking a desktop interface. The piece provides detailed product guidance but no comparative benchmark.</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/ai-blog-openai-mastering-codex-remote-for-engineering/" data-page-title="Codex Remote: Treat the Phone as an Engineering Control Plane" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

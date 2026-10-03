@@ -1,0 +1,255 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Claude in Chrome 全面开放：自主操作重新划定风险边界 · LATENTX</title>
+    <meta name="description" content="解析 Claude in Chrome 的全面开放、自主操作、分层提示词注入防御与仍然存在的风险。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Claude in Chrome 全面开放：自主操作重新划定风险边界 · LATENTX">
+    <meta property="og:description" content="解析 Claude in Chrome 的全面开放、自主操作、分层提示词注入防御与仍然存在的风险。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/ai-blog-anthropic-claude-in-chrome-generally-available/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-blog-anthropic-claude-in-chrome-generally-available/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-blog-anthropic-claude-in-chrome-generally-available/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-blog-anthropic-claude-in-chrome-generally-available/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/ai-blog-anthropic-claude-in-chrome-generally-available/"
+    data-page-title="Claude in Chrome 全面开放：自主操作重新划定风险边界"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/ai-blog-anthropic-claude-in-chrome-generally-available/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-blog-anthropic-claude-in-chrome-generally-available/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-blog-anthropic-claude-in-chrome-generally-available.md</div>
+    <h1>Claude in Chrome 全面开放：自主操作重新划定风险边界</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-08">发布于 2026.09.08</time>
+      <span>4 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#Anthropic</span><span>#AI Research</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-anthropic-claude-in-chrome-generally-available/" data-page-title="Claude in Chrome 全面开放：自主操作重新划定风险边界" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-09-08_ai-blog-anthropic-claude-in-chrome-generally-available.zh.6786e35ed916f09a.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>Claude in Chrome 全面开放后更容易部署，但自动批准操作改变了安全问题的重心。关键不再是智能体能否点击，而是网页内容、用户意图和每个拟执行动作，能否在点击前得到可靠校验。</p>
+</blockquote>
+<h2>编辑摘要</h2>
+<p>Anthropic 宣布 Claude in Chrome 已面向所有付费 Claude 计划开放。扩展可以跨标签页工作，并操作没有原生连接器的网站，包括内部仪表盘、遗留系统和供应商门户，同时沿用浏览器中已经登录的账号。</p>
+<p>风险影响最大的变化，是自动批准操作。Claude 不再必须为每次导航、点击或文本输入请求人工确认，而可以自行批准它判断为安全的动作。安全分类器会把拟执行动作与用户最初的请求进行比较，发现不一致就阻止；用户也可以关闭该功能，恢复逐项确认。</p>
+<p>Anthropic 用分层的提示词注入防御解释为什么现在扩大开放。网页内容通过工具结果进入模型，因此专门训练的探针会先检查结果中是否存在可疑指令，并提醒 Claude 谨慎处理。公司还持续扩充攻击样本库，来源包括自动攻击系统、外部红队与真实世界监控；一旦当前模型被新攻击突破，相应样本会进入后续训练和线上防护。</p>
+<p>文章给出的评测数字很有价值，但需要谨慎解读。在更强的新攻击集上，攻击到达未附加额外防护的模型后，Opus 4.5 的成功率为 17.6%，Opus 5 为 3.8%。加入探针和自动批准分类器后，Anthropic 报告 Sonnet 5、Opus 5 与 Mythos 5 没有成功攻击，Fable 5 为 0.3%；人工复核认为残留成功案例均属低严重度。</p>
+<p>这些结果并不意味着浏览器智能体从此绝对安全。Anthropic 明确说提示词注入仍在演化；不同结果还涉及模型、攻击集、评分流程和人工复核方式的变化。观测到零成功率，只能说明特定样本和测试框架下的表现，不能变成对所有未来网页的数学保证。</p>
+<p>实际部署时有三条边界值得保留：</p>
+<ol>
+<li><strong>自动批准必须可以随时撤回。</strong> 处理敏感业务的团队需要快速恢复到逐项人工确认。</li>
+<li><strong>域名策略可以收窄暴露面。</strong> 企业管理员能够限制扩展只在批准域名运行，减少带登录态访问的范围。</li>
+<li><strong>浏览器权限不等于桌面权限。</strong> 此版本只支持 Chrome；访问本地文件和其他应用仍需桌面端，也尚未覆盖移动端和其他 Chromium 浏览器。</li>
+</ol>
+<p>我的结论是，自主性的质量不应按“少打断人多少次”衡量，而应看中断策略是否准确。优秀的浏览器智能体不是点击得最自由，而是能稳定区分日常推进与那些必须因内容、意图或后果而请人复核的时刻。</p>
+<hr>
+<blockquote>
+<p><strong>来源分界：</strong> 原文出处如下；语音仅覆盖摘要。</p>
+</blockquote>
+<h2>来源材料</h2>
+<h3>Anthropic：Claude in Chrome is generally available</h3>
+<ul>
+<li><strong>发布日期：</strong> 2026 年 8 月 26 日</li>
+<li><strong>英文原文：</strong> <a href="https://claude.com/blog/claude-in-chrome-generally-available">阅读原文</a></li>
+<li><strong>官方中文版：</strong> 未找到</li>
+<li><strong>转载说明：</strong> 本文仅作摘要与出处标注，原文版权归 Anthropic 所有。</li>
+</ul>
+<h4>原文要点</h4>
+<p>原文宣布 Claude in Chrome 向所有付费计划开放，并引入由安全分类器保护的自动操作批准。扩展可通过已有浏览器会话阅读和操作网站，也能覆盖没有连接器的系统。</p>
+<p>文章的大部分篇幅用于介绍提示词注入防御，包括持续更新的攻击训练集、检查工具结果的探针、把动作与用户请求对照的分类器，以及升级后的红队评测。结尾列出了安装方式、企业域名控制与当前平台限制。</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-anthropic-claude-in-chrome-generally-available/" data-page-title="Claude in Chrome 全面开放：自主操作重新划定风险边界" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

@@ -1,0 +1,547 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Diagnosing MySQL ALTER TABLE Lock Waits: A Five-Minute MDL Runbook · LATENTX</title>
+    <meta name="description" content="A practical runbook for confirming MySQL ALTER TABLE lock waits, understanding the effective timeout, finding the blocking session, and recovering safely.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Diagnosing MySQL ALTER TABLE Lock Waits: A Five-Minute MDL Runbook · LATENTX">
+    <meta property="og:description" content="A practical runbook for confirming MySQL ALTER TABLE lock waits, understanding the effective timeout, finding the blocking session, and recovering safely.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/mysql-alter-table-mdl-diagnosis-runbook/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/mysql-alter-table-mdl-diagnosis-runbook/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/mysql-alter-table-mdl-diagnosis-runbook/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/mysql-alter-table-mdl-diagnosis-runbook/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/mysql-alter-table-mdl-diagnosis-runbook/"
+    data-page-title="Diagnosing MySQL ALTER TABLE Lock Waits: A Five-Minute MDL Runbook"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/mysql-alter-table-mdl-diagnosis-runbook/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/mysql-alter-table-mdl-diagnosis-runbook/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat mysql-alter-table-mdl-diagnosis-runbook.md</div>
+    <h1>Diagnosing MySQL ALTER TABLE Lock Waits: A Five-Minute MDL Runbook</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-04">PUBLISHED 2026.09.04</time>
+      <span>12 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#MySQL</span><span>#DDL</span><span>#Metadata Lock</span><span>#ERROR 1205</span><span>#Incident Response</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/mysql-alter-table-mdl-diagnosis-runbook/" data-page-title="Diagnosing MySQL ALTER TABLE Lock Waits: A Five-Minute MDL Runbook" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>An <code>ALTER TABLE</code> is stuck in production and eventually returns <code>ERROR 1205 (HY000): Lock wait timeout exceeded</code>. Is it really a Metadata Lock? How long will it wait, which session is blocking it, and how can the change be completed without turning one failed DDL into a larger outage?</p>
+</blockquote>
+<p>This article is the operational companion to <a href="/blog/posts/mysql-alter-table-lock-wait-timeout-postmortem/">the full production postmortem</a>. It turns the investigation into a reusable, five-minute incident runbook.</p>
+<h2>TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Practical answer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>How do I confirm the problem?</td>
+<td>Run <code>SHOW FULL PROCESSLIST</code>. If the DDL state is <code>Waiting for table metadata lock</code>, confirm the relationship with <code>sys.schema_table_lock_waits</code> or <code>performance_schema.metadata_locks</code>.</td>
+</tr>
+<tr>
+<td>How long before it fails?</td>
+<td>InnoDB row locks use <code>innodb_lock_wait_timeout</code>, normally 50 seconds by default. Metadata Locks use <code>lock_wait_timeout</code>, normally 31,536,000 seconds. Session overrides and deployment deadlines often make the observed wait shorter.</td>
+</tr>
+<tr>
+<td>Who is blocking the table?</td>
+<td><code>sys.schema_table_lock_waits</code> directly exposes <code>waiting_pid</code> and <code>blocking_pid</code>. Correlate the blocker with <code>information_schema.innodb_trx</code> and the Processlist.</td>
+</tr>
+<tr>
+<td>How do I finish the change quickly?</td>
+<td>Stop blind retries, capture evidence, let a healthy short transaction finish, or have the owner commit/roll back. Use <code>KILL CONNECTION</code> only after impact review, then rerun the DDL and verify the schema.</td>
+</tr>
+</tbody></table>
+<p>The key qualification is:</p>
+<blockquote>
+<p><strong><code>ERROR 1205</code> is evidence of a lock wait timeout, not proof that the wait was specifically an MDL wait.</strong></p>
+</blockquote>
+<h2>1. First classify the wait</h2>
+<p>Both an InnoDB row-lock wait and a server-layer Metadata Lock wait can surface as <code>ERROR 1205</code>. Treat the error code as the start of the diagnosis.</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;ALTER TABLE is slow or returns ERROR 1205&quot;] --&gt; B[&quot;SHOW FULL PROCESSLIST&quot;]
+    B --&gt; C{&quot;State is Waiting for table metadata lock&quot;}
+    C --&gt;|Yes| D[&quot;Inspect sys.schema_table_lock_waits&quot;]
+    D --&gt; E[&quot;MDL path confirmed&quot;]
+    C --&gt;|No| F{&quot;An InnoDB transaction is waiting&quot;}
+    F --&gt;|Yes| G[&quot;Inspect sys.innodb_lock_waits&quot;]
+    G --&gt; H[&quot;Row-lock path confirmed&quot;]
+    F --&gt;|No| I[&quot;Check target, permissions, read-only state, client and pipeline timeouts&quot;]
+
+    classDef start fill:#0B1E19,stroke:#00FF9C,color:#EAFEF5,stroke-width:2px;
+    classDef decision fill:#211B08,stroke:#FFD166,color:#FFF7D6,stroke-width:1.5px;
+    classDef action fill:#101820,stroke:#38BDF8,color:#E6F7FF,stroke-width:1.5px;
+    class A start;
+    class C,F decision;
+    class B,D,E,G,H,I action;
+</code></pre>
+<p>Start from another connection:</p>
+<pre><code class="language-sql">SHOW FULL PROCESSLIST;
+</code></pre>
+<p>The most useful signature for an <code>ALTER TABLE</code> blocked on MDL is:</p>
+<pre><code class="language-text">Id: 205
+Command: Query
+Time: 37
+State: Waiting for table metadata lock
+Info: ALTER TABLE chat_sessions ADD COLUMN robot_id ...
+</code></pre>
+<p>If that state is absent, do not force the incident into an MDL explanation. For InnoDB data-lock waits, inspect:</p>
+<pre><code class="language-sql">SELECT *
+FROM sys.innodb_lock_waits\G
+</code></pre>
+<p>Also rule out a wrong instance or schema, a read-only target, missing <code>ALTER</code> privilege, and a timeout enforced by the database client, proxy, CI job, or deployment platform.</p>
+<h2>2. Confirm who waits for whom</h2>
+<p>On MySQL installations with the <code>sys</code> schema, the fastest MDL query is:</p>
+<pre><code class="language-sql">SELECT
+    object_schema,
+    object_name,
+    waiting_pid,
+    waiting_account,
+    waiting_query,
+    waiting_query_secs,
+    blocking_pid,
+    blocking_account,
+    blocking_lock_type,
+    sql_kill_blocking_query,
+    sql_kill_blocking_connection
+FROM sys.schema_table_lock_waits
+WHERE object_schema = DATABASE()
+  AND object_name IN (
+      &#39;chat_sessions&#39;,
+      &#39;chat_runs&#39;,
+      &#39;chat_messages&#39;
+  )\G
+</code></pre>
+<p>Interpret it as a dependency, not merely a list of busy sessions:</p>
+<pre><code class="language-text">blocking_pid 101
+       │ holds a granted metadata lock
+       ▼
+waiting_pid 205
+ALTER TABLE ... waiting for exclusive MDL
+</code></pre>
+<p>For lower-level evidence, inspect <code>performance_schema.metadata_locks</code>. A waiting request has <code>LOCK_STATUS = &#39;PENDING&#39;</code>; a held lock normally has <code>LOCK_STATUS = &#39;GRANTED&#39;</code>.</p>
+<pre><code class="language-sql">SELECT
+    ml.OBJECT_SCHEMA,
+    ml.OBJECT_NAME,
+    ml.LOCK_TYPE,
+    ml.LOCK_DURATION,
+    ml.LOCK_STATUS,
+    t.PROCESSLIST_ID,
+    t.PROCESSLIST_USER,
+    t.PROCESSLIST_HOST,
+    t.PROCESSLIST_TIME,
+    t.PROCESSLIST_STATE,
+    t.PROCESSLIST_INFO
+FROM performance_schema.metadata_locks AS ml
+JOIN performance_schema.threads AS t
+  ON t.THREAD_ID = ml.OWNER_THREAD_ID
+WHERE ml.OBJECT_SCHEMA = DATABASE()
+  AND ml.OBJECT_NAME = &#39;chat_sessions&#39;
+ORDER BY ml.LOCK_STATUS, t.PROCESSLIST_TIME DESC;
+</code></pre>
+<p>Capture this evidence while the incident is active. Once the lock is released, its row is deleted from <code>metadata_locks</code>; a later successful retry cannot reconstruct the original blocker.</p>
+<h2>3. Why an ordinary SELECT can block DDL</h2>
+<p>MySQL uses Metadata Locks to keep object definitions consistent while statements and transactions access them. A transaction that touches a table can retain its MDL until <code>COMMIT</code> or <code>ROLLBACK</code>. The connection may appear as <code>Sleep</code> even though its transaction is still open.</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant App as Application connection 101
+    participant DB as MySQL
+    participant Deploy as Deployment connection 205
+
+    App-&gt;&gt;DB: BEGIN
+    App-&gt;&gt;DB: SELECT * FROM chat_sessions WHERE id = 42
+    Note over App,DB: The transaction remains open and retains MDL
+    App--&gt;&gt;DB: Connection becomes idle
+    Deploy-&gt;&gt;DB: ALTER TABLE chat_sessions ADD COLUMN ...
+    DB--&gt;&gt;Deploy: Waiting for table metadata lock
+    Note over DB,Deploy: Later requests may queue behind the DDL
+    App-&gt;&gt;DB: COMMIT or ROLLBACK
+    DB--&gt;&gt;Deploy: Exclusive MDL can now be acquired
+</code></pre>
+<p>Inspect the blocking process as a transaction, especially when <code>blocking_query</code> is <code>NULL</code>:</p>
+<pre><code class="language-sql">SELECT
+    trx_id,
+    trx_state,
+    trx_started,
+    trx_mysql_thread_id,
+    trx_rows_locked,
+    trx_rows_modified,
+    trx_query
+FROM information_schema.innodb_trx
+WHERE trx_mysql_thread_id IN (101, 205);
+</code></pre>
+<p>An idle connection with an old <code>trx_started</code> value is a strong clue. The statement that originally touched the table may have finished, but the transaction boundary has not.</p>
+<h2>4. How long will the lock wait?</h2>
+<p>Ask the server instead of relying on defaults:</p>
+<pre><code class="language-sql">SELECT
+    @@GLOBAL.lock_wait_timeout AS global_mdl_timeout_s,
+    @@SESSION.lock_wait_timeout AS session_mdl_timeout_s,
+    @@GLOBAL.innodb_lock_wait_timeout AS global_row_timeout_s,
+    @@SESSION.innodb_lock_wait_timeout AS session_row_timeout_s;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Controls</th>
+<th align="right">MySQL 8.0 default</th>
+<th>Important detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>innodb_lock_wait_timeout</code></td>
+<td>InnoDB row-lock waits</td>
+<td align="right">50 seconds</td>
+<td>It does not govern MDL. On timeout, the current statement is normally rolled back, not automatically the entire transaction.</td>
+</tr>
+<tr>
+<td><code>lock_wait_timeout</code></td>
+<td>Metadata Lock acquisition</td>
+<td align="right">31,536,000 seconds</td>
+<td>The value applies to each metadata-lock attempt. One statement can request multiple locks and therefore wait longer in total.</td>
+</tr>
+<tr>
+<td>Client, proxy, CI, deployment job</td>
+<td>Connection, query, or job lifetime</td>
+<td align="right">Environment-specific</td>
+<td>This outer deadline may end the operation before either MySQL default is reached.</td>
+</tr>
+</tbody></table>
+<p>So a DDL failing after 30 or 60 seconds does not contradict the one-year MDL default. The session may have overridden <code>lock_wait_timeout</code>, or an outer system may have terminated the request. Preserve the original database error, client exit code, and job log to tell those cases apart.</p>
+<p>Increasing the timeout is usually not the first fix. A waiting exclusive DDL can contribute to request queueing; allowing it to wait longer can enlarge the blast radius.</p>
+<h2>5. The five-minute recovery runbook</h2>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;0–1 min: stop retries and capture evidence&quot;] --&gt; B[&quot;1–2 min: identify and classify blocker&quot;]
+    B --&gt; C{&quot;Can the blocker finish safely now&quot;}
+    C --&gt;|Yes| D[&quot;Wait for commit or ask owner to commit or roll back&quot;]
+    C --&gt;|No| E[&quot;Reduce traffic or pause the responsible job&quot;]
+    E --&gt; F{&quot;Termination approved&quot;}
+    F --&gt;|Yes| G[&quot;KILL CONNECTION blocker&quot;]
+    F --&gt;|No| H[&quot;Abort DDL and reschedule&quot;]
+    D --&gt; I[&quot;4–5 min: rerun once and verify schema&quot;]
+    G --&gt; I
+
+    classDef action fill:#101820,stroke:#38BDF8,color:#E6F7FF,stroke-width:1.5px;
+    classDef decision fill:#211B08,stroke:#FFD166,color:#FFF7D6,stroke-width:1.5px;
+    classDef safe fill:#0B1E19,stroke:#00FF9C,color:#EAFEF5,stroke-width:2px;
+    class A,B,D,E,G,H action;
+    class C,F decision;
+    class I safe;
+</code></pre>
+<h3>Minute 0–1: stop amplification and preserve evidence</h3>
+<ul>
+<li>Stop automated retries of the same DDL.</li>
+<li>Save <code>SHOW FULL PROCESSLIST</code> and <code>sys.schema_table_lock_waits</code> output.</li>
+<li>Record the waiting and blocking process IDs, accounts, hosts, transaction age, and SQL.</li>
+<li>Watch application latency, active connections, and the connection-pool queue.</li>
+</ul>
+<h3>Minute 1–2: classify the blocker</h3>
+<table>
+<thead>
+<tr>
+<th>Blocker</th>
+<th>Preferred response</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Healthy short transaction</td>
+<td>Wait briefly for its normal commit.</td>
+</tr>
+<tr>
+<td>Known batch, report, or admin session</td>
+<td>Ask its owner to commit, roll back, or stop it.</td>
+</tr>
+<tr>
+<td>Idle uncommitted application transaction</td>
+<td>Fix the owning service or have the transaction rolled back.</td>
+</tr>
+<tr>
+<td>High business traffic on the target table</td>
+<td>Reduce or temporarily stop the relevant traffic before retrying.</td>
+</tr>
+<tr>
+<td>Unknown or high-risk transaction</td>
+<td>Abort the DDL and escalate; do not guess with <code>KILL</code>.</td>
+</tr>
+</tbody></table>
+<h3>Minute 2–4: release the lock safely</h3>
+<p>Prefer a normal <code>COMMIT</code> or <code>ROLLBACK</code> by the owner. If the connection is abandoned and termination has been reviewed, use the exact <code>blocking_pid</code>:</p>
+<pre><code class="language-sql">KILL CONNECTION 101;
+</code></pre>
+<p><code>KILL QUERY</code> stops only the currently executing statement and leaves the connection alive. It is therefore insufficient for a sleeping connection whose open transaction retains locks. <code>KILL CONNECTION</code> also ends the connection, but rollback and cleanup may still take time; do not expect the lock to disappear instantaneously after a large transaction.</p>
+<p>Never paste <code>sql_kill_blocking_connection</code> into production without verifying the account, host, transaction, affected rows, and business owner.</p>
+<h3>Minute 4–5: retry once, then prove success</h3>
+<p>After the blocker is gone and traffic is stable, rerun the migration once. Then verify the result independently:</p>
+<pre><code class="language-sql">SELECT
+    TABLE_NAME,
+    COLUMN_NAME,
+    COLUMN_TYPE,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;)
+  AND COLUMN_NAME = &#39;robot_id&#39;
+ORDER BY TABLE_NAME;
+</code></pre>
+<p>The release is complete only when the migration command, schema check, and a minimal application read/write check all succeed.</p>
+<h2>6. Make the next ALTER easier to complete</h2>
+<p>For a compatible <code>ADD COLUMN</code> on MySQL 8.0, request Instant DDL explicitly so unsupported conditions fail instead of silently selecting a more expensive algorithm:</p>
+<pre><code class="language-sql">ALTER TABLE chat_sessions
+    ADD COLUMN robot_id VARCHAR(64) NULL,
+    ALGORITHM=INSTANT;
+</code></pre>
+<ul>
+<li>MySQL 8.0.12 introduced Instant <code>ADD COLUMN</code>; before 8.0.29, the new column had to be appended at the end of the table.</li>
+<li>MySQL 8.0.29 and later can use Instant <code>ADD COLUMN</code> at an arbitrary position, subject to documented limitations.</li>
+<li>MySQL 5.7 has no <code>ALGORITHM=INSTANT</code>. <code>ALGORITHM=INPLACE, LOCK=NONE</code> may allow concurrent DML for supported operations, but it can still do substantial work.</li>
+<li>Instant or online DDL does <strong>not</strong> remove MDL from the operation. It reduces the work and contention window; the DDL still needs metadata-lock transitions.</li>
+</ul>
+<p>Physical column order rarely justifies an <code>AFTER</code> clause. Remove it unless a real compatibility requirement exists. For a business-critical isolation key, also consider a phased migration: add it nullable, deploy dual-compatible code, backfill in controlled batches, validate, then enforce the final constraint.</p>
+<h2>7. Release guardrails</h2>
+<h3>Before release</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Confirm target instance, schema, primary role, account, permissions, and exact MySQL version.</li>
+<li><input disabled="" type="checkbox"> Check long transactions, idle transactions, existing MDL waits, backups, reports, and batch jobs.</li>
+<li><input disabled="" type="checkbox"> Confirm the DDL algorithm and whether the table will be rebuilt.</li>
+<li><input disabled="" type="checkbox"> Define a finite wait budget, stop conditions, and the person authorized to terminate a blocker.</li>
+</ul>
+<h3>During release</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Make a database failure stop the application release.</li>
+<li><input disabled="" type="checkbox"> Capture database-client output and exit status without filtering the original error.</li>
+<li><input disabled="" type="checkbox"> Monitor latency, active connections, lock waits, I/O, and replication lag.</li>
+<li><input disabled="" type="checkbox"> Do not launch duplicate DDL requests when one is already waiting.</li>
+</ul>
+<h3>After release</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Verify columns and indexes through <code>information_schema</code>.</li>
+<li><input disabled="" type="checkbox"> Run a minimal application read/write check.</li>
+<li><input disabled="" type="checkbox"> Save Processlist, lock, transaction, deployment-log, and schema evidence.</li>
+<li><input disabled="" type="checkbox"> Have operations review the deployment log and attach screenshots when that is part of the release-control process.</li>
+</ul>
+<h2>8. Final takeaway</h2>
+<p>Fast recovery does not mean immediately killing the oldest-looking session. It means reducing uncertainty quickly:</p>
+<ol>
+<li>Confirm whether the wait is MDL or an InnoDB row lock.</li>
+<li>Build an explicit waiting-to-blocking dependency.</li>
+<li>Understand the effective timeout across MySQL and the deployment stack.</li>
+<li>Release the blocker through the safest available transaction boundary.</li>
+<li>Retry once and verify the resulting schema independently.</li>
+</ol>
+<p>The durable fix is not a larger timeout. It is shorter transactions, bounded DDL waits, an appropriate online algorithm, fail-fast deployment, and automated schema verification.</p>
+<h2>References</h2>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/metadata-locking.html">MySQL 8.0 Reference Manual: Metadata Locking</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/performance-schema-metadata-locks-table.html">MySQL 8.0 Reference Manual: <code>metadata_locks</code> Table</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/sys-schema-table-lock-waits.html">MySQL 8.0 Reference Manual: <code>schema_table_lock_waits</code> View</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/sys-innodb-lock-waits.html">MySQL 8.0 Reference Manual: <code>innodb_lock_waits</code> View</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_lock_wait_timeout">MySQL 8.0 Reference Manual: Server System Variables</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_lock_wait_timeout">MySQL 8.0 Reference Manual: InnoDB System Variables</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html">MySQL 8.0 Reference Manual: Online DDL Operations</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/kill.html">MySQL 8.0 Reference Manual: <code>KILL</code> Statement</a></li>
+</ul>
+<blockquote>
+<p>Rendering note: this site renders the Mermaid diagrams in this article directly in the browser.</p>
+</blockquote>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/mysql-alter-table-mdl-diagnosis-runbook/" data-page-title="Diagnosing MySQL ALTER TABLE Lock Waits: A Five-Minute MDL Runbook" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+      <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs';
+
+        const diagramBlocks = document.querySelectorAll('pre > code.language-mermaid');
+        diagramBlocks.forEach((code) => {
+          const container = code.parentElement;
+          container.className = 'mermaid';
+          container.textContent = code.textContent;
+        });
+
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'dark',
+          themeVariables: {
+            background: '#070b08',
+            primaryColor: '#102119',
+            primaryTextColor: '#edf3ef',
+            primaryBorderColor: '#00ff88',
+            lineColor: '#65d89a',
+            secondaryColor: '#17241c',
+            tertiaryColor: '#111712'
+          }
+        });
+
+        if (diagramBlocks.length > 0) {
+          await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+        }
+      </script>
+    
+  </body>
+</html>

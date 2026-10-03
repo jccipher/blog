@@ -1,0 +1,558 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>MySQL ALTER TABLE 锁等待排查：一份五分钟 MDL 处置手册 · LATENTX</title>
+    <meta name="description" content="一份可直接执行的 MySQL ALTER TABLE 锁等待手册：确认锁类型、理解实际超时、定位阻塞会话，并在控制风险的前提下快速恢复。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="MySQL ALTER TABLE 锁等待排查：一份五分钟 MDL 处置手册 · LATENTX">
+    <meta property="og:description" content="一份可直接执行的 MySQL ALTER TABLE 锁等待手册：确认锁类型、理解实际超时、定位阻塞会话，并在控制风险的前提下快速恢复。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/mysql-alter-table-mdl-diagnosis-runbook/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/mysql-alter-table-mdl-diagnosis-runbook/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/mysql-alter-table-mdl-diagnosis-runbook/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/mysql-alter-table-mdl-diagnosis-runbook/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/mysql-alter-table-mdl-diagnosis-runbook/"
+    data-page-title="MySQL ALTER TABLE 锁等待排查：一份五分钟 MDL 处置手册"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/mysql-alter-table-mdl-diagnosis-runbook/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/mysql-alter-table-mdl-diagnosis-runbook/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat mysql-alter-table-mdl-diagnosis-runbook.md</div>
+    <h1>MySQL ALTER TABLE 锁等待排查：一份五分钟 MDL 处置手册</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-04">发布于 2026.09.04</time>
+      <span>12 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#MySQL</span><span>#DDL</span><span>#Metadata Lock</span><span>#ERROR 1205</span><span>#Incident Response</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/mysql-alter-table-mdl-diagnosis-runbook/" data-page-title="MySQL ALTER TABLE 锁等待排查：一份五分钟 MDL 处置手册" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>生产中的 <code>ALTER TABLE</code> 长时间卡住，最后返回 <code>ERROR 1205 (HY000): Lock wait timeout exceeded</code>。这一定是 Metadata Lock 吗？到底会等多久、是谁阻塞了 DDL，又该怎样尽快完成变更而不把一次失败扩大成事故？</p>
+</blockquote>
+<p>本文是<a href="/blog/zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/">上一篇生产故障复盘</a>的实战配套手册，把结论整理成一套五分钟内可以执行的排查与处置流程。</p>
+<h2>TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>可执行结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>如何确认问题正在发生？</td>
+<td>先执行 <code>SHOW FULL PROCESSLIST</code>。如果 DDL 状态为 <code>Waiting for table metadata lock</code>，再用 <code>sys.schema_table_lock_waits</code> 或 <code>performance_schema.metadata_locks</code> 确认等待与阻塞关系。</td>
+</tr>
+<tr>
+<td>锁多久会报错？</td>
+<td>InnoDB 行锁通常由 <code>innodb_lock_wait_timeout</code> 控制，默认 50 秒；MDL 由 <code>lock_wait_timeout</code> 控制，默认 31,536,000 秒。Session 覆盖值和发布平台的截止时间常让实际等待更短。</td>
+</tr>
+<tr>
+<td>怎样找到是谁在锁表？</td>
+<td><code>sys.schema_table_lock_waits</code> 可直接给出 <code>waiting_pid</code> 和 <code>blocking_pid</code>；再结合 <code>information_schema.innodb_trx</code> 与 Processlist 判断阻塞连接的事务状态。</td>
+</tr>
+<tr>
+<td>怎样尽快完成更新？</td>
+<td>停止盲目重试并保存现场；正常短事务可等待结束，其他事务由负责人提交或回滚。只有完成影响评估后才使用 <code>KILL CONNECTION</code>，锁释放后只重试一次并校验 Schema。</td>
+</tr>
+</tbody></table>
+<p>首先要保留一个重要边界：</p>
+<blockquote>
+<p><strong><code>ERROR 1205</code> 只能证明发生了锁等待超时，不能单凭错误码断定一定是 MDL。</strong></p>
+</blockquote>
+<h2>1. 先判断是哪一类锁等待</h2>
+<p>InnoDB 行锁等待和 MySQL Server 层的 Metadata Lock 等待都可能返回 <code>ERROR 1205</code>。因此，错误码是排查起点，不是根因结论。</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;ALTER TABLE 卡住或返回 ERROR 1205&quot;] --&gt; B[&quot;执行 SHOW FULL PROCESSLIST&quot;]
+    B --&gt; C{&quot;状态是否为 Waiting for table metadata lock&quot;}
+    C --&gt;|是| D[&quot;查询 sys.schema_table_lock_waits&quot;]
+    D --&gt; E[&quot;确认 MDL 路径&quot;]
+    C --&gt;|否| F{&quot;是否存在等待中的 InnoDB 事务&quot;}
+    F --&gt;|是| G[&quot;查询 sys.innodb_lock_waits&quot;]
+    G --&gt; H[&quot;确认行锁路径&quot;]
+    F --&gt;|否| I[&quot;检查目标库、权限、只读状态、客户端与流水线超时&quot;]
+
+    classDef start fill:#0B1E19,stroke:#00FF9C,color:#EAFEF5,stroke-width:2px;
+    classDef decision fill:#211B08,stroke:#FFD166,color:#FFF7D6,stroke-width:1.5px;
+    classDef action fill:#101820,stroke:#38BDF8,color:#E6F7FF,stroke-width:1.5px;
+    class A start;
+    class C,F decision;
+    class B,D,E,G,H,I action;
+</code></pre>
+<p>从另一个数据库连接执行：</p>
+<pre><code class="language-sql">SHOW FULL PROCESSLIST;
+</code></pre>
+<p><code>ALTER TABLE</code> 被 MDL 阻塞时，最关键的现场特征是：</p>
+<pre><code class="language-text">Id: 205
+Command: Query
+Time: 37
+State: Waiting for table metadata lock
+Info: ALTER TABLE chat_sessions ADD COLUMN robot_id ...
+</code></pre>
+<p>如果没有这个状态，就不要强行套用 MDL 解释。排查 InnoDB 数据锁时可查询：</p>
+<pre><code class="language-sql">SELECT *
+FROM sys.innodb_lock_waits\G
+</code></pre>
+<p>同时还要排除：连错实例或 Schema、目标库只读、缺少 <code>ALTER</code> 权限，以及数据库客户端、代理、CI 任务或发布平台主动终止请求。</p>
+<h2>2. 确认“谁在等谁”</h2>
+<p>对于带有 <code>sys</code> Schema 的 MySQL，最快的 MDL 定位语句是：</p>
+<pre><code class="language-sql">SELECT
+    object_schema,
+    object_name,
+    waiting_pid,
+    waiting_account,
+    waiting_query,
+    waiting_query_secs,
+    blocking_pid,
+    blocking_account,
+    blocking_lock_type,
+    sql_kill_blocking_query,
+    sql_kill_blocking_connection
+FROM sys.schema_table_lock_waits
+WHERE object_schema = DATABASE()
+  AND object_name IN (
+      &#39;chat_sessions&#39;,
+      &#39;chat_runs&#39;,
+      &#39;chat_messages&#39;
+  )\G
+</code></pre>
+<p>应把结果理解成依赖关系，而不是一张“繁忙会话列表”：</p>
+<pre><code class="language-text">blocking_pid 101
+       │ 持有已经授予的 Metadata Lock
+       ▼
+waiting_pid 205
+ALTER TABLE ... 正在等待排他 MDL
+</code></pre>
+<p>需要更底层的证据时，查询 <code>performance_schema.metadata_locks</code>。等待中的请求表现为 <code>LOCK_STATUS = &#39;PENDING&#39;</code>，已经持有的锁通常为 <code>LOCK_STATUS = &#39;GRANTED&#39;</code>。</p>
+<pre><code class="language-sql">SELECT
+    ml.OBJECT_SCHEMA,
+    ml.OBJECT_NAME,
+    ml.LOCK_TYPE,
+    ml.LOCK_DURATION,
+    ml.LOCK_STATUS,
+    t.PROCESSLIST_ID,
+    t.PROCESSLIST_USER,
+    t.PROCESSLIST_HOST,
+    t.PROCESSLIST_TIME,
+    t.PROCESSLIST_STATE,
+    t.PROCESSLIST_INFO
+FROM performance_schema.metadata_locks AS ml
+JOIN performance_schema.threads AS t
+  ON t.THREAD_ID = ml.OWNER_THREAD_ID
+WHERE ml.OBJECT_SCHEMA = DATABASE()
+  AND ml.OBJECT_NAME = &#39;chat_sessions&#39;
+ORDER BY ml.LOCK_STATUS, t.PROCESSLIST_TIME DESC;
+</code></pre>
+<p>这些证据必须在故障仍然存在时保存。锁释放后，对应记录会从 <code>metadata_locks</code> 删除；后续手工执行成功，也无法反推出当时的 blocker。</p>
+<h2>3. 为什么普通 SELECT 也可能阻塞 DDL</h2>
+<p>MySQL 使用 Metadata Lock 保证对象定义与并发访问的一致性。事务访问一张表后，相关 MDL 可能一直保留到 <code>COMMIT</code> 或 <code>ROLLBACK</code>。即使连接已经显示为 <code>Sleep</code>，它的事务仍可能处于打开状态。</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant App as 业务连接 101
+    participant DB as MySQL
+    participant Deploy as 发布连接 205
+
+    App-&gt;&gt;DB: BEGIN
+    App-&gt;&gt;DB: SELECT * FROM chat_sessions WHERE id = 42
+    Note over App,DB: 事务未结束，相关 MDL 仍被保留
+    App--&gt;&gt;DB: 连接进入空闲状态
+    Deploy-&gt;&gt;DB: ALTER TABLE chat_sessions ADD COLUMN ...
+    DB--&gt;&gt;Deploy: Waiting for table metadata lock
+    Note over DB,Deploy: 后续请求可能继续排在 DDL 之后
+    App-&gt;&gt;DB: COMMIT 或 ROLLBACK
+    DB--&gt;&gt;Deploy: 此时才可能取得排他 MDL
+</code></pre>
+<p>特别是 <code>blocking_query</code> 为 <code>NULL</code> 时，要从事务角度检查阻塞连接：</p>
+<pre><code class="language-sql">SELECT
+    trx_id,
+    trx_state,
+    trx_started,
+    trx_mysql_thread_id,
+    trx_rows_locked,
+    trx_rows_modified,
+    trx_query
+FROM information_schema.innodb_trx
+WHERE trx_mysql_thread_id IN (101, 205);
+</code></pre>
+<p>如果连接空闲，但 <code>trx_started</code> 已经很早，这是一个强信号：最初访问表的 SQL 已执行完，事务边界却一直没有结束。</p>
+<h2>4. 锁多久会报这个错误？</h2>
+<p>不要只背默认值，应直接查询当前服务器和当前 Session：</p>
+<pre><code class="language-sql">SELECT
+    @@GLOBAL.lock_wait_timeout AS global_mdl_timeout_s,
+    @@SESSION.lock_wait_timeout AS session_mdl_timeout_s,
+    @@GLOBAL.innodb_lock_wait_timeout AS global_row_timeout_s,
+    @@SESSION.innodb_lock_wait_timeout AS session_row_timeout_s;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>控制层</th>
+<th>作用对象</th>
+<th align="right">MySQL 8.0 默认值</th>
+<th>关键说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>innodb_lock_wait_timeout</code></td>
+<td>InnoDB 行锁等待</td>
+<td align="right">50 秒</td>
+<td>不控制 MDL。超时后通常只回滚当前语句，不会自动回滚整个事务。</td>
+</tr>
+<tr>
+<td><code>lock_wait_timeout</code></td>
+<td>Metadata Lock 获取</td>
+<td align="right">31,536,000 秒</td>
+<td>该值对每一次元数据锁获取分别生效；一条语句申请多个锁时，总等待时间可能更长。</td>
+</tr>
+<tr>
+<td>客户端、代理、CI、发布任务</td>
+<td>连接、SQL 或任务生命周期</td>
+<td align="right">由环境决定</td>
+<td>外层截止时间可能早于 MySQL 的两个默认值。</td>
+</tr>
+</tbody></table>
+<p>因此，DDL 在 30 秒或 60 秒后失败，并不与 MDL 默认约一年矛盾：当前 Session 可能修改过 <code>lock_wait_timeout</code>，也可能是外层系统终止了请求。必须保留数据库原始错误、客户端退出码和发布日志，才能区分这些情况。</p>
+<p>通常不应把“增大超时”作为第一解决方案。等待排他锁的 DDL 可能参与形成请求队列；允许它等得更久，反而可能扩大影响范围。</p>
+<h2>5. 五分钟快速处置手册</h2>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;0–1 分钟：停止重试并保存现场&quot;] --&gt; B[&quot;1–2 分钟：定位并分类 blocker&quot;]
+    B --&gt; C{&quot;阻塞事务能否安全结束&quot;}
+    C --&gt;|能| D[&quot;等待提交或请负责人提交或回滚&quot;]
+    C --&gt;|不能| E[&quot;降低流量或暂停相关任务&quot;]
+    E --&gt; F{&quot;是否批准终止连接&quot;}
+    F --&gt;|是| G[&quot;KILL CONNECTION blocker&quot;]
+    F --&gt;|否| H[&quot;取消 DDL 并重新安排窗口&quot;]
+    D --&gt; I[&quot;4–5 分钟：只重试一次并校验 Schema&quot;]
+    G --&gt; I
+
+    classDef action fill:#101820,stroke:#38BDF8,color:#E6F7FF,stroke-width:1.5px;
+    classDef decision fill:#211B08,stroke:#FFD166,color:#FFF7D6,stroke-width:1.5px;
+    classDef safe fill:#0B1E19,stroke:#00FF9C,color:#EAFEF5,stroke-width:2px;
+    class A,B,D,E,G,H action;
+    class C,F decision;
+    class I safe;
+</code></pre>
+<h3>第 0–1 分钟：停止放大影响，保存证据</h3>
+<ul>
+<li>停止自动重试同一条 DDL；</li>
+<li>保存 <code>SHOW FULL PROCESSLIST</code> 和 <code>sys.schema_table_lock_waits</code> 输出；</li>
+<li>记录等待方与阻塞方的进程 ID、账号、来源主机、事务年龄和 SQL；</li>
+<li>观察应用延迟、活跃连接数和连接池排队情况。</li>
+</ul>
+<h3>第 1–2 分钟：对 blocker 分类</h3>
+<table>
+<thead>
+<tr>
+<th>阻塞来源</th>
+<th>优先处理方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>正常的短事务</td>
+<td>短暂等待其正常提交。</td>
+</tr>
+<tr>
+<td>已知批处理、报表或管理会话</td>
+<td>联系负责人提交、回滚或停止任务。</td>
+</tr>
+<tr>
+<td>业务连接中的空闲未提交事务</td>
+<td>修复所属服务，或由负责人回滚事务。</td>
+</tr>
+<tr>
+<td>目标表上的高业务流量</td>
+<td>先降低或临时停止相关流量，再执行 DDL。</td>
+</tr>
+<tr>
+<td>未知或高风险事务</td>
+<td>取消 DDL 并升级处理，不凭猜测执行 <code>KILL</code>。</td>
+</tr>
+</tbody></table>
+<h3>第 2–4 分钟：安全释放锁</h3>
+<p>优先由事务负责人正常 <code>COMMIT</code> 或 <code>ROLLBACK</code>。如果确认连接已经失控，并完成了终止影响评估，可使用准确的 <code>blocking_pid</code>：</p>
+<pre><code class="language-sql">KILL CONNECTION 101;
+</code></pre>
+<p><code>KILL QUERY</code> 只终止当前正在执行的语句，连接本身仍然存在。因此对于“连接在 Sleep，但打开的事务仍持锁”的场景，它并不足够。<code>KILL CONNECTION</code> 会结束连接，但大事务的回滚与清理仍可能耗时，不能期待执行后锁瞬间消失。</p>
+<p>不要直接复制 <code>sql_kill_blocking_connection</code> 到生产执行。必须先确认账号、来源主机、事务内容、影响行数和业务负责人。</p>
+<h3>第 4–5 分钟：只重试一次，然后证明成功</h3>
+<p>确认 blocker 已消失且业务流量稳定后，只重跑一次 migration。随后独立校验结果：</p>
+<pre><code class="language-sql">SELECT
+    TABLE_NAME,
+    COLUMN_NAME,
+    COLUMN_TYPE,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;)
+  AND COLUMN_NAME = &#39;robot_id&#39;
+ORDER BY TABLE_NAME;
+</code></pre>
+<p>Migration 命令成功、Schema 校验成功、最小业务读写成功，三者全部满足，发布才算完成。</p>
+<h2>6. 让下一次 ALTER 更容易成功</h2>
+<p>对于 MySQL 8.0 中满足条件的 <code>ADD COLUMN</code>，建议显式要求 Instant DDL。这样条件不支持时会直接失败，而不是悄悄选择代价更高的算法：</p>
+<pre><code class="language-sql">ALTER TABLE chat_sessions
+    ADD COLUMN robot_id VARCHAR(64) NULL,
+    ALGORITHM=INSTANT;
+</code></pre>
+<ul>
+<li>MySQL 8.0.12 引入 Instant <code>ADD COLUMN</code>；在 8.0.29 之前，新列只能追加到表尾；</li>
+<li>MySQL 8.0.29 及以后可在任意位置使用 Instant <code>ADD COLUMN</code>，但仍受官方文档中的条件限制；</li>
+<li>MySQL 5.7 没有 <code>ALGORITHM=INSTANT</code>。支持时使用 <code>ALGORITHM=INPLACE, LOCK=NONE</code> 可以允许并发 DML，但仍可能产生大量工作；</li>
+<li>Instant 或 Online DDL <strong>不会消除 MDL</strong>。它们减少的是工作量和竞争窗口，DDL 仍然需要完成元数据锁转换。</li>
+</ul>
+<p>字段物理顺序通常不值得保留一个 <code>AFTER</code> 子句。除非存在真实兼容要求，否则应删除它。对于关键的数据隔离字段，还应考虑分阶段迁移：先添加可空字段，发布兼容新旧结构的代码，分批回填与校验，最后再收紧约束。</p>
+<h2>7. 发布防线</h2>
+<h3>发布前</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 核对实例、Schema、主库角色、账号、权限和精确 MySQL 版本；</li>
+<li><input disabled="" type="checkbox"> 检查长事务、空闲事务、已有 MDL 等待、备份、报表和批处理任务；</li>
+<li><input disabled="" type="checkbox"> 确认 DDL 算法及是否重建表；</li>
+<li><input disabled="" type="checkbox"> 设定有限等待时间、停止条件，以及有权终止 blocker 的负责人。</li>
+</ul>
+<h3>发布中</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 数据库变更失败必须阻止应用继续发布；</li>
+<li><input disabled="" type="checkbox"> 完整保存数据库客户端输出、原始错误和退出码；</li>
+<li><input disabled="" type="checkbox"> 监控延迟、活跃连接、锁等待、I/O 和复制延迟；</li>
+<li><input disabled="" type="checkbox"> 已有一条 DDL 在等待时，不再启动重复 DDL。</li>
+</ul>
+<h3>发布后</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 通过 <code>information_schema</code> 校验字段与索引；</li>
+<li><input disabled="" type="checkbox"> 完成最小业务读写验证；</li>
+<li><input disabled="" type="checkbox"> 保存 Processlist、锁、事务、发布日志和 Schema 证据；</li>
+<li><input disabled="" type="checkbox"> 如果发布流程要求人工复核，由运维确认发布日志并附上截图证据。</li>
+</ul>
+<h2>8. 最终结论</h2>
+<p>快速解决不等于立即杀掉“看起来最老”的连接，而是快速降低不确定性：</p>
+<ol>
+<li>确认正在等待的是 MDL 还是 InnoDB 行锁；</li>
+<li>建立明确的 waiting-to-blocking 依赖关系；</li>
+<li>弄清 MySQL 与发布链路共同决定的实际超时时间；</li>
+<li>通过风险最低的事务边界释放 blocker；</li>
+<li>只重试一次，并独立校验最终 Schema。</li>
+</ol>
+<p>长期有效的修复不是把超时调大，而是缩短事务、限制 DDL 等待、选择合适的在线算法、发布失败即停止，以及自动校验 Schema。</p>
+<h2>参考资料</h2>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/metadata-locking.html">MySQL 8.0 Reference Manual: Metadata Locking</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/performance-schema-metadata-locks-table.html">MySQL 8.0 Reference Manual: <code>metadata_locks</code> Table</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/sys-schema-table-lock-waits.html">MySQL 8.0 Reference Manual: <code>schema_table_lock_waits</code> View</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/sys-innodb-lock-waits.html">MySQL 8.0 Reference Manual: <code>innodb_lock_waits</code> View</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_lock_wait_timeout">MySQL 8.0 Reference Manual: Server System Variables</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_lock_wait_timeout">MySQL 8.0 Reference Manual: InnoDB System Variables</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html">MySQL 8.0 Reference Manual: Online DDL Operations</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/kill.html">MySQL 8.0 Reference Manual: <code>KILL</code> Statement</a></li>
+</ul>
+<blockquote>
+<p>渲染说明：本站会在浏览器中直接渲染本文的 Mermaid 图表。</p>
+</blockquote>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/mysql-alter-table-mdl-diagnosis-runbook/" data-page-title="MySQL ALTER TABLE 锁等待排查：一份五分钟 MDL 处置手册" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+      <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs';
+
+        const diagramBlocks = document.querySelectorAll('pre > code.language-mermaid');
+        diagramBlocks.forEach((code) => {
+          const container = code.parentElement;
+          container.className = 'mermaid';
+          container.textContent = code.textContent;
+        });
+
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'dark',
+          themeVariables: {
+            background: '#070b08',
+            primaryColor: '#102119',
+            primaryTextColor: '#edf3ef',
+            primaryBorderColor: '#00ff88',
+            lineColor: '#65d89a',
+            secondaryColor: '#17241c',
+            tertiaryColor: '#111712'
+          }
+        });
+
+        if (diagramBlocks.length > 0) {
+          await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+        }
+      </script>
+    
+  </body>
+</html>

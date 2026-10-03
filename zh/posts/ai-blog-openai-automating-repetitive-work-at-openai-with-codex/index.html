@@ -1,0 +1,257 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Codex 与 Runme：把重复劳动变成可审查的操作记忆 · LATENTX</title>
+    <meta name="description" content="分析 OpenAI 的 Runme 工作流如何结合 Codex、审批关口、WebMCP 与可复用的操作记录。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Codex 与 Runme：把重复劳动变成可审查的操作记忆 · LATENTX">
+    <meta property="og:description" content="分析 OpenAI 的 Runme 工作流如何结合 Codex、审批关口、WebMCP 与可复用的操作记录。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/"
+    data-page-title="Codex 与 Runme：把重复劳动变成可审查的操作记忆"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-blog-openai-automating-repetitive-work-at-openai-with-codex.md</div>
+    <h1>Codex 与 Runme：把重复劳动变成可审查的操作记忆</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-07">发布于 2026.09.07</time>
+      <span>5 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#OpenAI</span><span>#AI Research</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/" data-page-title="Codex 与 Runme：把重复劳动变成可审查的操作记忆" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-09-07_ai-blog-openai-automating-repetitive-work-at-openai-with-codex.zh.a447c21425eaf7a8.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>Jeremy Lewi 的 Runme 案例没有把重复工程工作仅仅视为脚本问题，而是把它看作上下文与治理问题。Codex 在 Notebook 中执行，目标、审批点、命令、证据、失败路径和决策都会留下，供下一次任务继续使用。</p>
+</blockquote>
+<h2>编辑摘要</h2>
+<p>OpenAI 工程师 Jeremy Lewi 描述了云基础设施和模型评测中的共同模式：一个复杂操作任务刚刚解决，下一项相似任务又带着不同的配额、配置或失败模式出现。传统自动化可以消除稳定步骤，但如果为每个持续变化的工作流单独开发和维护工具，自动化本身也会变成新的工作层。</p>
+<p>他的替代方案是 Runme，一款用于与 Codex 协作的开源 Notebook 应用。一个 Notebook 可以组合 Markdown、可执行代码单元、HTML、指令、输出、表格和图表。Lewi 不让智能体从聊天历史中猜测完整流程，而是写下简短目标，要求它回顾上一次运行、制定详细计划、在执行前等待批准，并记录命令、结果和解释。</p>
+<p>Notebook 不只是方便的界面，它让工作流拥有用户与智能体都能检查的持久状态。运行评测时，Codex 更新计划并记录进度；Lewi 则把注意力放在后果更大的分叉上，例如选择哪套评测系统、是否值得开辟新基础设施，或在配额阻止环境创建时提出经过批准的替代方案。最终产物同时保留成功步骤、失败路径，以及原本容易消失在对话里的决策理由。</p>
+<p>Runme Notebook 可以存入 Google Drive，每份 Notebook 还生成一个可被 Drive 索引的 <code>*.index.md</code> 配套文件。这样，历史运行无需迁入新的文档仓库，也能成为可检索上下文。这套设计强调累积效应：本次运行结束后留下的材料会改善下次运行，让操作知识成为持续维护的输入，而不是事后补写的负担。</p>
+<p>智能体通过 WebMCP 与客户端 Runme 应用交互。应用在浏览器中注册工具，用于读取使用说明与文档，并运行有边界的 JavaScript 来读取或更新 Notebook。由于 Runme 是静态 Web 应用，浏览器侧工具避免了仅为暴露 MCP 端点而增加服务器，也让 Notebook 交互留在原本处理数据的位置附近。</p>
+<p>其中有四种做法值得复用：</p>
+<ol>
+<li><strong>把目标变成资产。</strong> 持久、可编辑的目标比散落在多轮对话中的意图更容易审阅，也为长任务提供稳定参照。</li>
+<li><strong>把审批放在决策边界。</strong> 人工审查最适合出现在高成本或高影响操作之前，而不是持续监控每一个机械步骤。</li>
+<li><strong>把解释与输出放在一起。</strong> 命令记录本身无法说明结果是否健康、为什么放弃某个方案，以及下一次应该改变什么。</li>
+<li><strong>为检索设计记忆。</strong> 有用历史必须能够搜索，并且足够紧凑，让智能体找到相关先例；只把 Notebook 越积越多并不等于知识管理。</li>
+</ol>
+<p>这篇文章是第一人称工作流记录，不是基准测试。它没有量化总共节省多少时间、人工介入频率、维护 Notebook 的成本，也没有说明旧运行在多大比例上仍适用于新任务。这种方法还依赖严格整理：错误或过时结论也可能变得非常容易检索；如果没有妥善管理存储权限和保留策略，详细记录还会暴露操作信息。</p>
+<p>WebMCP 降低了集成基础设施，但浏览器侧工具仍需能力收窄、数据边界可见，并对高影响操作保留审查。同样，自动审批审查也不能取代明确的人类责任，例如是否配置基础设施、是否修改评测配置，仍需要有人作出最终决定。</p>
+<p>我的主要结论是，最值得自动化的对象不是命令序列，而是两次运行之间流失的上下文。Runme 让工作产物与操作手册成为同一份资产。当它保留证据、约束、审批与推理时，智能体可以承担更多重复执行，而人不必放弃真正决定风险的判断。</p>
+<h2>来源材料</h2>
+<h3>OpenAI：Automating repetitive work at OpenAI with Codex</h3>
+<ul>
+<li><strong>发布日期：</strong> 2026 年 8 月 25 日</li>
+<li><strong>作者：</strong> Jeremy Lewi</li>
+<li><strong>英文原文：</strong> <a href="https://developers.openai.com/blog/automating-repetitive-work-at-openai-with-codex">阅读原文</a></li>
+<li><strong>官方中文版：</strong> 未找到</li>
+<li><strong>转载说明：</strong> 本文仅作摘要与出处标注，原文版权归 OpenAI 所有。</li>
+</ul>
+<h4>原文要点</h4>
+<p>Lewi 回顾了配置 Kubernetes 集群，以及为新模型与新功能运行评测的重复工作。他解释自己如今会结合 Codex 与 Runme，而不是为每项周期性任务建立一套固定自动化。</p>
+<p>Runme Notebook 以目标和一组工作指令开始：检查过去的运行、提出计划、等待审批并记录执行。Codex 在工作过程中更新 Notebook；Lewi 审阅计划，帮助选择影响较大的替代方案，并在配额耗尽等约束阻止原路径时提出合规选项。</p>
+<p>最终 Notebook 保留命令、输出、解释、决策与失败路径。Runme 支持混合 Markdown、代码、HTML、表格和图表，可以把 Notebook 存入 Google Drive，并创建 Markdown 索引，让智能体更容易发现历史运行。</p>
+<p>文章还介绍 Runme 如何通过 WebMCP 在静态客户端应用中注册浏览器侧工具。这些工具提供有边界的 Notebook 操作与文档读取能力，无需增加新的服务端 MCP 服务。文章最后主张，在执行过程中同步记录意图与证据，可以让操作知识被再次利用，同时把真正重要的决策保留给人来审查。</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/" data-page-title="Codex 与 Runme：把重复劳动变成可审查的操作记忆" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

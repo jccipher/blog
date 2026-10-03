@@ -1,0 +1,977 @@
+{
+  "schema_version": 1,
+  "build_id": "20261004T055133+0800-8f45bca1",
+  "built_at": "2026-10-04T05:51:33+08:00",
+  "files": [
+    {
+      "path": ".github/workflows/pages.yml",
+      "bytes": 912,
+      "sha256": "7ea18ed02ad64019e27be6d19f395eee7dc65f807df6782686eee299cd030343"
+    },
+    {
+      "path": ".nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "404.html",
+      "bytes": 6545,
+      "sha256": "36d4263f292766866045658398e3e81de2208a5462b7e7e295e1df26e00b7ce4"
+    },
+    {
+      "path": "about/index.html",
+      "bytes": 7082,
+      "sha256": "8b46ff57ac4989e824a7144f308d42bc1c72e820265a2e519d2919d1d584c0d3"
+    },
+    {
+      "path": "archives/index.html",
+      "bytes": 19575,
+      "sha256": "40ec28d4cba4b863d411892a98e649b950de240a3812c9d6c64a2086db22dc3c"
+    },
+    {
+      "path": "assets/audio-manifest.json",
+      "bytes": 34832,
+      "sha256": "b257072e53fd680be58cfdf296eb7876bd766bcca2126910038cb8dd64757f14"
+    },
+    {
+      "path": "assets/audio/2026-09-05_ai-blog-anthropic-claude-for-commerce-agents.en.690f70b67de23d64.mp3",
+      "bytes": 1669485,
+      "sha256": "5ccc2826350f2293bce121bde8d6e7738420bbb8d8d81dd19ec81a87d2e2aab6"
+    },
+    {
+      "path": "assets/audio/2026-09-05_ai-blog-anthropic-claude-for-commerce-agents.zh.0276d519335a9b09.mp3",
+      "bytes": 1454781,
+      "sha256": "d321e44e6590929675ed0e9080ff989410aae81a91872047b76afadf79b4082d"
+    },
+    {
+      "path": "assets/audio/2026-09-05_ai-blog-anthropic-the-anatomy-of-effective-commerce-agents.en.0a16fce206291d58.mp3",
+      "bytes": 1524909,
+      "sha256": "276f65275bc82e1fe9cdbb46016925dd3613527ae6bfba4cba5e57664e42a137"
+    },
+    {
+      "path": "assets/audio/2026-09-05_ai-blog-anthropic-the-anatomy-of-effective-commerce-agents.zh.61bdbeb1e5a93bb9.mp3",
+      "bytes": 1344765,
+      "sha256": "959372c8a5e7b1285be491507d8598b28961169461e2d3cae8df26e4984af327"
+    },
+    {
+      "path": "assets/audio/2026-09-05_ai-blog-openai-architectural-visualization-with-astra.en.d2c51ea512d79b53.mp3",
+      "bytes": 2187165,
+      "sha256": "64c5ffec51413193dbb856b425552b149dba54b817bb02a1cdb56927d477f085"
+    },
+    {
+      "path": "assets/audio/2026-09-05_ai-blog-openai-architectural-visualization-with-astra.zh.137f1e155e80d2da.mp3",
+      "bytes": 1820685,
+      "sha256": "401774f80dba8bfbff7e1f2313c25f4a7e8754ff72dd6e864840643b91acecac"
+    },
+    {
+      "path": "assets/audio/2026-09-05_ai-blog-openai-rosalind-workbench.en.5a50ab11c33a35ef.mp3",
+      "bytes": 1508493,
+      "sha256": "1aa2ac8872bdd2e7c0423f2e7d977d12fd0847fd1b461b8a6218c4ce1911891b"
+    },
+    {
+      "path": "assets/audio/2026-09-05_ai-blog-openai-rosalind-workbench.zh.685bd5a73cb6eff5.mp3",
+      "bytes": 1256493,
+      "sha256": "ea0bdedcaa79e3332fd76cbef60b24d87df56bc685eda37f95f7a282b70e8271"
+    },
+    {
+      "path": "assets/audio/2026-09-06_ai-blog-anthropic-how-anthropic-employees-use-claude-tag.en.04e37580c744f677.mp3",
+      "bytes": 2008173,
+      "sha256": "8d1753479fce77d854954552de604fa6735e113ecb247b49e7d6825d9e603221"
+    },
+    {
+      "path": "assets/audio/2026-09-06_ai-blog-anthropic-how-anthropic-employees-use-claude-tag.zh.60f0cd8183508bd8.mp3",
+      "bytes": 1713981,
+      "sha256": "2071026d27fb2629dc85c3771972ab1575f884ce14cbe6db0e2428d3427abe41"
+    },
+    {
+      "path": "assets/audio/2026-09-06_ai-blog-openai-how-to-build-games-with-astra.en.7459bdb18d820abc.mp3",
+      "bytes": 2303517,
+      "sha256": "ac2aaf6e5ace10ceb66a8b32549256f70f7053cdcd4be0185b9238f4a9794181"
+    },
+    {
+      "path": "assets/audio/2026-09-06_ai-blog-openai-how-to-build-games-with-astra.zh.d49c07b070b24323.mp3",
+      "bytes": 2212509,
+      "sha256": "81e62f3f218634af18b920a3b96abc9d9adaa75028955bd267185a8b906a60f0"
+    },
+    {
+      "path": "assets/audio/2026-09-07_ai-blog-anthropic-claude-for-teachers-now-available-for-schools-and-districts.en.cb23e8ad38443807.mp3",
+      "bytes": 1993773,
+      "sha256": "3fe9f0499bb01668a13c03304b72da097473f094d76a0d4c750662568d6b2123"
+    },
+    {
+      "path": "assets/audio/2026-09-07_ai-blog-anthropic-claude-for-teachers-now-available-for-schools-and-districts.zh.270ebb144152a6c1.mp3",
+      "bytes": 1905069,
+      "sha256": "c4b8820ffac6eba2f0f8fa2650c3930b703861d27ad6c482f0eaaa3dfc1655d5"
+    },
+    {
+      "path": "assets/audio/2026-09-07_ai-blog-openai-automating-repetitive-work-at-openai-with-codex.en.a4aabe342c72bffa.mp3",
+      "bytes": 1818381,
+      "sha256": "cdaa9c1e900a6edb46f10427688d80efb9c4f3c3c772ea23af5f9d65fb75e458"
+    },
+    {
+      "path": "assets/audio/2026-09-07_ai-blog-openai-automating-repetitive-work-at-openai-with-codex.zh.a447c21425eaf7a8.mp3",
+      "bytes": 1586541,
+      "sha256": "cc7b6f7f3c540d76e5645b85c29256e2372a9f9ccc8054e766e925a88ee6799f"
+    },
+    {
+      "path": "assets/audio/2026-09-08_ai-blog-anthropic-claude-in-chrome-generally-available.en.7e38c95cdf144a0e.mp3",
+      "bytes": 1300413,
+      "sha256": "bab8b755567975d1ef22053d84afc4476a8f85d2ac68f03620781e903053a323"
+    },
+    {
+      "path": "assets/audio/2026-09-08_ai-blog-anthropic-claude-in-chrome-generally-available.zh.6786e35ed916f09a.mp3",
+      "bytes": 1080813,
+      "sha256": "d882d5d108eadde28c53b8845c1e293a4c20dea7b772d6bec53670663d26cee5"
+    },
+    {
+      "path": "assets/audio/2026-09-08_ai-blog-anthropic-how-warp-builds-self-improving-agents-on-claude.en.e10c9e49e02bcf3d.mp3",
+      "bytes": 1329501,
+      "sha256": "bd90f14cc4365cb8a24371cd8ba1ed184958037cd322de0bb1bcd2266554c589"
+    },
+    {
+      "path": "assets/audio/2026-09-08_ai-blog-anthropic-how-warp-builds-self-improving-agents-on-claude.zh.bf20812ed009354e.mp3",
+      "bytes": 1117389,
+      "sha256": "a0fec2bdb23cfe70fabfc3264eae3a857bf360750a93b0c9d7969ca28e595bad"
+    },
+    {
+      "path": "assets/audio/2026-09-08_ai-blog-openai-build-week-winners.en.3ebf88fb6da48c71.mp3",
+      "bytes": 1523325,
+      "sha256": "c373b70c83a6fd6b398521280e7991c7bd917e4e727eb57c0ef6d3b0f9f4a064"
+    },
+    {
+      "path": "assets/audio/2026-09-08_ai-blog-openai-build-week-winners.zh.4d66e17ed092965c.mp3",
+      "bytes": 1321437,
+      "sha256": "5c6e41a6664a8473a79cc0e953e1fe5a88be1785464999c9c82de7fb9e2f5634"
+    },
+    {
+      "path": "assets/audio/2026-09-08_ai-blog-openai-scaling-cyber-defenders-with-daybreak.en.04a33d8f3db5fda2.mp3",
+      "bytes": 1602813,
+      "sha256": "8d3b9dd7f64b87527a5bf369e6c3227750031a3280c138067169c4ddabf96de0"
+    },
+    {
+      "path": "assets/audio/2026-09-08_ai-blog-openai-scaling-cyber-defenders-with-daybreak.zh.d0605e884f24721e.mp3",
+      "bytes": 1297101,
+      "sha256": "943effab70b0df776f5fba111135b379e419794aeefa80c1333cd0324803a639"
+    },
+    {
+      "path": "assets/audio/2026-09-11_ai-blog-anthropic-claudes-memory-works-everywhere-and-you-decide-whats-in-it.en.b9ea2bd12f811c34.mp3",
+      "bytes": 1367805,
+      "sha256": "7a40b952f3acac9d9f9270ff5f8d9338971f7079838ef96c43a9d9cf9e301eca"
+    },
+    {
+      "path": "assets/audio/2026-09-11_ai-blog-anthropic-claudes-memory-works-everywhere-and-you-decide-whats-in-it.zh.fbd543a326740fb7.mp3",
+      "bytes": 1063101,
+      "sha256": "dee5d851c84c7987a158a3806dc7589366cdbcf21bc102dcf720e6a837272b62"
+    },
+    {
+      "path": "assets/audio/2026-09-11_ai-blog-openai-connect-private-mcp-servers-to-openai-products.en.9937bd994c6bd7df.mp3",
+      "bytes": 1499421,
+      "sha256": "987427762f59bfb14dea8961fb1c0c00fca97b2e7bc978c2cadcd697abd210ab"
+    },
+    {
+      "path": "assets/audio/2026-09-11_ai-blog-openai-connect-private-mcp-servers-to-openai-products.zh.d531e08d12cd39fc.mp3",
+      "bytes": 1235325,
+      "sha256": "23a3420aeb6a4dce2e0bccd01a13bafa1d535d1ea499dd594eb1a44caaccab83"
+    },
+    {
+      "path": "assets/audio/2026-09-14_ai-blog-anthropic-bain-company-joins-the-claude-partner-network-as-a-global-premier-partner.en.093b662525ef73d5.mp3",
+      "bytes": 1290477,
+      "sha256": "2952519969b4fd95c47a4f20c26bf30f8ab4bd9c74f029bd476fb13164a83f91"
+    },
+    {
+      "path": "assets/audio/2026-09-14_ai-blog-anthropic-bain-company-joins-the-claude-partner-network-as-a-global-premier-partner.zh.a05f6837d2d8480b.mp3",
+      "bytes": 1010253,
+      "sha256": "6fd334e7e06f23f5bb438b8d13d86822d7f8efc6e87c089ef541ce11c9a395bc"
+    },
+    {
+      "path": "assets/audio/2026-09-14_ai-blog-openai-custom-code-review-rules-for-codex.en.289d670a4bfbc1a2.mp3",
+      "bytes": 1438941,
+      "sha256": "23aecba2ecef6b2e0d3eccb957dca4e0f9d5592ecfde57f07b6f07b670879ec8"
+    },
+    {
+      "path": "assets/audio/2026-09-14_ai-blog-openai-custom-code-review-rules-for-codex.zh.a3276f91e7e472a8.mp3",
+      "bytes": 1207101,
+      "sha256": "d4564c819580186a5b3bc2f71fc39c642aba0cfbeb6f04dc39876c8bba3ebb79"
+    },
+    {
+      "path": "assets/audio/2026-09-16_ai-blog-anthropic-what-1-000-small-business-owners-taught-us-about-ai.en.47d8d265bd950271.mp3",
+      "bytes": 489117,
+      "sha256": "343c188f75a83e096d0e8a04f406a23b90b8e8d497c368be2c7ea9a76f26770d"
+    },
+    {
+      "path": "assets/audio/2026-09-16_ai-blog-anthropic-what-1-000-small-business-owners-taught-us-about-ai.zh.052379602b863ac7.mp3",
+      "bytes": 386589,
+      "sha256": "2e0ee3143ac60649c6b74bd06aff6b3e0c900c51e52ce0204ba4985d0d5c493f"
+    },
+    {
+      "path": "assets/audio/2026-09-16_ai-blog-openai-realtime-perplexity-computer.en.588e804ad6ef4a5f.mp3",
+      "bytes": 1113357,
+      "sha256": "2843721dd4a96db77dca037abd09f4a93807d4fd0c99d51df284d2e0e3c1088e"
+    },
+    {
+      "path": "assets/audio/2026-09-16_ai-blog-openai-realtime-perplexity-computer.zh.c1ff16a68728c144.mp3",
+      "bytes": 1020909,
+      "sha256": "2a6d8f2d2a753607f259eb25a784614a8cef24b466801dff76d5f4c3d6f66bb6"
+    },
+    {
+      "path": "assets/audio/2026-09-17_ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform.en.dbc0363b3d8041c2.mp3",
+      "bytes": 982173,
+      "sha256": "780ae573edff1614e6f41be686a5619de1b7b26b2e46431fc9c70024a59f507b"
+    },
+    {
+      "path": "assets/audio/2026-09-17_ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform.zh.13cdce1a289174f1.mp3",
+      "bytes": 932925,
+      "sha256": "faa0c1670732a78a6d1eeacfb79f7f8e8bb3b699b98a897793d72867bc741fc9"
+    },
+    {
+      "path": "assets/audio/2026-09-17_ai-blog-openai-designing-delightful-frontends-with-gpt-5-4.en.bfe2eb0ef610688e.mp3",
+      "bytes": 636285,
+      "sha256": "551add2b152a1b7b9a80aca5c90bace5f79f87895b944e854ad80636f75edc2d"
+    },
+    {
+      "path": "assets/audio/2026-09-17_ai-blog-openai-designing-delightful-frontends-with-gpt-5-4.zh.2f42fdbb848c7f85.mp3",
+      "bytes": 539229,
+      "sha256": "10f433549bed4e69061f6caa9388d1ed44334b69b75f8aab58123c1f63efd4ce"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-artifacts-in-claude-code.en.c4938f9300a505a5.mp3",
+      "bytes": 644925,
+      "sha256": "b4e01fc49c86decce5d6463d469ca7bf95cdcb0ed5d884e165f3ba4766ccda22"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-artifacts-in-claude-code.zh.06100891f5d9c971.mp3",
+      "bytes": 617997,
+      "sha256": "c26d73658401f107600fa44512974236c7027ce2d28c6b2c8f8b3769d6f23543"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders.en.d97ee0fb24bfb280.mp3",
+      "bytes": 563565,
+      "sha256": "2b45376f71fbfb447084e994d8a4c01e370c75925af5cb23076b5bbbd83fa146"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders.zh.a5a6108c04b04b84.mp3",
+      "bytes": 572349,
+      "sha256": "77c2deccceefa85564ad3df886daad440c3c3b7f361b627bb444c8a159d7adab"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-claude-for-foundation-models.en.f21d81dcf60782bb.mp3",
+      "bytes": 732189,
+      "sha256": "624ea2cd071060c7c0f0f3db4e6ed2b0a863eb792acdd9338faf04c9b030d898"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-claude-for-foundation-models.zh.3f623aa19fd7d5e9.mp3",
+      "bytes": 674157,
+      "sha256": "0c257d8f914c9885da00d1a62b72ee7042f7b510f52a8c533fe0eeb596a78366"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-cowork-built-in-browser.en.4ab46dd2cd8bbaf7.mp3",
+      "bytes": 1205229,
+      "sha256": "acc53ab15b117132f397ecde14666bc0cf29b3ca6b47912ba3d13c8e547188de"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-cowork-built-in-browser.zh.e390f03dfc77e879.mp3",
+      "bytes": 1074765,
+      "sha256": "a1688599d8f120dc3f21d845e5d0c3a9206d367e043a116ae4c71aa05fc16643"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep.en.3f0724cc7828b60a.mp3",
+      "bytes": 1304877,
+      "sha256": "721bd3115fd8c33aa23031ba7976dd0a570eedebccc77d513fb6d33ab37ca612"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep.zh.cda594bba692ddb9.mp3",
+      "bytes": 1196445,
+      "sha256": "e95b5b890e9d67b3b6a45ff96757d5616b03eb4782f0361fe8611d9d0d46fe1f"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-salesforce-in-claude.en.45a1f69d29e1cf2a.mp3",
+      "bytes": 562269,
+      "sha256": "eae2bdca503567f50973cc96e1c4c3c0e6690ecb64d5272335656a87763ebb1d"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-salesforce-in-claude.zh.17b0edf429acba31.mp3",
+      "bytes": 512445,
+      "sha256": "f124692fe5e8d42aaf73308bbe5d5e0e138309be726e4614022b6e726b4ee8bb"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process.en.3495ac333fb73791.mp3",
+      "bytes": 624333,
+      "sha256": "38b20306ba0813683614c420a513630cf587b241cc9a57b96ba2cdce1f2859a9"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process.zh.26647b4453b07abf.mp3",
+      "bytes": 524109,
+      "sha256": "b9653258e708f1ca9508f1a7efaf0782baa2d415eca41de436b1f9cf5f6e6a4c"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-the-ai-native-sdlc-playbook.en.34cd30ae51430939.mp3",
+      "bytes": 657741,
+      "sha256": "61fc7240d6265276ff9bed28992545916853141e921af2d701db17bcef472fc3"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-anthropic-the-ai-native-sdlc-playbook.zh.3241069ed0767de6.mp3",
+      "bytes": 520077,
+      "sha256": "ff733c023d2bf41b8f430f522f5099aac8f5875ff8c14741cb5d9b171b0f515f"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-building-frontend-uis-with-codex-and-figma.en.767d5d262fc442d4.mp3",
+      "bytes": 779421,
+      "sha256": "9534e0527c4a5e76400fdad822b291fc03fb0b0ae73344c1684b45d8061345c2"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-building-frontend-uis-with-codex-and-figma.zh.e1cc7247bde00635.mp3",
+      "bytes": 652989,
+      "sha256": "fad009da300c0238daca5d6efd146576cb6cd096df0ad4d83cae7fe006519830"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-codex-as-a-platform.en.01cc0500fdb69b0a.mp3",
+      "bytes": 1663437,
+      "sha256": "5a691b1987383b0d568e7e5d24fcd2c5f5fe663cec2f313ad8f4303b3de5c052"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-codex-as-a-platform.zh.52b610898c49643d.mp3",
+      "bytes": 1458957,
+      "sha256": "e6c9c82ab27f290e3aa0e5d6bdce2a7bbff3b7c31113cfec6fbae025ae949027"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-mastering-codex-remote-for-engineering.en.aa6cd15ad270278a.mp3",
+      "bytes": 1504749,
+      "sha256": "f3552e70d2fee5344205c3ccdf1d1dd621eb13849d848070e325976da7087ac4"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-mastering-codex-remote-for-engineering.zh.82dd8b00e62df321.mp3",
+      "bytes": 1396893,
+      "sha256": "1566bf2f1844e3702973c80eac75ed3c4f01308dd7d1587733bc3e5827fa90bf"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-one-year-of-responses.en.464f0c33491b647b.mp3",
+      "bytes": 536781,
+      "sha256": "63bbb121ac878e1f18f1325b8b877cb3142b091b81731c2f73cd6f9db54f074e"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-one-year-of-responses.zh.b51b9aadc0894c1e.mp3",
+      "bytes": 516765,
+      "sha256": "fcbe485c95e9ea06db35658db51bcc2503b12c5d0a29869b20ed16e733ec6b83"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra.en.c910bc2907fab8f1.mp3",
+      "bytes": 751485,
+      "sha256": "c317dc7b2b1ebd3b93b2765af5769590c0f4bd29f1e11b98711f0e00cdec5b6d"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra.zh.1cd54797aa265f38.mp3",
+      "bytes": 625629,
+      "sha256": "452b7ee105d088aa6aa7d441ec1657fbf5f18e2ca4afa5068bd8ed18f8081629"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-run-long-horizon-tasks-with-codex.en.04616a66dd95bd5b.mp3",
+      "bytes": 526989,
+      "sha256": "607e91878ada67cb0eb957914b7b94fd8484e760f6b8304dbbc8252361c4183b"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-run-long-horizon-tasks-with-codex.zh.3eb40000391103cb.mp3",
+      "bytes": 386157,
+      "sha256": "9d41159b29893cef2e6072d272342c2c1f12406c30340c25f3ac46a3ab5bcaae"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-skills-agents-sdk.en.8c3f75cb6f289deb.mp3",
+      "bytes": 508845,
+      "sha256": "50d4456e0575c3b70627a28c9d6c6c99e112464e05ed29fdbe6538adcdc12eed"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-skills-agents-sdk.zh.68f482a3735e714f.mp3",
+      "bytes": 426909,
+      "sha256": "b1d1d65a9fb9b4c07e0f092814366f7dcddf9f58cf3a51ddcf1e8195ecaacd8d"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-skills-shell-tips.en.85e02cde5f21ca11.mp3",
+      "bytes": 505245,
+      "sha256": "079795cdf41c0f932ea4561b1fb644f6922637e080083106f3b64b6513035b0a"
+    },
+    {
+      "path": "assets/audio/2026-09-28_ai-blog-openai-skills-shell-tips.zh.64006e890f765e56.mp3",
+      "bytes": 399693,
+      "sha256": "e97ba4952ee140614be520e48006d940d5d025ec4a703b071cd681044dc3a954"
+    },
+    {
+      "path": "assets/css/style.css",
+      "bytes": 25358,
+      "sha256": "24d750b182f78f8c1ff35bd9c1ccb4dac6662efed4a4dcbd0eb9685c7f870821"
+    },
+    {
+      "path": "assets/css/summary-audio.css",
+      "bytes": 813,
+      "sha256": "676f7c63a30523d1cfa6847c40bff66ab2269a2a9b899e8acde463144fe6a3cc"
+    },
+    {
+      "path": "assets/images/og.png",
+      "bytes": 804479,
+      "sha256": "f63686c3eed045256e03483eef0a6aad6bd9bb59e29ecc276ffa7fdee31250c0"
+    },
+    {
+      "path": "assets/js/engagement.js",
+      "bytes": 10516,
+      "sha256": "6a64cc4db62da0e1f37d0d421c35dffc764c638d3e247b48d49f243bad35e017"
+    },
+    {
+      "path": "assets/js/main.js",
+      "bytes": 422,
+      "sha256": "bf58e4e0464fafdec73739e0dbe1eb9f20654266f878f2f70e8fb4dad0dea486"
+    },
+    {
+      "path": "assets/js/summary-audio.js",
+      "bytes": 901,
+      "sha256": "1170a71e916786b73159f703973072f37e174dac1c8070c69a0ffbe62c7f397d"
+    },
+    {
+      "path": "favorites/index.html",
+      "bytes": 53107,
+      "sha256": "974c6fcd1a95d5b54923541f10690bce32aed704e84c44967fa0cd94e49b7101"
+    },
+    {
+      "path": "index.html",
+      "bytes": 14873,
+      "sha256": "e903c96904bfd8c9822be8f8d8a94e87e96a363ba583e367fb76504e62297317"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
+      "bytes": 11980,
+      "sha256": "2ebfe90c7a2c370d41f7b785fc279a8dae640ce6da4522a779c3cdcb4ef63c3a"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-artifacts-in-claude-code/index.html",
+      "bytes": 12772,
+      "sha256": "5f6e131f3391b03caac7fc0b6cb712ade78e9deb2b94889b0d13469165c531af"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-bain-company-joins-the-claude-partner-network-as-a-global-premier-partner/index.html",
+      "bytes": 15112,
+      "sha256": "e2940c1e3bdb59e7e82ae2210a31da6672aff17edcf89ebd63e010910ba88ffb"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders/index.html",
+      "bytes": 12945,
+      "sha256": "e533001e237a8c778a0d5b2e5819ed49a95bc8483c619b79f3cfd4faf6c70794"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-building-an-ai-native-revenue-organization/index.html",
+      "bytes": 11558,
+      "sha256": "42da10cb74f08c102b80bac54052b705ea3ab2b4a06043112b56f278d20bf334"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-claude-for-commerce-agents/index.html",
+      "bytes": 16598,
+      "sha256": "5a4ded8aff30bcdbb67b2b67cdbddd705427476b3d5749c99d7223e5636cdd1a"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-claude-for-financial-advisors/index.html",
+      "bytes": 11371,
+      "sha256": "cf266d229cac1dc4cf6cd04661ef2fc097b4d1128dfce24b655746dfe7b083b9"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-claude-for-foundation-models/index.html",
+      "bytes": 12965,
+      "sha256": "346138410671ecff83d7fdeb2f483d74fe811f119fd0ddc9c27d39492f2dc162"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-claude-for-small-business-launches-new-workflows-integrations-and-training-programs/index.html",
+      "bytes": 11935,
+      "sha256": "c5d764d2619974dc6d92f6fe9b32cbceaaf1f1320ced3b12f86302ba18c9d0de"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-claude-for-teachers-now-available-for-schools-and-districts/index.html",
+      "bytes": 17213,
+      "sha256": "6f613293ef9210b423c05914253305001d40bedd6be14ee28dbf2b768f32aee1"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-claude-in-chrome-generally-available/index.html",
+      "bytes": 14628,
+      "sha256": "7991ac2ca76041bfeed843724cf06d242181dd368b4a95a4c14eb9e547f2c3e4"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-claudes-memory-works-everywhere-and-you-decide-whats-in-it/index.html",
+      "bytes": 14999,
+      "sha256": "7dae3b0c840c91f58bbc958d400d4c04f28d30abc815ab1d1c4c546b3bd402e5"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-cowork-built-in-browser/index.html",
+      "bytes": 14437,
+      "sha256": "3dd2e8c3745b09c04e6d13ccb2b8b756d0822b3584a80eba7978388a8c37d46d"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-deploying-ai-from-pilot-to-production/index.html",
+      "bytes": 11530,
+      "sha256": "2a04ab1a500450fd2b1c68938596395c61dd2b46508c7f0a2671aded8b2f31f7"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep/index.html",
+      "bytes": 15880,
+      "sha256": "d27e1d94af024c0096ea4394628b578b6c465ca7d1244244af1e9a38ae3a4e7d"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-how-anthropic-employees-use-claude-tag/index.html",
+      "bytes": 17204,
+      "sha256": "de6f5fd1b5a84a2200b75cc0df3db1723835922fd72e3ab62fac7ebd3bcca819"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-how-healthcare-organizations-use-claude-tag/index.html",
+      "bytes": 11690,
+      "sha256": "7fe0e3ab6ab48481d7086a358955cbe8d32f800e63e3df1fd317c115e5e32b27"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-how-warp-builds-self-improving-agents-on-claude/index.html",
+      "bytes": 14759,
+      "sha256": "d8f400618c05985c1337d692b55d2ae0b0be42318b4ed549a65f625c0795935b"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/index.html",
+      "bytes": 14344,
+      "sha256": "d3d2f91b6a2005b83014befad4890406298fba19ed0323ad5348868f96cd1458"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-salesforce-in-claude/index.html",
+      "bytes": 12665,
+      "sha256": "922a010ff6b53d738a0a8e3ce9db3638161139f5c5ae15f67572d8a7e3dee0ea"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process/index.html",
+      "bytes": 13255,
+      "sha256": "cff3dd7576519bb376842eb3efd048b9926a5f5783b262f375a595e1a157a65b"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-the-ai-native-sdlc-playbook/index.html",
+      "bytes": 13045,
+      "sha256": "e8ac4d53868348021c217b1723a3daf2f1a1d1bb15850197471075894b750a01"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-the-anatomy-of-effective-commerce-agents/index.html",
+      "bytes": 16995,
+      "sha256": "d2297d61412addd6fe4cfaeec24f3ec01eaa7346ff3cbd87279c617a105031f7"
+    },
+    {
+      "path": "posts/ai-blog-anthropic-what-1-000-small-business-owners-taught-us-about-ai/index.html",
+      "bytes": 12975,
+      "sha256": "2aefd3343a31480635edc86c55928e174eaad9bc9202654d96dca37682724550"
+    },
+    {
+      "path": "posts/ai-blog-openai-15-lessons-building-chatgpt-apps/index.html",
+      "bytes": 11380,
+      "sha256": "5ceb4936e7a4d8296d8a801dcbcbc65df2d65e7ababd58020c46b217b60e767f"
+    },
+    {
+      "path": "posts/ai-blog-openai-architectural-visualization-with-astra/index.html",
+      "bytes": 17868,
+      "sha256": "8928989095016e7af267a83203cbf3cc2b8886562aa1b35d134f0f78bc63c296"
+    },
+    {
+      "path": "posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/index.html",
+      "bytes": 16758,
+      "sha256": "2dd810ea8b33ee2c8412ccfe69eebcfa8eec0e61c34209dfd04f6668e2e4951c"
+    },
+    {
+      "path": "posts/ai-blog-openai-build-week-winners/index.html",
+      "bytes": 14878,
+      "sha256": "30ba0de20cfc154fee1082645c0560c2e4e67d586f125a5525986c75ceea1ceb"
+    },
+    {
+      "path": "posts/ai-blog-openai-building-frontend-uis-with-codex-and-figma/index.html",
+      "bytes": 13241,
+      "sha256": "5bd1c7c0643c1c2c3f43d2cd1cb5963ec49a93bc5be72c3980d90c1494fbe48e"
+    },
+    {
+      "path": "posts/ai-blog-openai-codex-as-a-platform/index.html",
+      "bytes": 15496,
+      "sha256": "7f080bde055192e8a5b1846d780e781ec55eefeef6445878e96d69a58c3c75ea"
+    },
+    {
+      "path": "posts/ai-blog-openai-connect-private-mcp-servers-to-openai-products/index.html",
+      "bytes": 15267,
+      "sha256": "992c7f34551e3523b33bf29926c9ec3968a5d5887d0df7416217efff67e1ae3b"
+    },
+    {
+      "path": "posts/ai-blog-openai-custom-code-review-rules-for-codex/index.html",
+      "bytes": 14927,
+      "sha256": "1af9d60c0ce519d10ac44f5e4f9e9982fe14ffeeb65258704e1d52f875418abd"
+    },
+    {
+      "path": "posts/ai-blog-openai-designing-delightful-frontends-with-gpt-5-4/index.html",
+      "bytes": 12858,
+      "sha256": "fa651d0ef1d4c56769316cf95eaa98ac8b9242c39d33c6df188178738f0acfff"
+    },
+    {
+      "path": "posts/ai-blog-openai-eval-skills/index.html",
+      "bytes": 11045,
+      "sha256": "4d23798b624aaadc718af82c71667ca30fa4eecc89841e64b2ef99c64407368e"
+    },
+    {
+      "path": "posts/ai-blog-openai-how-to-build-games-with-astra/index.html",
+      "bytes": 18560,
+      "sha256": "2c082ad9b6f894c8383b61b34e6e98c753b5e8363da8ea5fdc75dbed6c3122cc"
+    },
+    {
+      "path": "posts/ai-blog-openai-mastering-codex-remote-for-engineering/index.html",
+      "bytes": 15166,
+      "sha256": "223c636ef7ca93505c39f6700b05776d0028e60ab14fc372d398a3093aa2d535"
+    },
+    {
+      "path": "posts/ai-blog-openai-one-year-of-responses/index.html",
+      "bytes": 12755,
+      "sha256": "e3d1583a202a718ec50c59d3352067fed547466d64e3178abcd8e7da8484cb7f"
+    },
+    {
+      "path": "posts/ai-blog-openai-openai-for-developers-2025/index.html",
+      "bytes": 11202,
+      "sha256": "4e4b8fe1ee69189690b9bbcd3857621fff479f22be1d5c742d64945597385dce"
+    },
+    {
+      "path": "posts/ai-blog-openai-realtime-perplexity-computer/index.html",
+      "bytes": 14100,
+      "sha256": "03784be390d99ee738048e007ef4c825d49be87d6ba08c9311ba1b4394411e31"
+    },
+    {
+      "path": "posts/ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra/index.html",
+      "bytes": 13053,
+      "sha256": "37cf1bf81328525d0a2d8d2078566799bf3247396713274b9a25aeeb27ec70df"
+    },
+    {
+      "path": "posts/ai-blog-openai-rosalind-workbench/index.html",
+      "bytes": 16578,
+      "sha256": "999fea0efe7fddfd221f281103cfaf7f44c8169828a125c4481f153e0f97c3e5"
+    },
+    {
+      "path": "posts/ai-blog-openai-run-long-horizon-tasks-with-codex/index.html",
+      "bytes": 12700,
+      "sha256": "b92840c599f34a78b7ef93b012a58145371defafa992dffb12fd7c09ac5684e1"
+    },
+    {
+      "path": "posts/ai-blog-openai-scaling-cyber-defenders-with-daybreak/index.html",
+      "bytes": 15417,
+      "sha256": "7ddd67e1c0bec9f99334828717c3d826561f12fa8a7ccb7b7ea6674aab655a42"
+    },
+    {
+      "path": "posts/ai-blog-openai-skills-agents-sdk/index.html",
+      "bytes": 13212,
+      "sha256": "725f9189c73aa8fdd5e1045fbedc1fdcb29de8c32d6670c82fc92e8a42d86bd3"
+    },
+    {
+      "path": "posts/ai-blog-openai-skills-shell-tips/index.html",
+      "bytes": 12381,
+      "sha256": "7e76fce8ee2712f25510661423995294175a016b41894d7a7047a50bf73362d8"
+    },
+    {
+      "path": "posts/ai-blog-openai-skyscanner-codex-jetbrains-mcp/index.html",
+      "bytes": 11041,
+      "sha256": "3cadeb71d110911a3ecd4b1bf71d4a6c263b27c4bdeb153b305cffbf75e99ad6"
+    },
+    {
+      "path": "posts/ai-blog-openai-updates-audio-models/index.html",
+      "bytes": 11188,
+      "sha256": "a1728902bcf9d520293a3358597a4d6a0cf8a585f37dddb5202ca9ceeaff6f55"
+    },
+    {
+      "path": "posts/ai-blog-openai-what-makes-a-great-chatgpt-app/index.html",
+      "bytes": 11199,
+      "sha256": "d87d56451fc93d13191560941c166b4c37c8eba711124359ee99b0c6e731f88a"
+    },
+    {
+      "path": "posts/mysql-alter-table-lock-wait-timeout-postmortem/index.html",
+      "bytes": 41997,
+      "sha256": "200b57b9f42c356412096d59cf111a635140f39938d9a8828981688d42987c77"
+    },
+    {
+      "path": "posts/mysql-alter-table-mdl-diagnosis-runbook/index.html",
+      "bytes": 27868,
+      "sha256": "01f3114fcc2177881c32ca0161123d04abf3c0285dde70a71876d3797dec3ee4"
+    },
+    {
+      "path": "posts/title/index.html",
+      "bytes": 8567,
+      "sha256": "c2c8b9f495b601b8e163cfc246d7ab1fe4e775be33e80c1c21f94cbc7f124550"
+    },
+    {
+      "path": "README.md",
+      "bytes": 267,
+      "sha256": "3488c6275db0ee24173429839bf874eb3becc3cf037887ded2310af213b69e16"
+    },
+    {
+      "path": "zh/404.html",
+      "bytes": 6563,
+      "sha256": "e4a598a4ae8b6451344dff55968f00a95bdf391ad5dba00980818ae59ec42bef"
+    },
+    {
+      "path": "zh/about/index.html",
+      "bytes": 7034,
+      "sha256": "f022980c3c8fb8ab45896f5b109f99bb056e63f49dd8c415dd344e6050e695fc"
+    },
+    {
+      "path": "zh/archives/index.html",
+      "bytes": 19525,
+      "sha256": "f256f90cd67e6108b54de3b38db5974441e49ec38eedac903c6dd82e2c73fc27"
+    },
+    {
+      "path": "zh/favorites/index.html",
+      "bytes": 57576,
+      "sha256": "67306de8f9b3fde43b4fc92e2fffc14ebc41478d959adc00febe80ac0ba9bfa1"
+    },
+    {
+      "path": "zh/index.html",
+      "bytes": 15007,
+      "sha256": "7fc91018d342daac408a375cb13022e8986659a5d1716f6f983f65ce4898b47d"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
+      "bytes": 11605,
+      "sha256": "9d28c0de6622260892f5fc36b2972d611b6550333a58cbb10e943ffd26a5466c"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-artifacts-in-claude-code/index.html",
+      "bytes": 12405,
+      "sha256": "2ffee88a6395e870ac0b186a2e5ece0d3fb6654cece330d6ccaba00438f35373"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-bain-company-joins-the-claude-partner-network-as-a-global-premier-partner/index.html",
+      "bytes": 14436,
+      "sha256": "21adb8975faf14bb4af5fbace1cd008339353f7f7180599795296c2fe0e3fa2a"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-bringing-claude-mythos-5-to-more-defenders/index.html",
+      "bytes": 12633,
+      "sha256": "87817a8813732990b7343f34702c3674bc0300362b6043219db117d237ee1b1d"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-building-an-ai-native-revenue-organization/index.html",
+      "bytes": 11168,
+      "sha256": "1acde39f88b87edbf954a41a4783f5904766de8668830eebc57d6cc9df1193e9"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-claude-for-commerce-agents/index.html",
+      "bytes": 15759,
+      "sha256": "2a735ce60e9805d7f23c853d1240f07d6b7e1c00a47dba459000782ee9d28e57"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-claude-for-financial-advisors/index.html",
+      "bytes": 10990,
+      "sha256": "ae0946f250fb4403c73d87bd76322f3c6af5b49576f3d15ced4621d82952932b"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-claude-for-foundation-models/index.html",
+      "bytes": 12556,
+      "sha256": "0a01af4250fcd7de5cc1ffc08448799452d9152488eb9d62b9779cbb5b09baa1"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-claude-for-small-business-launches-new-workflows-integrations-and-training-programs/index.html",
+      "bytes": 11482,
+      "sha256": "e926baf13a7a62cf43bf789eacf0119a7f5183f105e91217b70fb13a4c7049e0"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-claude-for-teachers-now-available-for-schools-and-districts/index.html",
+      "bytes": 16160,
+      "sha256": "a143d3071f4e4172ee09557cb0178219241d84e00dae241e8156bbe5589362c5"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-claude-in-chrome-generally-available/index.html",
+      "bytes": 14163,
+      "sha256": "2d7676c519c7c9211e6e5606a15070293fc69c58934126c56df4319f75296b62"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-claudes-memory-works-everywhere-and-you-decide-whats-in-it/index.html",
+      "bytes": 14309,
+      "sha256": "bea58e4f6a7cb402ef44ff1c5f4ead5de0e512304872af9c53b952c02f86a53e"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-cowork-built-in-browser/index.html",
+      "bytes": 13899,
+      "sha256": "e7c2e91103c089f17efcaaca772a50c9461d466eaf86a28ad5d28d6e7ae97566"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-deploying-ai-from-pilot-to-production/index.html",
+      "bytes": 11032,
+      "sha256": "58a1aa3ee40d32d9d4999de00635440c3d2a8c3291a966d365eaf74dc9f6ec3a"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep/index.html",
+      "bytes": 15248,
+      "sha256": "7c8c23c1466b9124ffe4663093f50697c053696b00516645dc2d183e53ab7b7d"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-how-anthropic-employees-use-claude-tag/index.html",
+      "bytes": 16483,
+      "sha256": "df36823cd3ace5cc3f12976c9357e606b91d2fbf48473f1aa648250dd6919113"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-how-healthcare-organizations-use-claude-tag/index.html",
+      "bytes": 11233,
+      "sha256": "1a113dbc6de0b0528616f4ad99cb35424c3bafd1878126cfc137877aacf4c775"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-how-warp-builds-self-improving-agents-on-claude/index.html",
+      "bytes": 14375,
+      "sha256": "55c09d3915d40ec54a48359a9fd419ac65ef2bfdf43ef4279b3aeac1e801e9e3"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/index.html",
+      "bytes": 13777,
+      "sha256": "db9d9b806b270400526a54eb8963fd613c2cce7d28373914feee8f6e61b8fddd"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-salesforce-in-claude/index.html",
+      "bytes": 12286,
+      "sha256": "fe2efbea753fa6f395c07fd5cbe3d39acfe67eba08dcba617c00bcd567c538e2"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-t-rowe-price-brings-more-of-claude-to-its-investment-process/index.html",
+      "bytes": 12755,
+      "sha256": "f59201d95e6dfc3873b2223457a7d38174acdc695c6b963d0abfbb1d8db05bb9"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-the-ai-native-sdlc-playbook/index.html",
+      "bytes": 12429,
+      "sha256": "6fca6b6db254a59acf96c66317db76d9933cddd44c0b991b4addaa399bc1dcb1"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-the-anatomy-of-effective-commerce-agents/index.html",
+      "bytes": 16355,
+      "sha256": "455280623577c0bc16ff31670cdbcf2750da5d9c7f39aab5287a240e6ade31f8"
+    },
+    {
+      "path": "zh/posts/ai-blog-anthropic-what-1-000-small-business-owners-taught-us-about-ai/index.html",
+      "bytes": 12434,
+      "sha256": "db89687c5dd534a8feecc4224381074e5d23bbd1ea0586d77e98674dd723bf1e"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-15-lessons-building-chatgpt-apps/index.html",
+      "bytes": 11009,
+      "sha256": "6c3c5f0926439161c52df0e04119388e076382a1c42c0b1c684ee9ed62bf8b47"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-architectural-visualization-with-astra/index.html",
+      "bytes": 16773,
+      "sha256": "514631b4ed9242009ba4a7ad327f0f486572782b17404f3b5cb545389c64b297"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/index.html",
+      "bytes": 16038,
+      "sha256": "1648428be93e21c853d07c3caaec4c44a66b66a573fdfb1ddfe25c7edc89a83f"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-build-week-winners/index.html",
+      "bytes": 14274,
+      "sha256": "7044174e4e8f5ba54deb69cae84f226cb142c27dacaf46cc285174a1e0138ab1"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-building-frontend-uis-with-codex-and-figma/index.html",
+      "bytes": 12865,
+      "sha256": "f5c7f43bf2427a43032264f9f07898c1ba59c0a432aa2ad78df83162312a5f3d"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-codex-as-a-platform/index.html",
+      "bytes": 14779,
+      "sha256": "513d27e1a29f6c0bc84b98082f450e9af131bc06d98b19e12d90f7c5720397d8"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-connect-private-mcp-servers-to-openai-products/index.html",
+      "bytes": 14439,
+      "sha256": "7210c680093b746584e321c12f2b191b003a1e5b5742d24e2deccac572ba00b8"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-custom-code-review-rules-for-codex/index.html",
+      "bytes": 14317,
+      "sha256": "296ef6994df064c13f956a8cf8e2bb04015461541e233f152c2fc09cb1e66019"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-designing-delightful-frontends-with-gpt-5-4/index.html",
+      "bytes": 12528,
+      "sha256": "a288499242ae43160bb5df878ab1a15560696a1b7b04f943ec852f6e5610602b"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-eval-skills/index.html",
+      "bytes": 10675,
+      "sha256": "a50221fb72ba4cfd5988289197b93734bd33c3f21036b6eddb606f089e7aa5fa"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-how-to-build-games-with-astra/index.html",
+      "bytes": 17498,
+      "sha256": "dcd2b93e3c16d209ff5ff07aed2eabfacca4a7050174c1b328ce7c1683c9ad8e"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-mastering-codex-remote-for-engineering/index.html",
+      "bytes": 14442,
+      "sha256": "ad35694c85fc6c8a1e1353d1b375c2ac92f8f58498caaa0e459d00b90de42908"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-one-year-of-responses/index.html",
+      "bytes": 12313,
+      "sha256": "07a118010c9c0e8d85f522200f24a2800be93f7a8e3599aad0c753ab321d09fe"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-openai-for-developers-2025/index.html",
+      "bytes": 10785,
+      "sha256": "e90e03057f6f9b87cdbcac1b42804ccc985a75be7e2e2713522e45b6aa37fd57"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-realtime-perplexity-computer/index.html",
+      "bytes": 13713,
+      "sha256": "7aff30c730c8b6ae54b3db0e352aaa28885b8d4f2c1f7c4a88414bbf9494e6f9"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-rethinking-skills-and-prompts-for-gpt-6-astra/index.html",
+      "bytes": 12569,
+      "sha256": "12cc16e57f7f8c432d07cbbf51226c8092a00a375f97f57aeb6852ae3c526dd8"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-rosalind-workbench/index.html",
+      "bytes": 15647,
+      "sha256": "79dd947fb7df69c82fba2a27d3f8d3e2936a9653f4eef0156032569b776aecb5"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-run-long-horizon-tasks-with-codex/index.html",
+      "bytes": 12226,
+      "sha256": "f86d83f46c36c16bb3b8e721cdffa95950970a6de5f7688cabecfc7f1d706685"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-scaling-cyber-defenders-with-daybreak/index.html",
+      "bytes": 14681,
+      "sha256": "7c2c4ed6578a1c90a6d056d91385751c2d75efc1e3565521960211dedab8e24c"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-skills-agents-sdk/index.html",
+      "bytes": 12485,
+      "sha256": "b55cc91e326dddfd496d2f8bb855aa137e033a0f460147f517fd50919c39b228"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-skills-shell-tips/index.html",
+      "bytes": 11906,
+      "sha256": "50ef12cb5d5295c2622a6eeb1f905dd4709d070d0b3f16364f825ec2b842755b"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-skyscanner-codex-jetbrains-mcp/index.html",
+      "bytes": 10726,
+      "sha256": "84dd2d12c480d85aa7e7233eb8d7ac48b9f513cc32d14151cf056b747e41831e"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-updates-audio-models/index.html",
+      "bytes": 10781,
+      "sha256": "23989758e72c388ff2b3f1e41b7d3d9b7e1027464df5fb55b6c39345584cba64"
+    },
+    {
+      "path": "zh/posts/ai-blog-openai-what-makes-a-great-chatgpt-app/index.html",
+      "bytes": 10881,
+      "sha256": "e718af84fb1da23fe5bd300a006d397903a1ec32cb2b030d8119702386e93158"
+    },
+    {
+      "path": "zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/index.html",
+      "bytes": 38805,
+      "sha256": "d264a67944a67541c22760f93221ceb024e142f69e58cb69c0ea245234165bdd"
+    },
+    {
+      "path": "zh/posts/mysql-alter-table-mdl-diagnosis-runbook/index.html",
+      "bytes": 27421,
+      "sha256": "61a5aba01a11ef58327eeae8b286a04f3ab52845b29f891f2304d6d65c810dc0"
+    },
+    {
+      "path": "zh/posts/title/index.html",
+      "bytes": 8626,
+      "sha256": "8927f91700d06a6135cf8da1ca259baf23c2a2cdbfc23f0b6d641f227a4f2640"
+    }
+  ]
+}

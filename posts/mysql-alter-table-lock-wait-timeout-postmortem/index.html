@@ -1,0 +1,841 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>MySQL ALTER TABLE Production Postmortem: From ERROR 1205 to Metadata Lock Governance · LATENTX</title>
+    <meta name="description" content="A production postmortem for an ALTER TABLE that passed in test but failed with a lock wait timeout in production, plus a reusable DDL release, diagnosis, and verification workflow.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="MySQL ALTER TABLE Production Postmortem: From ERROR 1205 to Metadata Lock Governance · LATENTX">
+    <meta property="og:description" content="A production postmortem for an ALTER TABLE that passed in test but failed with a lock wait timeout in production, plus a reusable DDL release, diagnosis, and verification workflow.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/mysql-alter-table-lock-wait-timeout-postmortem/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/mysql-alter-table-lock-wait-timeout-postmortem/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/mysql-alter-table-lock-wait-timeout-postmortem/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/mysql-alter-table-lock-wait-timeout-postmortem/"
+    data-page-title="MySQL ALTER TABLE Production Postmortem: From ERROR 1205 to Metadata Lock Governance"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/mysql-alter-table-lock-wait-timeout-postmortem/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat mysql-alter-table-lock-wait-timeout-postmortem.md</div>
+    <h1>MySQL ALTER TABLE Production Postmortem: From ERROR 1205 to Metadata Lock Governance</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-03">PUBLISHED 2026.09.03</time>
+      <span>18 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#MySQL</span><span>#DDL</span><span>#Metadata Lock</span><span>#ERROR 1205</span><span>#Production Engineering</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/mysql-alter-table-lock-wait-timeout-postmortem/" data-page-title="MySQL ALTER TABLE Production Postmortem: From ERROR 1205 to Metadata Lock Governance" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>An ordinary <code>ADD COLUMN</code> ran successfully in test, but left production in a dangerous intermediate state: the application had shipped while the <code>robot_id</code> column had not been created. The only explicit clue in the deployment log was <code>ERROR 1205 (HY000): Lock wait timeout exceeded</code>.</p>
+</blockquote>
+<h2>TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Conclusion</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Symptom</td>
+<td><code>chat_sessions</code>, <code>chat_runs</code>, and <code>chat_messages</code> did not receive the expected <code>robot_id</code> column after the production deployment</td>
+</tr>
+<tr>
+<td>Direct cause</td>
+<td><code>ALTER TABLE</code> timed out while waiting for a lock; the release process either did not stop the application deployment or did not surface the failure clearly enough</td>
+</tr>
+<tr>
+<td>Leading root-cause hypothesis</td>
+<td>An active transaction held a Metadata Lock (MDL) on the target table, preventing the DDL from obtaining the exclusive metadata lock it required</td>
+</tr>
+<tr>
+<td>Ruled out</td>
+<td>Basic SQL syntax was not the primary cause; equivalent <code>ADD COLUMN</code> syntax is supported by common MySQL 5.7 and 8.0 versions</td>
+</tr>
+<tr>
+<td>Version differences</td>
+<td>They can change the DDL algorithm, whether a table rebuild is required, execution time, and the contention window. They are amplifiers, not a direct syntax-level cause</td>
+</tr>
+<tr>
+<td>Evidence boundary</td>
+<td>Because the blocking sessions were not fully captured during the incident, no specific transaction can be identified as the blocker after the fact</td>
+</tr>
+<tr>
+<td>Main improvements</td>
+<td>Check long transactions and MDL before release; evaluate the DDL algorithm explicitly; fail fast; verify the schema automatically; use phased migrations or online schema-change tools for large tables</td>
+</tr>
+</tbody></table>
+<p>In one sentence:</p>
+<blockquote>
+<p><strong>The same SQL succeeding later proves only that it can run—not that it is safe to run under production traffic.</strong></p>
+</blockquote>
+<h2>1. Incident background</h2>
+<p>To support data isolation by robot, three business tables needed a new <code>robot_id</code> column and related indexes. The core change looked like this:</p>
+<pre><code class="language-sql">ALTER TABLE chat_sessions
+ADD COLUMN robot_id VARCHAR(64)
+NOT NULL DEFAULT &#39;data-agent&#39;
+COMMENT &#39;Robot ID used for data isolation&#39;
+AFTER id;
+</code></pre>
+<p>The same script succeeded in test and during manual verification. After the production release, however, the column was missing. The deployment log contained the key error:</p>
+<pre><code class="language-text">ERROR 1205 (HY000) at line 4 in file update.sql:
+Lock wait timeout exceeded; try restarting transaction
+</code></pre>
+<p>The danger was not merely that one SQL statement failed. The system entered a state where the application version and database schema no longer matched:</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Application released&quot;] --&gt; C{&quot;Schema upgrade successful?&quot;}
+    B[&quot;DDL failed&quot;] --&gt; C
+    C --&gt;|No| D[&quot;Code starts reading robot_id&quot;]
+    D --&gt; E[&quot;Runtime failure or broken data isolation&quot;]
+
+    classDef normal fill:#E8F3FF,stroke:#3B82F6,color:#0F172A,stroke-width:1.5px;
+    classDef decision fill:#FFF7D6,stroke:#D97706,color:#422006,stroke-width:1.5px;
+    classDef danger fill:#FFE4E6,stroke:#E11D48,color:#4C0519,stroke-width:1.5px;
+    class A,B normal;
+    class C decision;
+    class D,E danger;
+</code></pre>
+<h2>2. Impact and risk</h2>
+<p>The confirmed impact was that the database columns were not created as planned. Even if the application did not fail immediately, several risks remained:</p>
+<ul>
+<li>New code could raise <code>Unknown column</code> when reading or writing <code>robot_id</code>.</li>
+<li>An apparently successful application deployment could hide a failed database migration.</li>
+<li>Multiple tables could be left at different migration stages, making retries vulnerable to duplicate-column or duplicate-index errors.</li>
+<li>If <code>robot_id</code> defines tenant or robot isolation, an incorrect default or backfill could become a data-boundary incident.</li>
+<li>A manual rerun might restore the schema while leaving the underlying lock contention and release-process defects unresolved.</li>
+</ul>
+<h2>3. Separate facts, inferences, and open questions</h2>
+<p>The easiest mistake in a production postmortem is to present a plausible explanation as a proven root cause. The evidence in this incident should be layered carefully:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Evidence</th>
+<th>Confidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Confirmed facts</td>
+<td>Production lacked <code>robot_id</code>; logs contained <code>ERROR 1205</code>; the same SQL succeeded later</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Strong inference</td>
+<td>The DDL encountered lock contention; for <code>ALTER TABLE</code>, MDL is the first place to investigate</td>
+<td>Medium to high</td>
+</tr>
+<tr>
+<td>Possible amplifiers</td>
+<td>Long transactions, high concurrency, large tables, MySQL version differences, a rebuild caused by <code>AFTER</code>, or deployment timeout</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Not proven</td>
+<td>Which connection, query, or job held the blocking lock</td>
+<td>Low without live evidence</td>
+</tr>
+<tr>
+<td>Unsupported conclusion</td>
+<td>“MySQL 5.7 does not support this <code>ADD COLUMN</code> syntax”</td>
+<td>Ruled out</td>
+</tr>
+</tbody></table>
+<p>A rigorous root-cause statement is therefore:</p>
+<blockquote>
+<p><strong>The direct cause is confirmed: the production <code>ALTER TABLE</code> failed after a lock wait timeout. Given DDL locking semantics, Metadata Lock contention is the most likely blocking mechanism. Because session and lock relationships were not captured during the wait, the exact blocker cannot be identified uniquely after the event.</strong></p>
+</blockquote>
+<h2>4. Investigation method: from static correctness to runtime state</h2>
+<p>Database-change failures fall into two broad groups:</p>
+<table>
+<thead>
+<tr>
+<th>Static issues</th>
+<th>Dynamic issues</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQL syntax error</td>
+<td>Metadata Lock contention</td>
+</tr>
+<tr>
+<td>Column or index already exists</td>
+<td>Long-running or idle uncommitted transaction</td>
+</tr>
+<tr>
+<td>Referenced column does not exist</td>
+<td>High concurrency and queueing effects</td>
+</tr>
+<tr>
+<td>Account lacks <code>ALTER</code> permission</td>
+<td>Table rebuild, I/O, or temporary-space pressure</td>
+</tr>
+<tr>
+<td>Wrong instance, schema, or read-only replica</td>
+<td>Deployment platform or proxy timeout</td>
+</tr>
+<tr>
+<td>Migration version was skipped</td>
+<td>DDL algorithm does not fit the production workload</td>
+</tr>
+</tbody></table>
+<p><code>ERROR 1205</code> shifts the center of gravity from “Is the SQL written correctly?” to “What was the database doing at that exact moment?” Before diving into locks, still rule out the wrong database, missing permissions, read-only state, and migration-history errors.</p>
+<h3>4.1 Confirm the target and version</h3>
+<p>Run the following from both the deployment connection and the manual verification connection:</p>
+<pre><code class="language-sql">SELECT
+    DATABASE() AS db_name,
+    @@hostname AS hostname,
+    @@port AS port,
+    @@server_uuid AS server_uuid,
+    VERSION() AS mysql_version,
+    @@version_comment AS version_comment;
+</code></pre>
+<p>Compare <code>DATABASE()</code>, host, port, and <code>server_uuid</code>. Identically named schemas, read/write splitting, proxies, and multiple clusters can all produce the illusion that the log shows a successful execution while the expected column cannot be found.</p>
+<h3>4.2 Confirm identity, privileges, and read-only state</h3>
+<pre><code class="language-sql">SELECT USER() AS login_identity, CURRENT_USER() AS privilege_identity;
+
+SHOW GRANTS FOR CURRENT_USER();
+
+SELECT
+    @@read_only AS read_only,
+    @@super_read_only AS super_read_only;
+</code></pre>
+<p>Do not rely only on a green deployment status. Inspect the database client&#39;s original error and final exit code.</p>
+<h3>4.3 Confirm the actual schema and migration history</h3>
+<pre><code class="language-sql">SHOW CREATE TABLE chat_sessions;
+SHOW CREATE TABLE chat_runs;
+SHOW CREATE TABLE chat_messages;
+
+SELECT
+    TABLE_NAME,
+    COLUMN_NAME,
+    COLUMN_TYPE,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;)
+  AND COLUMN_NAME = &#39;robot_id&#39;;
+</code></pre>
+<p>If the system uses Flyway, Liquibase, or an in-house migration framework, inspect its version table as well. A classic anti-pattern is editing an old migration that has already run in production: new environments execute the modified content, while production skips it according to migration history.</p>
+<h2>5. How Metadata Lock makes ALTER TABLE fail</h2>
+<p>MySQL uses Metadata Locks to keep object definitions consistent with concurrent access. After a transaction accesses a table, its metadata lock may remain until commit or rollback. <code>ALTER TABLE</code> must obtain the exclusive metadata lock appropriate for the structural change.</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant App as Application connection A
+    participant DB as MySQL
+    participant Deploy as Deployment job B
+    participant Verify as Post-release verification
+
+    App-&gt;&gt;DB: BEGIN
+    App-&gt;&gt;DB: SELECT / UPDATE chat_sessions
+    Note over App,DB: Transaction not committed, table MDL remains held
+    Deploy-&gt;&gt;DB: ALTER TABLE ... ADD robot_id
+    DB--&gt;&gt;Deploy: Waiting for table metadata lock
+    Note over DB,Deploy: Later requests may queue behind the wait
+    DB--xDeploy: ERROR 1205 / timeout
+    Deploy--&gt;&gt;Verify: Release may continue without fail-fast
+    Verify-&gt;&gt;DB: Query information_schema.COLUMNS
+    DB--&gt;&gt;Verify: robot_id does not exist
+    App-&gt;&gt;DB: COMMIT
+    Note over App,DB: Once released, a manual retry may succeed immediately
+</code></pre>
+<p>This explains why “the automated deployment failed but a later manual run succeeded” is not contradictory:</p>
+<ul>
+<li>The SQL did not change.</li>
+<li>The schema did not change.</li>
+<li>The transaction and lock state at execution time did.</li>
+</ul>
+<p>There is also a queueing effect. A DDL request waiting for exclusive MDL can cause later requests against the same table to queue as well, expanding one blocked DDL into a pile-up of application connections. A stuck DDL should not be allowed to wait indefinitely.</p>
+<h2>6. Finding who blocks whom during the incident</h2>
+<p>Lock incidents are highly time-sensitive. The most valuable action is not simply “cancel and retry later,” but to preserve evidence first when it is safe to do so.</p>
+<h3>6.1 Inspect active sessions</h3>
+<pre><code class="language-sql">SHOW FULL PROCESSLIST;
+</code></pre>
+<p>Look specifically for:</p>
+<pre><code class="language-text">Waiting for table metadata lock
+</code></pre>
+<p>Record the connection ID, user, source address, database, wait duration, and SQL text.</p>
+<h3>6.2 Inspect long-running transactions</h3>
+<pre><code class="language-sql">SELECT
+    trx_id,
+    trx_mysql_thread_id,
+    trx_started,
+    trx_state,
+    trx_rows_locked,
+    trx_rows_modified,
+    trx_query
+FROM information_schema.innodb_trx
+ORDER BY trx_started;
+</code></pre>
+<p><code>trx_query IS NULL</code> does not mean a transaction is harmless. A connection may be in <code>Sleep</code> while its transaction remains uncommitted—one of the least visible ways an idle transaction can keep locks alive.</p>
+<h3>6.3 Inspect table-lock wait relationships</h3>
+<p>When the <code>sys</code> schema is available:</p>
+<pre><code class="language-sql">SELECT
+    object_schema,
+    object_name,
+    waiting_pid,
+    waiting_query,
+    waiting_query_secs,
+    blocking_pid,
+    blocking_account,
+    sql_kill_blocking_connection
+FROM sys.schema_table_lock_waits
+WHERE object_schema = DATABASE()
+  AND object_name IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;);
+</code></pre>
+<p><code>sql_kill_blocking_connection</code> is only diagnostic assistance. Never execute it automatically. Before terminating a production connection, confirm the transaction&#39;s work, rollback cost, business impact, and on-call authorization.</p>
+<h3>6.4 Inspect MDL in Performance Schema</h3>
+<pre><code class="language-sql">SELECT
+    ml.OBJECT_TYPE,
+    ml.OBJECT_SCHEMA,
+    ml.OBJECT_NAME,
+    ml.LOCK_TYPE,
+    ml.LOCK_DURATION,
+    ml.LOCK_STATUS,
+    t.PROCESSLIST_ID,
+    t.PROCESSLIST_USER,
+    t.PROCESSLIST_HOST,
+    t.PROCESSLIST_TIME,
+    t.PROCESSLIST_STATE,
+    t.PROCESSLIST_INFO
+FROM performance_schema.metadata_locks AS ml
+LEFT JOIN performance_schema.threads AS t
+       ON t.THREAD_ID = ml.OWNER_THREAD_ID
+WHERE ml.OBJECT_SCHEMA = DATABASE()
+  AND ml.OBJECT_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;)
+ORDER BY ml.OBJECT_NAME, ml.LOCK_STATUS, t.PROCESSLIST_TIME DESC;
+</code></pre>
+<p>Inspect both <code>GRANTED</code> and <code>PENDING</code> rows. The former are locks already held; the latter are requests still waiting.</p>
+<h3>6.5 Do not confuse the two timeout variables</h3>
+<pre><code class="language-sql">SHOW VARIABLES
+WHERE Variable_name IN (&#39;lock_wait_timeout&#39;, &#39;innodb_lock_wait_timeout&#39;);
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Primary scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>lock_wait_timeout</code></td>
+<td>Metadata Lock waits</td>
+</tr>
+<tr>
+<td><code>innodb_lock_wait_timeout</code></td>
+<td>InnoDB row-lock waits</td>
+</tr>
+</tbody></table>
+<p>Both classes of timeout can surface as <code>ERROR 1205</code>, so the error code alone does not prove the lock type. Use the SQL statement, Processlist, <code>metadata_locks</code>, and transaction state together. Because the failed statement here was <code>ALTER TABLE</code>, MDL is the leading direction.</p>
+<h2>7. Why test did not catch it</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Test</th>
+<th>Production</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Data volume</td>
+<td>Small</td>
+<td>Potentially orders of magnitude larger</td>
+<td>Table rebuilds and index creation take very different amounts of time</td>
+</tr>
+<tr>
+<td>Concurrent connections</td>
+<td>Few and short-lived</td>
+<td>Numerous and continuous</td>
+<td>DDL is more likely to compete for MDL</td>
+</tr>
+<tr>
+<td>Transaction profile</td>
+<td>Few long transactions</td>
+<td>Batch jobs, reports, consumers, and manual operations coexist</td>
+<td>Lock duration becomes less predictable</td>
+</tr>
+<tr>
+<td>MySQL version</td>
+<td>Potentially newer</td>
+<td>Potentially older</td>
+<td>DDL algorithms and capabilities differ</td>
+</tr>
+<tr>
+<td>Table definition</td>
+<td>Often created from a fresh script</td>
+<td>Evolved over years</td>
+<td>Row format, indexes, and dependencies may differ</td>
+</tr>
+<tr>
+<td>Release window</td>
+<td>Tests can run at any time</td>
+<td>Executes under real traffic</td>
+<td>The contention window expands</td>
+</tr>
+<tr>
+<td>Verification target</td>
+<td>“Can the SQL run?”</td>
+<td>“Can it run safely within production constraints?”</td>
+<td>Functional correctness is not operational correctness</td>
+</tr>
+</tbody></table>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph Test[&quot;Test environment&quot;]
+        T1[&quot;Small data volume&quot;] --&gt; T4[&quot;Fast DDL&quot;]
+        T2[&quot;Low concurrency&quot;] --&gt; T4
+        T3[&quot;Short transactions&quot;] --&gt; T4
+        T4 --&gt; T5[&quot;Validation passes&quot;]
+    end
+
+    subgraph Prod[&quot;Production environment&quot;]
+        P1[&quot;Large data volume&quot;] --&gt; P4[&quot;Longer DDL window&quot;]
+        P2[&quot;Continuous traffic&quot;] --&gt; P5[&quot;More lock contention&quot;]
+        P3[&quot;Long transactions or batch jobs&quot;] --&gt; P5
+        P4 --&gt; P6[&quot;Timeout or load risk&quot;]
+        P5 --&gt; P6
+    end
+
+    classDef safe fill:#DCFCE7,stroke:#16A34A,color:#052E16,stroke-width:1.5px;
+    classDef warn fill:#FEF3C7,stroke:#D97706,color:#451A03,stroke-width:1.5px;
+    classDef danger fill:#FFE4E6,stroke:#E11D48,color:#4C0519,stroke-width:1.5px;
+    class T1,T2,T3,T4,T5 safe;
+    class P1,P2,P3,P4,P5 warn;
+    class P6 danger;
+</code></pre>
+<h2>8. MySQL version differences: not syntax, but still a risk multiplier</h2>
+<p>The basic <code>ADD COLUMN ... DEFAULT ... COMMENT ... AFTER ...</code> syntax works in common MySQL 5.7 and 8.0 versions. What actually needs comparison is the execution algorithm and cost.</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>MySQL 5.7</th>
+<th>MySQL 8.0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Common algorithm for <code>ADD COLUMN</code></td>
+<td>Supports <code>INPLACE</code>, but normally rebuilds the table</td>
+<td>From 8.0.12, eligible changes may use <code>INSTANT</code></td>
+</tr>
+<tr>
+<td>Instant add column at an arbitrary position</td>
+<td>Not supported</td>
+<td>Supported from 8.0.29 when restrictions are met</td>
+</tr>
+<tr>
+<td>Effect of <code>AFTER id</code></td>
+<td>Requires data reorganization</td>
+<td>Before 8.0.29, cannot use Instant at an arbitrary position and may fall back to a heavier algorithm</td>
+</tr>
+<tr>
+<td>DDL atomicity</td>
+<td>DDL generally performs implicit commits with limited recovery semantics</td>
+<td>The 8.0 data dictionary supports atomic DDL more broadly</td>
+</tr>
+</tbody></table>
+<p>This means <code>AFTER id</code>, although mainly a presentation preference, can change the execution path. Physical column position rarely improves query performance. Unless compatibility requires it, remove <code>AFTER</code> so the database has a better chance of using a low-cost algorithm.</p>
+<p>Do not guess the algorithm. Rehearse against the same minor version, table definition, row format, and index conditions as production. Use explicit constraints to prevent silent degradation:</p>
+<pre><code class="language-sql">-- Use only after confirming support in the current version and table.
+-- Fail immediately when INSTANT cannot be honored.
+ALTER TABLE chat_sessions
+    ADD COLUMN robot_id VARCHAR(64) NULL,
+    ALGORITHM=INSTANT;
+</code></pre>
+<p>For an in-place plan:</p>
+<pre><code class="language-sql">ALTER TABLE chat_sessions
+    ADD COLUMN robot_id VARCHAR(64) NULL,
+    ALGORITHM=INPLACE,
+    LOCK=NONE;
+</code></pre>
+<p>Explicit constraints make MySQL fail with a reason when it cannot satisfy the intended algorithm or concurrency level instead of silently selecting a more expensive path in production.</p>
+<h2>9. A safer robot_id migration</h2>
+<p>Adding the column directly as:</p>
+<pre><code class="language-sql">NOT NULL DEFAULT &#39;data-agent&#39;
+</code></pre>
+<p>would reinterpret every historical row whose origin is unknown as belonging to a single robot. If <code>robot_id</code> enforces data isolation, this is a data-semantics problem before it is a DDL problem.</p>
+<p>A safer approach is Expand → Migrate → Contract:</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Expand&lt;br/&gt;Add a nullable column&quot;] --&gt; B[&quot;Dual-write&lt;br/&gt;Write robot_id for new data&quot;]
+    B --&gt; C[&quot;Backfill&lt;br/&gt;Migrate historical rows in PK batches&quot;]
+    C --&gt; D{&quot;Integrity and mapping checks&quot;}
+    D --&gt;|Fail| C
+    D --&gt;|Pass| E[&quot;Create required indexes&quot;]
+    E --&gt; F[&quot;Contract&lt;br/&gt;Enforce NOT NULL / DEFAULT&quot;]
+    F --&gt; G[&quot;Remove compatibility logic&quot;]
+
+    classDef phase fill:#E8F3FF,stroke:#2563EB,color:#0F172A,stroke-width:1.5px;
+    classDef verify fill:#FFF7D6,stroke:#D97706,color:#422006,stroke-width:1.5px;
+    class A,B,C,E,F,G phase;
+    class D verify;
+</code></pre>
+<p>Key principles:</p>
+<ol>
+<li>Add a backward-compatible structure first so the old application keeps working.</li>
+<li>Have the new application dual-write or reliably populate <code>robot_id</code>.</li>
+<li>Backfill historical data in small, pausable, retryable primary-key ranges.</li>
+<li>Validate nulls, invalid values, relationships, and per-robot distributions.</li>
+<li>Use <code>EXPLAIN</code> against real queries to validate indexes.</li>
+<li>Tighten <code>NOT NULL</code>, defaults, and old compatibility logic only at the end.</li>
+</ol>
+<h2>10. Re-evaluate index design during the migration</h2>
+<p>The original proposal included several indexes starting with <code>robot_id</code>. Use the leftmost-prefix rule to eliminate unnecessary write amplification:</p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Candidate indexes</th>
+<th>Evaluation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>chat_sessions</code></td>
+<td><code>(robot_id)</code> and <code>(robot_id, deleted_at)</code></td>
+<td>The composite index can usually support equality lookups on <code>robot_id</code> alone, so the single-column index may be redundant</td>
+</tr>
+<tr>
+<td><code>chat_runs</code></td>
+<td><code>(robot_id)</code> and <code>(robot_id, status)</code></td>
+<td>The composite index covers the <code>robot_id</code> prefix; decide using ordering needs, covering queries, and cardinality</td>
+</tr>
+<tr>
+<td><code>chat_messages</code></td>
+<td><code>(robot_id)</code>, <code>(session_id, robot_id)</code>, and <code>(run_id, robot_id)</code></td>
+<td>The latter two do not efficiently replace queries whose first predicate is <code>robot_id</code>, so the single-column index may still be useful</td>
+</tr>
+</tbody></table>
+<p>“Possibly redundant” does not mean “safe to delete immediately.” Base the final decision on real SQL, <code>EXPLAIN</code> plans, cardinality, write overhead, and slow-query evidence.</p>
+<h2>11. A standardized production DDL release</h2>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;Prepare the change note and forward-fix plan&quot;] --&gt; B{&quot;Instance / schema / version match?&quot;}
+    B --&gt;|No| X[&quot;Stop release&quot;]
+    B --&gt;|Yes| C{&quot;Table size, disk, and algorithm assessed?&quot;}
+    C --&gt;|No| X
+    C --&gt;|Yes| D{&quot;Long transactions and MDL check pass?&quot;}
+    D --&gt;|No| X
+    D --&gt;|Yes| E[&quot;Use a low-traffic window and bounded execution time&quot;]
+    E --&gt; F{&quot;DDL succeeded?&quot;}
+    F --&gt;|No| G[&quot;Fail fast&lt;br/&gt;Preserve evidence and stop downstream release&quot;]
+    F --&gt;|Yes| H[&quot;Automatically verify columns, indexes, and constraints&quot;]
+    H --&gt; I{&quot;Schema matches the target?&quot;}
+    I --&gt;|No| G
+    I --&gt;|Yes| J[&quot;Canary the application and observe database signals&quot;]
+    J --&gt; K[&quot;Complete release and preserve records&quot;]
+
+    classDef gate fill:#FFF7D6,stroke:#D97706,color:#422006,stroke-width:1.5px;
+    classDef action fill:#E8F3FF,stroke:#2563EB,color:#0F172A,stroke-width:1.5px;
+    classDef stop fill:#FFE4E6,stroke:#E11D48,color:#4C0519,stroke-width:1.5px;
+    classDef done fill:#DCFCE7,stroke:#16A34A,color:#052E16,stroke-width:1.5px;
+    class B,C,D,F,I gate;
+    class A,E,H,J action;
+    class X,G stop;
+    class K done;
+</code></pre>
+<h3>11.1 Before release</h3>
+<ul>
+<li>Confirm the target instance, port, <code>server_uuid</code>, schema, and primary/replica role.</li>
+<li>Compare the exact MySQL version, storage engine, row format, and table definition between production and rehearsal.</li>
+<li>Estimate row count, data size, index size, and available disk.</li>
+<li>Confirm the DDL algorithm, whether it rebuilds the table, concurrent-DML behavior, and expected duration.</li>
+<li>Check long-running transactions, idle uncommitted transactions, MDL waits, backups, reports, and batch jobs.</li>
+<li>Define the maximum wait, stop conditions, observability signals, and decision owner.</li>
+<li>For isolation fields, define how historical data will be mapped; do not substitute a default value for a business decision.</li>
+<li>Prepare a forward-fix plan. Dropping a column or reversing a large-table DDL should not be treated as cheap.</li>
+</ul>
+<p>Estimate table size with:</p>
+<pre><code class="language-sql">SELECT
+    TABLE_NAME,
+    TABLE_ROWS,
+    ROUND(DATA_LENGTH / 1024 / 1024 / 1024, 2) AS data_gb,
+    ROUND(INDEX_LENGTH / 1024 / 1024 / 1024, 2) AS index_gb
+FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;);
+</code></pre>
+<p><code>TABLE_ROWS</code> is normally an estimate for InnoDB, but it is enough to establish the order of magnitude.</p>
+<h3>11.2 During release</h3>
+<ul>
+<li>Make application changes explicitly depend on database changes; never ship code that requires the new column before the DDL completes.</li>
+<li>Use a finite and observable wait budget instead of allowing a DDL to queue forever.</li>
+<li>Monitor threads, QPS, latency, lock waits, disk I/O, replication lag, and connection pools.</li>
+<li>When <code>Waiting for table metadata lock</code> appears, enter the incident procedure instead of retrying blindly.</li>
+<li>Avoid client options that swallow SQL errors; a non-zero migration exit must fail the pipeline.</li>
+<li>For large tables, use a reviewed online schema-change tool when necessary, and rehearse throttling, pause, and cleanup behavior.</li>
+</ul>
+<h3>11.3 After release</h3>
+<p>Do not treat “the command finished” as “the change succeeded.” At minimum, verify automatically:</p>
+<pre><code class="language-sql">-- All three tables must return one row each.
+SELECT
+    TABLE_NAME,
+    COLUMN_TYPE,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;)
+  AND COLUMN_NAME = &#39;robot_id&#39;
+ORDER BY TABLE_NAME;
+</code></pre>
+<p>Also validate index-column order, application reads and writes, error rate, slow queries, replication lag, and the correctness of historical mappings. A failed verification must prevent the release from being marked successful.</p>
+<h2>12. Reusable checklist</h2>
+<h3>Change design</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Create a new migration for every change; never edit a migration already released.</li>
+<li><input disabled="" type="checkbox"> Define column defaults and the semantics of historical backfill.</li>
+<li><input disabled="" type="checkbox"> Use Expand → Migrate → Contract for incompatible changes.</li>
+<li><input disabled="" type="checkbox"> Remove unnecessary <code>AFTER</code> / <code>FIRST</code> clauses instead of paying DDL cost for presentation.</li>
+<li><input disabled="" type="checkbox"> Validate indexes against real queries and avoid redundant indexes.</li>
+</ul>
+<h3>Production assessment</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Confirm instance, schema, primary/replica role, account, and permissions.</li>
+<li><input disabled="" type="checkbox"> Confirm the exact MySQL version, engine, row format, and <code>SHOW CREATE TABLE</code>.</li>
+<li><input disabled="" type="checkbox"> Assess row count, table size, disk, replication lag, and the DDL algorithm.</li>
+<li><input disabled="" type="checkbox"> Rehearse on an equivalent version and representative data volume.</li>
+<li><input disabled="" type="checkbox"> Decide whether an online schema-change tool is required.</li>
+</ul>
+<h3>Execution window</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Check long transactions, Sleep in transaction, and MDL waits.</li>
+<li><input disabled="" type="checkbox"> Avoid batch jobs, backups, reports, and peak traffic.</li>
+<li><input disabled="" type="checkbox"> Set a finite wait time, stop conditions, and an accountable owner.</li>
+<li><input disabled="" type="checkbox"> Monitor critical database and application signals.</li>
+<li><input disabled="" type="checkbox"> Ensure an SQL failure immediately fails the release.</li>
+</ul>
+<h3>Result verification</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Query <code>information_schema.COLUMNS</code> to verify column definitions.</li>
+<li><input disabled="" type="checkbox"> Query <code>information_schema.STATISTICS</code> to verify indexes and column order.</li>
+<li><input disabled="" type="checkbox"> Complete compatibility checks and a minimal application smoke test.</li>
+<li><input disabled="" type="checkbox"> Validate the completeness and isolation semantics of historical backfill.</li>
+<li><input disabled="" type="checkbox"> Preserve SQL output, schema snapshots, execution duration, and monitoring evidence.</li>
+</ul>
+<h2>13. What this incident actually exposed</h2>
+<p>On the surface, this was an <code>ALTER TABLE</code> timeout. Systemically, it exposed three gaps:</p>
+<ol>
+<li><strong>An incomplete validation model:</strong> test proved syntax and functional correctness, not executability under production scale and concurrency.</li>
+<li><strong>An incomplete release gate:</strong> the process could continue after a database change failed, so the application and schema lacked a hard dependency.</li>
+<li><strong>Incomplete observability:</strong> transaction, Processlist, and MDL relationships were not captured automatically during the wait, leaving only a strong hypothesis rather than a closed evidence chain.</li>
+</ol>
+<p>The best fix is therefore not to increase the timeout. A longer timeout can leave both the DDL and later application requests queued for longer, magnifying the impact. The right direction is to shorten transactions, select an appropriate window and algorithm, bound the wait, stop on failure, and make schema verification a release-completion condition.</p>
+<h2>14. Lessons learned</h2>
+<ul>
+<li>Correct SQL is not necessarily executable SQL in production; functional and operational correctness are separate acceptance criteria.</li>
+<li><code>ERROR 1205</code> is the beginning of the investigation, not a complete root cause; close the loop with live lock and transaction evidence.</li>
+<li>For DDL, even an ordinary query can become a blocker when its transaction remains open.</li>
+<li>A successful manual retry usually means runtime state changed; it does not disprove lock contention.</li>
+<li>Analyze version differences in terms of algorithm and cost, not merely syntax compatibility.</li>
+<li>Physical column order is rarely worth giving up the opportunity for Instant DDL.</li>
+<li>Defaults for data-isolation fields require business-semantic review.</li>
+<li>A release is successful only when the migration, schema verification, and application verification all succeed.</li>
+</ul>
+<h2>References</h2>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html">MySQL 8.0 Reference Manual: Online DDL Operations</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-online-ddl-operations.html">MySQL 5.7 Reference Manual: Online DDL Operations</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/metadata-locking.html">MySQL 8.0 Reference Manual: Metadata Locking</a></li>
+<li><a href="https://dev.mysql.com/doc/mysql-perfschema-excerpt/8.0/en/performance-schema-metadata-locks-table.html">MySQL Performance Schema: <code>metadata_locks</code> Table</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/sys-schema-table-lock-waits.html">MySQL 8.0 Reference Manual: <code>schema_table_lock_waits</code> View</a></li>
+</ul>
+<blockquote>
+<p>Rendering note: this site renders the Mermaid diagrams in this article directly in the browser.</p>
+</blockquote>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/mysql-alter-table-lock-wait-timeout-postmortem/" data-page-title="MySQL ALTER TABLE Production Postmortem: From ERROR 1205 to Metadata Lock Governance" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+      <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs';
+
+        const diagramBlocks = document.querySelectorAll('pre > code.language-mermaid');
+        diagramBlocks.forEach((code) => {
+          const container = code.parentElement;
+          container.className = 'mermaid';
+          container.textContent = code.textContent;
+        });
+
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'dark',
+          themeVariables: {
+            background: '#070b08',
+            primaryColor: '#102119',
+            primaryTextColor: '#edf3ef',
+            primaryBorderColor: '#00ff88',
+            lineColor: '#65d89a',
+            secondaryColor: '#17241c',
+            tertiaryColor: '#111712'
+          }
+        });
+
+        if (diagramBlocks.length > 0) {
+          await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+        }
+      </script>
+    
+  </body>
+</html>

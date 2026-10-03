@@ -1,0 +1,851 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>一次 MySQL ALTER TABLE 生产故障复盘：从 ERROR 1205 到 Metadata Lock 治理 · LATENTX</title>
+    <meta name="description" content="复盘一次测试环境正常、生产环境 ALTER TABLE 因锁等待超时失败的事故，并沉淀可复用的 DDL 发布、诊断与验证流程。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="一次 MySQL ALTER TABLE 生产故障复盘：从 ERROR 1205 到 Metadata Lock 治理 · LATENTX">
+    <meta property="og:description" content="复盘一次测试环境正常、生产环境 ALTER TABLE 因锁等待超时失败的事故，并沉淀可复用的 DDL 发布、诊断与验证流程。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/mysql-alter-table-lock-wait-timeout-postmortem/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/mysql-alter-table-lock-wait-timeout-postmortem/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/"
+    data-page-title="一次 MySQL ALTER TABLE 生产故障复盘：从 ERROR 1205 到 Metadata Lock 治理"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/mysql-alter-table-lock-wait-timeout-postmortem/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat mysql-alter-table-lock-wait-timeout-postmortem.md</div>
+    <h1>一次 MySQL ALTER TABLE 生产故障复盘：从 ERROR 1205 到 Metadata Lock 治理</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-03">发布于 2026.09.03</time>
+      <span>18 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#MySQL</span><span>#DDL</span><span>#Metadata Lock</span><span>#ERROR 1205</span><span>#Production Engineering</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/" data-page-title="一次 MySQL ALTER TABLE 生产故障复盘：从 ERROR 1205 到 Metadata Lock 治理" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>一条普通的 <code>ADD COLUMN</code> 在测试环境顺利执行，到了生产环境却留下了一个危险的中间状态：应用已经发布，<code>robot_id</code> 字段没有创建。日志中唯一明确的线索是 <code>ERROR 1205 (HY000): Lock wait timeout exceeded</code>。</p>
+</blockquote>
+<h2>TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>故障表现</td>
+<td>生产发布后，<code>chat_sessions</code>、<code>chat_runs</code>、<code>chat_messages</code> 未按预期新增 <code>robot_id</code></td>
+</tr>
+<tr>
+<td>直接原因</td>
+<td><code>ALTER TABLE</code> 等待锁超时并失败；发布流程没有阻止应用继续上线或没有充分暴露失败状态</td>
+</tr>
+<tr>
+<td>首要根因假设</td>
+<td>目标表被活跃事务持有 Metadata Lock（MDL），DDL 无法取得所需的排他元数据锁</td>
+</tr>
+<tr>
+<td>已排除方向</td>
+<td>SQL 基础语法错误不是主因；同类 <code>ADD COLUMN</code> 语法在常见 MySQL 5.7/8.0 中均受支持</td>
+</tr>
+<tr>
+<td>版本差异</td>
+<td>可能改变 DDL 算法、是否重建表、执行时间和竞争窗口，是放大因素而非语法层面的直接根因</td>
+</tr>
+<tr>
+<td>证据边界</td>
+<td>由于故障现场的阻塞会话未被完整保留，不能事后武断地认定某一个具体事务就是 blocker</td>
+</tr>
+<tr>
+<td>核心改进</td>
+<td>发布前查长事务和 MDL；显式评估 DDL 算法；失败即停止；发布后自动校验 Schema；大表采用分阶段变更或在线 Schema 变更工具</td>
+</tr>
+</tbody></table>
+<p>一句话总结：</p>
+<blockquote>
+<p><strong>相同 SQL 在另一个时间执行成功，只能证明 SQL 能执行，不能证明它在生产流量下可以安全执行。</strong></p>
+</blockquote>
+<h2>1. 事故背景</h2>
+<p>为了支持机器人维度的数据隔离，需要为三张业务表新增 <code>robot_id</code>，并增加相关索引。核心变更类似：</p>
+<pre><code class="language-sql">ALTER TABLE chat_sessions
+ADD COLUMN robot_id VARCHAR(64)
+NOT NULL DEFAULT &#39;data-agent&#39;
+COMMENT &#39;机器人ID（用于数据隔离）&#39;
+AFTER id;
+</code></pre>
+<p>同一脚本在测试环境和人工验证中均能执行成功，但生产发布后检查发现字段不存在。发布日志给出了关键错误：</p>
+<pre><code class="language-text">ERROR 1205 (HY000) at line 4 in file update.sql:
+Lock wait timeout exceeded; try restarting transaction
+</code></pre>
+<p>这类事故的危险之处不只是“一条 SQL 失败”，而是系统进入了 Schema 与应用版本不一致的状态：</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;应用版本已发布&quot;] --&gt; C{&quot;Schema 是否升级成功&quot;}
+    B[&quot;DDL 执行失败&quot;] --&gt; C
+    C --&gt;|否| D[&quot;代码开始访问 robot_id&quot;]
+    D --&gt; E[&quot;运行时异常或数据隔离失效&quot;]
+
+    classDef normal fill:#E8F3FF,stroke:#3B82F6,color:#0F172A,stroke-width:1.5px;
+    classDef decision fill:#FFF7D6,stroke:#D97706,color:#422006,stroke-width:1.5px;
+    classDef danger fill:#FFE4E6,stroke:#E11D48,color:#4C0519,stroke-width:1.5px;
+    class A,B normal;
+    class C decision;
+    class D,E danger;
+</code></pre>
+<h2>2. 影响与风险</h2>
+<p>本次已确认的影响是数据库字段未按计划创建。即使业务暂时没有立即报错，也存在以下风险：</p>
+<ul>
+<li>新代码查询或写入 <code>robot_id</code> 时出现 <code>Unknown column</code>；</li>
+<li>应用发布“成功”掩盖数据库迁移失败，造成错误的完成认知；</li>
+<li>多张表处于不一致的迁移状态，重试时又可能遇到重复字段或重复索引；</li>
+<li>若 <code>robot_id</code> 用于租户或机器人数据隔离，错误默认值和错误回填可能扩大为数据边界问题；</li>
+<li>人工补执行虽然恢复了 Schema，却可能让真正的锁竞争和发布机制缺陷继续潜伏。</li>
+</ul>
+<h2>3. 先区分事实、推断与待验证项</h2>
+<p>生产复盘最容易犯的错误，是把“合理解释”写成“已经证实的根因”。本次证据应这样分层：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>内容</th>
+<th>结论强度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>已确认事实</td>
+<td>生产缺少 <code>robot_id</code>；日志出现 <code>ERROR 1205</code>；同一 SQL 后续可以成功执行</td>
+<td>强</td>
+</tr>
+<tr>
+<td>高概率推断</td>
+<td>DDL 执行时遇到锁竞争；对 <code>ALTER TABLE</code> 而言，MDL 是第一排查方向</td>
+<td>中到强</td>
+</tr>
+<tr>
+<td>可能的放大因素</td>
+<td>长事务、高并发、大表、MySQL 版本差异、<code>AFTER</code> 触发表重建、发布超时</td>
+<td>中</td>
+</tr>
+<tr>
+<td>尚未证实</td>
+<td>哪个连接、哪条 SQL、哪一个任务持有了阻塞锁</td>
+<td>弱，需现场证据</td>
+</tr>
+<tr>
+<td>不支持的结论</td>
+<td>“MySQL 5.7 不支持这条 ADD COLUMN 语法”</td>
+<td>可排除</td>
+</tr>
+</tbody></table>
+<p>因此，严谨的根因表述是：</p>
+<blockquote>
+<p><strong>直接原因已经确认：生产 <code>ALTER TABLE</code> 因锁等待超时失败。结合 DDL 的锁语义，最可能的阻塞机制是 Metadata Lock；但由于未保存等待时的会话和锁关系，具体 blocker 无法事后唯一确定。</strong></p>
+</blockquote>
+<h2>4. 调研方法：从静态正确性转向运行时状态</h2>
+<p>排查数据库变更时，可以先将问题分成两类：</p>
+<table>
+<thead>
+<tr>
+<th>静态问题</th>
+<th>动态问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQL 语法错误</td>
+<td>Metadata Lock 竞争</td>
+</tr>
+<tr>
+<td>字段或索引已经存在</td>
+<td>长事务或空闲未提交事务</td>
+</tr>
+<tr>
+<td>依赖字段不存在</td>
+<td>高并发与排队效应</td>
+</tr>
+<tr>
+<td>账号没有 <code>ALTER</code> 权限</td>
+<td>大表重建、I/O 或临时空间压力</td>
+</tr>
+<tr>
+<td>连错实例、Schema 或只读副本</td>
+<td>发布平台或代理超时、主动终止 SQL</td>
+</tr>
+<tr>
+<td>Migration 版本被跳过</td>
+<td>DDL 算法与生产负载不匹配</td>
+</tr>
+</tbody></table>
+<p><code>ERROR 1205</code> 已经把排查重点从“SQL 写得对不对”转移到“执行 SQL 的那一刻数据库发生了什么”。但在进入锁分析前，仍要快速排除连错库、权限、只读和迁移历史等常见问题。</p>
+<h3>4.1 确认连接目标与版本</h3>
+<p>在发布连接和人工检查连接上分别执行：</p>
+<pre><code class="language-sql">SELECT
+    DATABASE() AS db_name,
+    @@hostname AS hostname,
+    @@port AS port,
+    @@server_uuid AS server_uuid,
+    VERSION() AS mysql_version,
+    @@version_comment AS version_comment;
+</code></pre>
+<p>需要逐项比对 <code>DATABASE()</code>、主机、端口和 <code>server_uuid</code>。同名 Schema、主从读写分离、代理路由和多集群配置，都可能制造“日志显示执行过，但检查不到字段”的错觉。</p>
+<h3>4.2 确认账号、权限与只读状态</h3>
+<pre><code class="language-sql">SELECT USER() AS login_identity, CURRENT_USER() AS privilege_identity;
+
+SHOW GRANTS FOR CURRENT_USER();
+
+SELECT
+    @@read_only AS read_only,
+    @@super_read_only AS super_read_only;
+</code></pre>
+<p>不要只看整个发布任务的绿色状态，要查看数据库客户端的原始错误和最终退出码。</p>
+<h3>4.3 确认实际 Schema 与迁移历史</h3>
+<pre><code class="language-sql">SHOW CREATE TABLE chat_sessions;
+SHOW CREATE TABLE chat_runs;
+SHOW CREATE TABLE chat_messages;
+
+SELECT
+    TABLE_NAME,
+    COLUMN_NAME,
+    COLUMN_TYPE,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;)
+  AND COLUMN_NAME = &#39;robot_id&#39;;
+</code></pre>
+<p>如果使用 Flyway、Liquibase 或自研 Migration 框架，还要检查版本表。一个典型反模式是修改已在生产执行过的旧 migration：新环境会执行新内容，生产却会根据历史记录跳过它。</p>
+<h2>5. Metadata Lock 如何让 ALTER TABLE 失败</h2>
+<p>MySQL 使用 Metadata Lock 保证对象定义与并发访问的一致性。事务访问表后，相关元数据锁可能保持到事务提交或回滚；<code>ALTER TABLE</code> 则需要取得与结构变更相适配的排他锁。</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant App as 业务连接 A
+    participant DB as MySQL
+    participant Deploy as 发布任务 B
+    participant Verify as 发布后校验
+
+    App-&gt;&gt;DB: BEGIN
+    App-&gt;&gt;DB: SELECT / UPDATE chat_sessions
+    Note over App,DB: 事务尚未 COMMIT，持有表相关 MDL
+    Deploy-&gt;&gt;DB: ALTER TABLE ... ADD robot_id
+    DB--&gt;&gt;Deploy: Waiting for table metadata lock
+    Note over DB,Deploy: 等待期间可能产生后续请求排队
+    DB--xDeploy: ERROR 1205 / timeout
+    Deploy--&gt;&gt;Verify: 若未 fail-fast，发布流程仍可能继续
+    Verify-&gt;&gt;DB: 查询 information_schema.COLUMNS
+    DB--&gt;&gt;Verify: robot_id 不存在
+    App-&gt;&gt;DB: COMMIT
+    Note over App,DB: 锁释放后，人工重试可能立即成功
+</code></pre>
+<p>这解释了为什么“自动发布失败、稍后人工执行成功”并不矛盾：</p>
+<ul>
+<li>SQL 没变；</li>
+<li>Schema 没变；</li>
+<li>变化的是执行时刻的事务和锁状态。</li>
+</ul>
+<p>还要注意排队效应：一个等待排他 MDL 的 DDL 可能让后续访问同一张表的请求也排队，从单条 DDL 等待放大为业务连接堆积。因此，DDL 卡住时不应无限等待。</p>
+<h2>6. 如何在现场定位谁阻塞了谁</h2>
+<p>锁问题高度依赖现场。最有价值的动作不是“取消后晚点重试”，而是在风险可控的前提下先保留证据。</p>
+<h3>6.1 快速查看会话状态</h3>
+<pre><code class="language-sql">SHOW FULL PROCESSLIST;
+</code></pre>
+<p>重点关注：</p>
+<pre><code class="language-text">Waiting for table metadata lock
+</code></pre>
+<p>同时记录连接 ID、用户、来源地址、数据库、等待时间和 SQL。</p>
+<h3>6.2 查看长事务</h3>
+<pre><code class="language-sql">SELECT
+    trx_id,
+    trx_mysql_thread_id,
+    trx_started,
+    trx_state,
+    trx_rows_locked,
+    trx_rows_modified,
+    trx_query
+FROM information_schema.innodb_trx
+ORDER BY trx_started;
+</code></pre>
+<p><code>trx_query IS NULL</code> 不代表事务没有风险。连接可能处于 <code>Sleep</code>，但事务仍未提交；这正是“空闲事务持锁”最隐蔽的形态之一。</p>
+<h3>6.3 直接查看表锁等待关系</h3>
+<p>若 <code>sys</code> Schema 可用：</p>
+<pre><code class="language-sql">SELECT
+    object_schema,
+    object_name,
+    waiting_pid,
+    waiting_query,
+    waiting_query_secs,
+    blocking_pid,
+    blocking_account,
+    sql_kill_blocking_connection
+FROM sys.schema_table_lock_waits
+WHERE object_schema = DATABASE()
+  AND object_name IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;);
+</code></pre>
+<p><code>sql_kill_blocking_connection</code> 只是辅助信息，不能看到就直接执行。终止生产连接前，必须确认事务内容、回滚成本、业务影响和当班授权。</p>
+<h3>6.4 查看 Performance Schema 中的 MDL</h3>
+<pre><code class="language-sql">SELECT
+    ml.OBJECT_TYPE,
+    ml.OBJECT_SCHEMA,
+    ml.OBJECT_NAME,
+    ml.LOCK_TYPE,
+    ml.LOCK_DURATION,
+    ml.LOCK_STATUS,
+    t.PROCESSLIST_ID,
+    t.PROCESSLIST_USER,
+    t.PROCESSLIST_HOST,
+    t.PROCESSLIST_TIME,
+    t.PROCESSLIST_STATE,
+    t.PROCESSLIST_INFO
+FROM performance_schema.metadata_locks AS ml
+LEFT JOIN performance_schema.threads AS t
+       ON t.THREAD_ID = ml.OWNER_THREAD_ID
+WHERE ml.OBJECT_SCHEMA = DATABASE()
+  AND ml.OBJECT_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;)
+ORDER BY ml.OBJECT_NAME, ml.LOCK_STATUS, t.PROCESSLIST_TIME DESC;
+</code></pre>
+<p>通常需要同时观察 <code>GRANTED</code> 和 <code>PENDING</code>。前者是已持有的锁，后者是尚未获得的请求。</p>
+<h3>6.5 不要混淆两个超时参数</h3>
+<pre><code class="language-sql">SHOW VARIABLES
+WHERE Variable_name IN (&#39;lock_wait_timeout&#39;, &#39;innodb_lock_wait_timeout&#39;);
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>主要作用域</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>lock_wait_timeout</code></td>
+<td>Metadata Lock 等待</td>
+</tr>
+<tr>
+<td><code>innodb_lock_wait_timeout</code></td>
+<td>InnoDB 行锁等待</td>
+</tr>
+</tbody></table>
+<p>两类超时都可能表现为 <code>ERROR 1205</code>，所以不能仅凭错误码断定锁类型；必须结合 SQL 类型、Processlist、<code>metadata_locks</code> 和事务信息判断。本次失败语句是 <code>ALTER TABLE</code>，因此 MDL 是首要方向。</p>
+<h2>7. 为什么测试环境没有发现</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>测试环境</th>
+<th>生产环境</th>
+<th>风险影响</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据量</td>
+<td>小</td>
+<td>可能大几个数量级</td>
+<td>表重建与索引创建耗时显著不同</td>
+</tr>
+<tr>
+<td>并发连接</td>
+<td>少且短</td>
+<td>多且持续</td>
+<td>更容易与 DDL 争用 MDL</td>
+</tr>
+<tr>
+<td>事务特征</td>
+<td>很少有长事务</td>
+<td>批任务、报表、消息消费、人工操作并存</td>
+<td>锁持有时间更不可控</td>
+</tr>
+<tr>
+<td>MySQL 版本</td>
+<td>可能较新</td>
+<td>可能较旧</td>
+<td>DDL 算法和能力不同</td>
+</tr>
+<tr>
+<td>表定义</td>
+<td>常由新脚本初始化</td>
+<td>经历多年演进</td>
+<td>行格式、索引和依赖可能不同</td>
+</tr>
+<tr>
+<td>发布窗口</td>
+<td>随时可测</td>
+<td>真实业务负载下执行</td>
+<td>竞争窗口扩大</td>
+</tr>
+<tr>
+<td>验证目标</td>
+<td>“SQL 能否运行”</td>
+<td>“能否在约束内安全运行”</td>
+<td>Functional Correctness 不等于 Operational Correctness</td>
+</tr>
+</tbody></table>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph Test[&quot;测试环境&quot;]
+        T1[&quot;数据量小&quot;] --&gt; T4[&quot;DDL 很快&quot;]
+        T2[&quot;并发低&quot;] --&gt; T4
+        T3[&quot;事务短&quot;] --&gt; T4
+        T4 --&gt; T5[&quot;验证通过&quot;]
+    end
+
+    subgraph Prod[&quot;生产环境&quot;]
+        P1[&quot;数据量大&quot;] --&gt; P4[&quot;DDL 窗口变长&quot;]
+        P2[&quot;持续流量&quot;] --&gt; P5[&quot;锁竞争概率上升&quot;]
+        P3[&quot;长事务或批任务&quot;] --&gt; P5
+        P4 --&gt; P6[&quot;超时或负载风险&quot;]
+        P5 --&gt; P6
+    end
+
+    classDef safe fill:#DCFCE7,stroke:#16A34A,color:#052E16,stroke-width:1.5px;
+    classDef warn fill:#FEF3C7,stroke:#D97706,color:#451A03,stroke-width:1.5px;
+    classDef danger fill:#FFE4E6,stroke:#E11D48,color:#4C0519,stroke-width:1.5px;
+    class T1,T2,T3,T4,T5 safe;
+    class P1,P2,P3,P4,P5 warn;
+    class P6 danger;
+</code></pre>
+<h2>8. MySQL 版本差异：不是语法问题，却可能放大风险</h2>
+<p>本次 <code>ADD COLUMN ... DEFAULT ... COMMENT ... AFTER ...</code> 的基础语法在常见 MySQL 5.7 和 8.0 中都成立。真正需要比较的是执行算法和代价。</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>MySQL 5.7</th>
+<th>MySQL 8.0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ADD COLUMN</code> 常见算法</td>
+<td>支持 <code>INPLACE</code>，但通常需要重建表</td>
+<td>从 8.0.12 起，满足条件时可使用 <code>INSTANT</code></td>
+</tr>
+<tr>
+<td>任意位置 Instant Add Column</td>
+<td>不支持</td>
+<td>8.0.29 起在满足限制时支持</td>
+</tr>
+<tr>
+<td>使用 <code>AFTER id</code> 的影响</td>
+<td>需要重组数据</td>
+<td>8.0.29 之前无法用 Instant 在任意位置新增列，可能退化为更重算法</td>
+</tr>
+<tr>
+<td>DDL 原子性</td>
+<td>DDL 通常隐式提交，恢复语义有限</td>
+<td>8.0 数据字典支持原子 DDL 的范围更广</td>
+</tr>
+</tbody></table>
+<p>这意味着原脚本中的 <code>AFTER id</code> 虽然主要是排版需求，却可能改变执行路径。字段的物理位置通常不影响查询性能，若没有硬性兼容需求，建议去掉 <code>AFTER</code>，让数据库更有机会采用低成本算法。</p>
+<p>不要猜测算法。应在与生产相同的小版本、表结构、行格式和索引条件下预演，并用显式算法约束阻止静默降级：</p>
+<pre><code class="language-sql">-- 仅在确认当前版本和表条件支持时采用；不支持则立即报错
+ALTER TABLE chat_sessions
+    ADD COLUMN robot_id VARCHAR(64) NULL,
+    ALGORITHM=INSTANT;
+</code></pre>
+<p>若计划使用 In-place DDL：</p>
+<pre><code class="language-sql">ALTER TABLE chat_sessions
+    ADD COLUMN robot_id VARCHAR(64) NULL,
+    ALGORITHM=INPLACE,
+    LOCK=NONE;
+</code></pre>
+<p>显式约束的价值在于：如果 MySQL 无法满足期望算法或并发级别，就失败并返回原因，而不是在生产中悄悄选择更昂贵的执行方式。</p>
+<h2>9. 更安全的 robot_id 迁移设计</h2>
+<p>直接添加：</p>
+<pre><code class="language-sql">NOT NULL DEFAULT &#39;data-agent&#39;
+</code></pre>
+<p>会把所有无法区分来源的历史记录都解释成同一个机器人。如果 <code>robot_id</code> 承担数据隔离职责，这首先是数据语义问题，其次才是 DDL 问题。</p>
+<p>更稳妥的是 Expand → Migrate → Contract：</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Expand&lt;br/&gt;新增可空列&quot;] --&gt; B[&quot;双写&lt;br/&gt;新数据写入 robot_id&quot;]
+    B --&gt; C[&quot;Backfill&lt;br/&gt;按主键分批回填历史数据&quot;]
+    C --&gt; D{&quot;完整性与映射校验&quot;}
+    D --&gt;|不通过| C
+    D --&gt;|通过| E[&quot;建立必要索引&quot;]
+    E --&gt; F[&quot;Contract&lt;br/&gt;收紧 NOT NULL / DEFAULT&quot;]
+    F --&gt; G[&quot;停止兼容逻辑&quot;]
+
+    classDef phase fill:#E8F3FF,stroke:#2563EB,color:#0F172A,stroke-width:1.5px;
+    classDef verify fill:#FFF7D6,stroke:#D97706,color:#422006,stroke-width:1.5px;
+    class A,B,C,E,F,G phase;
+    class D verify;
+</code></pre>
+<p>关键原则：</p>
+<ol>
+<li>先增加可兼容的新结构，旧应用仍能工作；</li>
+<li>新应用开始双写或可靠写入 <code>robot_id</code>；</li>
+<li>按主键范围、小批次、可暂停、可重试地回填历史数据；</li>
+<li>校验空值、非法值、关联关系和各机器人数量分布；</li>
+<li>根据真实查询使用 <code>EXPLAIN</code> 验证索引；</li>
+<li>最后再收紧 <code>NOT NULL</code>、默认值和旧逻辑。</li>
+</ol>
+<h2>10. 索引设计也要随迁移一起复核</h2>
+<p>原方案包含多个以 <code>robot_id</code> 开头的索引，应根据最左前缀原则消除重复写放大：</p>
+<table>
+<thead>
+<tr>
+<th>表</th>
+<th>候选索引</th>
+<th>评估</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>chat_sessions</code></td>
+<td><code>(robot_id)</code> 与 <code>(robot_id, deleted_at)</code></td>
+<td>后者通常可支持仅按 <code>robot_id</code> 的等值查询，单列索引可能冗余</td>
+</tr>
+<tr>
+<td><code>chat_runs</code></td>
+<td><code>(robot_id)</code> 与 <code>(robot_id, status)</code></td>
+<td>后者通常覆盖 <code>robot_id</code> 左前缀，需结合排序、覆盖查询和基数判断</td>
+</tr>
+<tr>
+<td><code>chat_messages</code></td>
+<td><code>(robot_id)</code>、<code>(session_id, robot_id)</code>、<code>(run_id, robot_id)</code></td>
+<td>后两个不能高效替代以 <code>robot_id</code> 为首列的查询，单列索引可能仍有价值</td>
+</tr>
+</tbody></table>
+<p>“可能冗余”不是“可以直接删除”。最终决策应基于真实 SQL、<code>EXPLAIN</code>、索引基数、写入开销和慢查询数据。</p>
+<h2>11. 标准化的生产 DDL 发布流程</h2>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;准备变更说明与回退策略&quot;] --&gt; B{&quot;实例 / Schema / 版本一致&quot;}
+    B --&gt;|否| X[&quot;停止发布&quot;]
+    B --&gt;|是| C{&quot;表规模、磁盘和算法已评估&quot;}
+    C --&gt;|否| X
+    C --&gt;|是| D{&quot;长事务与 MDL 检查通过&quot;}
+    D --&gt;|否| X
+    D --&gt;|是| E[&quot;进入低峰变更窗口并限时执行&quot;]
+    E --&gt; F{&quot;DDL 返回成功&quot;}
+    F --&gt;|否| G[&quot;Fail Fast&lt;br/&gt;保留现场并停止后续发布&quot;]
+    F --&gt;|是| H[&quot;自动校验列、索引和约束&quot;]
+    H --&gt; I{&quot;Schema 符合期望&quot;}
+    I --&gt;|否| G
+    I --&gt;|是| J[&quot;灰度应用并观察数据库指标&quot;]
+    J --&gt; K[&quot;完成发布与留痕&quot;]
+
+    classDef gate fill:#FFF7D6,stroke:#D97706,color:#422006,stroke-width:1.5px;
+    classDef action fill:#E8F3FF,stroke:#2563EB,color:#0F172A,stroke-width:1.5px;
+    classDef stop fill:#FFE4E6,stroke:#E11D48,color:#4C0519,stroke-width:1.5px;
+    classDef done fill:#DCFCE7,stroke:#16A34A,color:#052E16,stroke-width:1.5px;
+    class B,C,D,F,I gate;
+    class A,E,H,J action;
+    class X,G stop;
+    class K done;
+</code></pre>
+<h3>11.1 发布前</h3>
+<ul>
+<li>确认目标实例、端口、<code>server_uuid</code>、Schema 和主从角色；</li>
+<li>比对生产与预演环境的 MySQL 精确版本、存储引擎、行格式和表定义；</li>
+<li>统计表行数、数据量、索引量和可用磁盘空间；</li>
+<li>确认 DDL 算法、是否重建表、并发 DML 能力和预计耗时；</li>
+<li>检查长事务、空闲未提交事务、MDL 等待、备份、报表和批任务；</li>
+<li>定义最大等待时间、停止条件、观察指标和责任人；</li>
+<li>对数据隔离字段确认历史数据回填规则，不能用默认值替代业务判断；</li>
+<li>准备前向修复方案。删除列或回滚大表 DDL 不应被视为低成本操作。</li>
+</ul>
+<p>表规模可以先用下列查询估算：</p>
+<pre><code class="language-sql">SELECT
+    TABLE_NAME,
+    TABLE_ROWS,
+    ROUND(DATA_LENGTH / 1024 / 1024 / 1024, 2) AS data_gb,
+    ROUND(INDEX_LENGTH / 1024 / 1024 / 1024, 2) AS index_gb
+FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;);
+</code></pre>
+<p><code>TABLE_ROWS</code> 对 InnoDB 通常是估算值，但足以先判断数量级。</p>
+<h3>11.2 发布中</h3>
+<ul>
+<li>数据库变更与应用变更建立明确依赖，DDL 未完成时不发布依赖新列的代码；</li>
+<li>为等待设置有限、可观测的时间预算，避免 DDL 无限排队；</li>
+<li>监控 Threads、QPS、延迟、锁等待、磁盘 I/O、复制延迟和连接池；</li>
+<li>发现 <code>Waiting for table metadata lock</code> 时立即进入预案，不盲目多次重试；</li>
+<li>不使用会吞掉 SQL 错误的客户端选项；确保 Migration 命令非零退出能让流水线失败；</li>
+<li>大表必要时使用经过评审的在线 Schema 变更工具，并演练限流、暂停与清理流程。</li>
+</ul>
+<h3>11.3 发布后</h3>
+<p>不能把“命令执行结束”当作“变更成功”。至少自动校验：</p>
+<pre><code class="language-sql">-- 三张表必须各返回一行
+SELECT
+    TABLE_NAME,
+    COLUMN_TYPE,
+    IS_NULLABLE,
+    COLUMN_DEFAULT
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = DATABASE()
+  AND TABLE_NAME IN (&#39;chat_sessions&#39;, &#39;chat_runs&#39;, &#39;chat_messages&#39;)
+  AND COLUMN_NAME = &#39;robot_id&#39;
+ORDER BY TABLE_NAME;
+</code></pre>
+<p>还应验证索引列顺序、应用读写、错误率、慢查询、复制延迟，以及历史数据的映射正确性。校验失败必须阻止发布任务被标记为成功。</p>
+<h2>12. 可直接复用的 Checklist</h2>
+<h3>变更设计</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 每次变更新建 migration，不修改已发布的历史 migration</li>
+<li><input disabled="" type="checkbox"> 明确列默认值和历史数据回填语义</li>
+<li><input disabled="" type="checkbox"> 使用 Expand → Migrate → Contract 处理非兼容变更</li>
+<li><input disabled="" type="checkbox"> 删除不必要的 <code>AFTER</code> / <code>FIRST</code>，避免只为排版增加 DDL 成本</li>
+<li><input disabled="" type="checkbox"> 根据真实查询验证索引，避免冗余索引</li>
+</ul>
+<h3>生产评估</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 已核对实例、Schema、主从角色、账号与权限</li>
+<li><input disabled="" type="checkbox"> 已核对 MySQL 精确版本、引擎、行格式和 <code>SHOW CREATE TABLE</code></li>
+<li><input disabled="" type="checkbox"> 已评估行数、表大小、磁盘、复制延迟和 DDL 算法</li>
+<li><input disabled="" type="checkbox"> 已在等价版本与近似数据规模上预演</li>
+<li><input disabled="" type="checkbox"> 已确认是否需要在线 Schema 变更工具</li>
+</ul>
+<h3>执行窗口</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 已检查长事务、Sleep in transaction 和 MDL 等待</li>
+<li><input disabled="" type="checkbox"> 已避开批处理、备份、报表和业务高峰</li>
+<li><input disabled="" type="checkbox"> 已设置有限等待时间、停止条件和负责人</li>
+<li><input disabled="" type="checkbox"> 已开启数据库与应用关键指标监控</li>
+<li><input disabled="" type="checkbox"> SQL 失败会让发布流程立即失败</li>
+</ul>
+<h3>结果验证</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 已查询 <code>information_schema.COLUMNS</code> 验证列定义</li>
+<li><input disabled="" type="checkbox"> 已查询 <code>information_schema.STATISTICS</code> 验证索引及列顺序</li>
+<li><input disabled="" type="checkbox"> 已完成新旧应用兼容性和最小业务验证</li>
+<li><input disabled="" type="checkbox"> 已验证历史数据回填完整性与隔离关系</li>
+<li><input disabled="" type="checkbox"> 已保存 SQL 输出、Schema 快照、执行耗时和监控证据</li>
+</ul>
+<h2>13. 这次事故真正暴露的问题</h2>
+<p>表面上，这是一次 <code>ALTER TABLE</code> 超时；系统性问题则有三层：</p>
+<ol>
+<li><strong>验证模型不完整</strong>：测试只证明了语法和功能正确，没有验证生产规模与并发下的可执行性；</li>
+<li><strong>发布门禁不完整</strong>：数据库变更失败后，流程仍可能继续，应用和 Schema 缺少强一致的发布依赖；</li>
+<li><strong>可观测性不完整</strong>：没有在等待发生时自动保存事务、Processlist 和 MDL 关系，导致根因只能高概率推断。</li>
+</ol>
+<p>因此，最有效的修复不是把超时值调大。单纯延长等待时间可能让 DDL 和后续业务请求排队更久，扩大影响。正确方向是缩短事务、选择合适窗口与算法、限制等待、失败即停止，并让 Schema 校验成为发布完成条件。</p>
+<h2>14. Lessons Learned</h2>
+<ul>
+<li>SQL 正确不代表生产可执行；功能正确与运行正确是两个验收维度。</li>
+<li><code>ERROR 1205</code> 是起点，不是完整根因；要用现场锁与事务证据闭环。</li>
+<li>对 DDL 而言，普通查询也可能因为未结束的事务成为 blocker。</li>
+<li>手工重试成功通常说明运行时状态改变了，不能据此否定锁竞争。</li>
+<li>版本差异要分析执行算法和代价，不能只讨论语法兼容性。</li>
+<li>字段物理顺序很少值得牺牲 Instant DDL 的机会。</li>
+<li>数据隔离字段的默认值必须经过业务语义评审。</li>
+<li>发布成功必须同时满足：Migration 成功、Schema 校验成功、应用验证成功。</li>
+</ul>
+<h2>参考资料</h2>
+<ul>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html">MySQL 8.0 Reference Manual: Online DDL Operations</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-online-ddl-operations.html">MySQL 5.7 Reference Manual: Online DDL Operations</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/metadata-locking.html">MySQL 8.0 Reference Manual: Metadata Locking</a></li>
+<li><a href="https://dev.mysql.com/doc/mysql-perfschema-excerpt/8.0/en/performance-schema-metadata-locks-table.html">MySQL Performance Schema: metadata_locks Table</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/sys-schema-table-lock-waits.html">MySQL 8.0 Reference Manual: schema_table_lock_waits View</a></li>
+</ul>
+<blockquote>
+<p>渲染说明：本站已在浏览器端直接渲染本文中的 Mermaid 图表。</p>
+</blockquote>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/" data-page-title="一次 MySQL ALTER TABLE 生产故障复盘：从 ERROR 1205 到 Metadata Lock 治理" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+      <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs';
+
+        const diagramBlocks = document.querySelectorAll('pre > code.language-mermaid');
+        diagramBlocks.forEach((code) => {
+          const container = code.parentElement;
+          container.className = 'mermaid';
+          container.textContent = code.textContent;
+        });
+
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'dark',
+          themeVariables: {
+            background: '#070b08',
+            primaryColor: '#102119',
+            primaryTextColor: '#edf3ef',
+            primaryBorderColor: '#00ff88',
+            lineColor: '#65d89a',
+            secondaryColor: '#17241c',
+            tertiaryColor: '#111712'
+          }
+        });
+
+        if (diagramBlocks.length > 0) {
+          await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+        }
+      </script>
+    
+  </body>
+</html>

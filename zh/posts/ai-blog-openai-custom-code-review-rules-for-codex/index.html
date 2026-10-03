@@ -1,0 +1,259 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Codex 自定义审查规则：把仓库记忆变成聚焦检查 · LATENTX</title>
+    <meta name="description" content="分析 OpenAI 的 Codex 自定义审查规则、评测结果，以及有范围的仓库指引如何补充 CI。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Codex 自定义审查规则：把仓库记忆变成聚焦检查 · LATENTX">
+    <meta property="og:description" content="分析 OpenAI 的 Codex 自定义审查规则、评测结果，以及有范围的仓库指引如何补充 CI。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/ai-blog-openai-custom-code-review-rules-for-codex/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-blog-openai-custom-code-review-rules-for-codex/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-blog-openai-custom-code-review-rules-for-codex/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-blog-openai-custom-code-review-rules-for-codex/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/ai-blog-openai-custom-code-review-rules-for-codex/"
+    data-page-title="Codex 自定义审查规则：把仓库记忆变成聚焦检查"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/ai-blog-openai-custom-code-review-rules-for-codex/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-blog-openai-custom-code-review-rules-for-codex/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-blog-openai-custom-code-review-rules-for-codex.md</div>
+    <h1>Codex 自定义审查规则：把仓库记忆变成聚焦检查</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-14">发布于 2026.09.14</time>
+      <span>5 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#OpenAI</span><span>#AI Research</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-openai-custom-code-review-rules-for-codex/" data-page-title="Codex 自定义审查规则：把仓库记忆变成聚焦检查" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-09-14_ai-blog-openai-custom-code-review-rules-for-codex.zh.a3276f91e7e472a8.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>OpenAI 的自定义 Code Review 规则把审查者反复传递的知识写成有范围的仓库指引。它的价值不是替代测试，而是在 Pull Request 尚可修改时，让关键且不明显的不变量变得可见。</p>
+</blockquote>
+<h2>编辑摘要</h2>
+<p>文章从容量问题展开。编码智能体能够生成更大、周期更长的改动，OpenAI 称其每周 PR 数量自第四季度以来增长了一倍以上。代码产量提高后，压力会转移到审查环节：一个看似合理的 Diff 仍可能破坏旧 API 合约、跨越数据边界，或影响作者并不知道的下游使用方。</p>
+<p>Codex Code Review 现在可以读取 <code>AGENTS.md</code> 中的自定义审查指引。仓库级规则可以放在根目录，服务特定规则则放在所约束文件附近。审查发现能够引用适用规则，让作者同时看到风险和仓库约定的安全修改路径。</p>
+<p>OpenAI 用 app-server 的 <code>rawResponseItem/completed</code> 通知说明这一机制。该事件虽然标记为实验性，但 Codex Cloud 已经依赖这个线上名称。一次“清理式”重命名可能正常编译，却悄悄破坏真实集成。仓库规则因此明确把这一事件族视为外部接口，并要求保留兼容性或提供向后兼容方案。</p>
+<p>它与传统自动化的边界很重要。测试和 Linter 适合确定性条件；仓库规则适合捕捉资深审查者不断解释、却难以编码的判断，例如兼容承诺、安全边界、日志限制和服务间隐含耦合。规则不应变成第二套格式规范。</p>
+<p>OpenAI 报告称，在一套评测中，使用规则的变体找回了 98% 的必需自定义发现，而基线对照为 58.3%。评测还考察了对安全改动的克制、常规缺陷发现是否保留，以及结论是否可执行。文章没有公开完整数据集、不确定性或误报数量，因此该百分比应视为特定测试设置下的证据，而不是普遍审查质量分数。</p>
+<p>文章给出的写法很务实：</p>
+<ol>
+<li>从审查者反复解释、且后果重大的不变量开始。</li>
+<li>把规则限制在对应目录或服务。</li>
+<li>同时说明风险与可接受的修复路径。</li>
+<li>尽量描述稳定结果，而不是容易变化的符号名。</li>
+<li>删除持续制造噪声的规则，把机械检查留给 CI。</li>
+</ol>
+<p>建议的采用测试也很小：先添加两三条规则，再分别尝试一个违规改动、一个安全反例和一个无关改动。这一点尤其值得复用，因为它把指令视为需要评测的行为，而不是一段听起来准确就算完成的文字。</p>
+<p>我的结论是，<code>AGENTS.md</code> 正在成为组织记忆与自动审查之间的接口。收益依赖持续整理：窄而明确的规则能提前暴露隐藏约束，宽泛或过时的规则则会制造大量貌似合理却无关的发现。分支保护、测试和必要的人工批准仍是强制层。</p>
+<hr>
+<blockquote>
+<p><strong>来源分界：</strong> 下方是基于原文的转述与出处信息。除非元数据记录了兼容的明确许可，完整原文请通过官方链接阅读。</p>
+</blockquote>
+<h2>来源材料</h2>
+<h3>OpenAI：Custom Code Review rules for Codex</h3>
+<ul>
+<li><strong>发布日期：</strong> 2026 年 7 月 20 日</li>
+<li><strong>作者：</strong> Hari Srikanth</li>
+<li><strong>英文原文：</strong> <a href="https://developers.openai.com/blog/custom-code-review-rules-for-codex">阅读原文</a></li>
+<li><strong>官方中文版：</strong> 未找到</li>
+<li><strong>转载说明：</strong> 本文仅作摘要与出处标注，原文版权归 OpenAI 所有。</li>
+</ul>
+<h4>原文要点</h4>
+<p>文章解释了 Codex Code Review 如何应用 <code>AGENTS.md</code> 中的自定义指令、嵌套文件如何限定范围，以及为什么仓库规则适合测试和 Linter 难以表达的上下文检查。兼容性案例展示了一个能够编译的事件名修改如何破坏现有 Codex Cloud 使用方。</p>
+<p>原文还介绍了内部评测、四项审查质量维度、规则编写建议和小规模上线实验，并明确把 Codex 定位为额外审查者，而不是测试、分支保护或必要批准的替代品。</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-openai-custom-code-review-rules-for-codex/" data-page-title="Codex 自定义审查规则：把仓库记忆变成聚焦检查" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

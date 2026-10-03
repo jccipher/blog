@@ -1,0 +1,246 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Codex and Runme: Turn Repetition into Reviewable Operational Memory · LATENTX</title>
+    <meta name="description" content="An analysis of how OpenAI&#39;s Runme workflow combines Codex, review gates, WebMCP, and reusable operational records.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Codex and Runme: Turn Repetition into Reviewable Operational Memory · LATENTX">
+    <meta property="og:description" content="An analysis of how OpenAI&#39;s Runme workflow combines Codex, review gates, WebMCP, and reusable operational records.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/"
+    data-page-title="Codex and Runme: Turn Repetition into Reviewable Operational Memory"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-blog-openai-automating-repetitive-work-at-openai-with-codex.md</div>
+    <h1>Codex and Runme: Turn Repetition into Reviewable Operational Memory</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-07">PUBLISHED 2026.09.07</time>
+      <span>5 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#OpenAI</span><span>#AI Research</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/" data-page-title="Codex and Runme: Turn Repetition into Reviewable Operational Memory" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">Listen to the summary · English</h2>
+    <p>AI-generated narration of the editorial summary only, not the original article.</p>
+    <audio controls preload="none" aria-label="English summary audio">
+      <source src="/blog/assets/audio/2026-09-07_ai-blog-openai-automating-repetitive-work-at-openai-with-codex.en.a4aabe342c72bffa.mp3" type="audio/mpeg">
+      Your browser does not support audio playback.
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">Back 15s</button>
+      <button type="button" data-audio-seek="15">Forward 15s</button>
+      <label>Speed <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">Audio is temporarily unavailable. The full text remains available below.</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>Jeremy Lewi&#39;s Runme case study treats repetitive engineering work as a context and governance problem, not merely a scripting problem. Codex executes inside a notebook that preserves the goal, approval points, commands, evidence, dead ends, and decisions for the next run.</p>
+</blockquote>
+<h2>Editorial summary</h2>
+<p>OpenAI engineer Jeremy Lewi describes a recurring pattern from cloud infrastructure and model evaluations: after solving a difficult operational task, another similar task arrives with different quotas, configuration details, or failure modes. Conventional automation can remove stable steps, but creating and maintaining a separate tool for every changing workflow can become another layer of work.</p>
+<p>His alternative is Runme, an open-source notebook application built to collaborate with Codex. A notebook combines Markdown, executable code cells, HTML, instructions, outputs, tables, and charts. Instead of asking an agent to infer an entire process from chat history, Lewi writes a short goal, asks it to review a previous run, requires a detailed plan, sets an approval point before execution, and instructs it to record commands, results, and interpretation.</p>
+<p>The notebook is more than a convenient interface. It gives the workflow a durable state that both a person and an agent can inspect. During an evaluation run, Codex updates the plan and records progress. Lewi concentrates on consequential forks—choosing an evaluation system, deciding whether new infrastructure is justified, or suggesting an approved fallback when quota blocks provisioning. The final artifact captures successful steps and dead ends, along with the reasons behind decisions that would otherwise disappear inside a conversation.</p>
+<p>Runme notebooks can be stored in Google Drive, and each notebook produces a companion <code>*.index.md</code> file that Drive can index. This turns past runs into discoverable context without introducing a separate document repository. The design is intentionally cumulative: a completed run improves the materials available to the next run, so operational knowledge becomes a maintained input rather than a retrospective chore.</p>
+<p>Agents interact with the client-side Runme application through WebMCP. The application registers browser tools for reading its instructions and documentation and for running bounded JavaScript that reads or updates notebook content. Because Runme is a static web application, browser-side tools avoid adding a server only to expose an MCP endpoint and keep the notebook interaction close to where its data is already handled.</p>
+<p>Four practices are broadly reusable:</p>
+<ol>
+<li><strong>Make the goal an artifact.</strong> A persistent, editable goal is easier to review than intent scattered across chat turns, and it gives long-running work a stable reference point.</li>
+<li><strong>Put approvals at decision boundaries.</strong> Human review is most useful before costly or consequential action, not as continuous supervision of every mechanical step.</li>
+<li><strong>Record interpretation beside output.</strong> A command transcript alone does not explain whether a result is healthy, why an alternative was rejected, or what should change next time.</li>
+<li><strong>Design memory for retrieval.</strong> Useful history must be searchable and compact enough for an agent to find the relevant precedent; merely accumulating notebooks is not knowledge management.</li>
+</ol>
+<p>The article is a first-person workflow account, not a benchmark. It does not quantify total time saved, intervention frequency, notebook maintenance cost, or how often a previous run remains applicable. The approach also depends on disciplined curation. Incorrect or stale conclusions can become highly discoverable, and a detailed record can expose operational information unless storage permissions and retention are managed carefully.</p>
+<p>WebMCP reduces integration infrastructure, but browser-side tools still require narrow capabilities, visible data boundaries, and review of consequential actions. Likewise, automatic approval review does not remove the need for explicit human ownership of choices such as provisioning infrastructure or changing an evaluation configuration.</p>
+<p>My main takeaway is that the highest-leverage automation target is not the command sequence; it is the loss of context between runs. Runme makes the work product and the operating manual the same artifact. When that artifact preserves evidence, constraints, approvals, and reasoning, an agent can take on more repetition without forcing people to surrender the decisions that shape risk.</p>
+<h2>Source material</h2>
+<h3>OpenAI: Automating repetitive work at OpenAI with Codex</h3>
+<ul>
+<li><strong>Published:</strong> August 25, 2026</li>
+<li><strong>Author:</strong> Jeremy Lewi</li>
+<li><strong>Original:</strong> <a href="https://developers.openai.com/blog/automating-repetitive-work-at-openai-with-codex">Read the article</a></li>
+<li><strong>Official Chinese edition:</strong> Not found</li>
+<li><strong>Reuse:</strong> Summary and attribution; original copyright remains with OpenAI.</li>
+</ul>
+<h4>What the original covers</h4>
+<p>Lewi recounts repetitive work from provisioning Kubernetes clusters and running evaluations for new models and features. He explains that he now uses Codex with Runme rather than building a separate fixed automation for every recurring task.</p>
+<p>A Runme notebook begins with a goal and instructions to examine prior work, propose a plan, wait for approval, and document execution. Codex updates the notebook while it works; Lewi reviews the plan, helps choose among consequential alternatives, and suggests approved options when constraints such as exhausted quota block the initial route.</p>
+<p>The resulting notebook retains commands, output, interpretation, decisions, and unsuccessful paths. Runme supports mixed Markdown, code, HTML, tables, and charts, stores notebooks in Google Drive, and creates a Markdown index that makes previous runs easier for an agent to discover.</p>
+<p>The article also describes Runme&#39;s use of WebMCP to register browser-side tools in a static client application. Those tools expose bounded notebook operations and documentation without requiring a new server-side MCP service. The closing argument is that capturing intent and evidence during execution can make operational knowledge reusable while preserving human review for the decisions that matter.</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/ai-blog-openai-automating-repetitive-work-at-openai-with-codex/" data-page-title="Codex and Runme: Turn Repetition into Reviewable Operational Memory" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

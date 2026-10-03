@@ -1,0 +1,243 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>通过 Claude 平台减少成本并提高性能 · LATENTX</title>
+    <meta name="description" content="Anthropic 最新发布的博客文章介绍了在使用 Claude 平台时减少成本和提高性能的策略。文章强调了三个关键改进点：最大化提示缓存命中率、在升级到前沿 Claude 模型时移除提示中的反模式，以及根据任务调整努力程度。这些指导已整合到 claude-api 技能中，并展示了 Claude Code 如何用于识别和解决低效问题。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="通过 Claude 平台减少成本并提高性能 · LATENTX">
+    <meta property="og:description" content="Anthropic 最新发布的博客文章介绍了在使用 Claude 平台时减少成本和提高性能的策略。文章强调了三个关键改进点：最大化提示缓存命中率、在升级到前沿 Claude 模型时移除提示中的反模式，以及根据任务调整努力程度。这些指导已整合到 claude-api 技能中，并展示了 Claude Code 如何用于识别和解决低效问题。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/"
+    data-page-title="通过 Claude 平台减少成本并提高性能"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform.md</div>
+    <h1>通过 Claude 平台减少成本并提高性能</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-17">发布于 2026.09.17</time>
+      <span>2 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#Anthropic</span><span>#AI Research</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/" data-page-title="通过 Claude 平台减少成本并提高性能" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-09-17_ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform.zh.13cdce1a289174f1.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>Anthropic 的博客文章讨论了在 Claude 平台上减少成本和提高性能的方法。文章强调了提示缓存、移除提示中的反模式以及调整努力程度。claude-api 技能用于审计提示并优化成本。文章包括了在各种任务上成本降低高达 58% 的基准测试。</p>
+</blockquote>
+<h2>编辑摘要</h2>
+<p>Anthropic 的博客文章《通过 Claude 平台减少成本并提高性能》概述了在 Claude 平台上优化成本和性能的三个关键策略。首先，最大化提示缓存命中率可以显著降低输入成本，因为缓存读取的费用仅为完整输入价格的一小部分。然而，有效使用提示缓存需要关注几个因素，包括模型特定的固定、字节精确的前缀和有限的生存时间（TTL）约束。文章提供了实用技巧，例如避免在对话中更改努力或思考设置，将易变值保留在提示前缀之外，并延迟使用频率较低的工具以提高缓存效率。</p>
+<p>其次，文章指出了在升级到前沿 Claude 模型时，提示中常见的“反模式”会阻碍性能并增加成本。这些包括验证仪式、强调增强器、强制性程序、过时示例、矛盾规则和过时配置。claude-api 技能包含了一个提示审计命令，用于识别并移除这些反模式。基准测试显示，移除这些模式可以将成本降低高达 14.6%，并将准确性提高 5.3%。</p>
+<p>第三，文章讨论了“努力程度”的校准，这决定了 Claude 在任务上的努力程度。根据任务，低努力程度可能比高努力程度更具成本效益。例如，在 FrontierCode Diamond 基准测试中，Claude Fable 5.1 在低努力程度下以三分之一的成本优于 Fable 5 在高努力程度下的表现。文章还介绍了 /claude-api hillclimb 命令，通过测试不同模型、努力程度和提示配置，迭代地改进成本和性能。</p>
+<p>最后，文章介绍了 /claude-api cost-optimize 命令，它提供了对令牌使用情况的全面审计，并识别了节省成本的机会。它建议使用提示缓存、批量处理未处理的工作和限制输出以减少成本。基准测试显示，cost-optimize 可以在不影响性能的情况下将成本降低高达 58%。文章最后提供了使用这些工具优化实际应用中成本和性能的指导。</p>
+<hr>
+<blockquote>
+<p><strong>来源分界：</strong> 以下为原文出处；仅摘要提供中英双语及语音。</p>
+</blockquote>
+<h2>来源材料</h2>
+<h3>Anthropic: Reducing cost and improving performance with Claude Platform</h3>
+<ul>
+<li>Published: 2026-09-08</li>
+<li>Original: <a href="https://claude.com/blog/reducing-cost-and-improving-performance-with-claude-platform">Reducing cost and improving performance with Claude Platform</a></li>
+</ul>
+<p>Read the complete original at the official link. Original copyright remains with Anthropic.</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-blog-anthropic-reducing-cost-and-improving-performance-with-claude-platform/" data-page-title="通过 Claude 平台减少成本并提高性能" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

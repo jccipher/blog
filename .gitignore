@@ -1,8 +1,0 @@
-_site/
-.ai-blog/
-.sass-cache/
-.bundle/
-node_modules/
-vendor/
-.DS_Store
-__pycache__/

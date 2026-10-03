@@ -1,0 +1,248 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Custom Codex Review Rules: Turn Repository Memory into Focused Checks · LATENTX</title>
+    <meta name="description" content="An analysis of OpenAI&#39;s custom Codex review rules, their evaluation results, and how scoped repository guidance complements CI.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Custom Codex Review Rules: Turn Repository Memory into Focused Checks · LATENTX">
+    <meta property="og:description" content="An analysis of OpenAI&#39;s custom Codex review rules, their evaluation results, and how scoped repository guidance complements CI.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/ai-blog-openai-custom-code-review-rules-for-codex/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-blog-openai-custom-code-review-rules-for-codex/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-blog-openai-custom-code-review-rules-for-codex/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-blog-openai-custom-code-review-rules-for-codex/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/ai-blog-openai-custom-code-review-rules-for-codex/"
+    data-page-title="Custom Codex Review Rules: Turn Repository Memory into Focused Checks"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/ai-blog-openai-custom-code-review-rules-for-codex/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-blog-openai-custom-code-review-rules-for-codex/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-blog-openai-custom-code-review-rules-for-codex.md</div>
+    <h1>Custom Codex Review Rules: Turn Repository Memory into Focused Checks</h1>
+    <div class="article-meta">
+      <time datetime="2026-09-14">PUBLISHED 2026.09.14</time>
+      <span>5 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#OpenAI</span><span>#AI Research</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/ai-blog-openai-custom-code-review-rules-for-codex/" data-page-title="Custom Codex Review Rules: Turn Repository Memory into Focused Checks" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">Listen to the summary · English</h2>
+    <p>AI-generated narration of the editorial summary only, not the original article.</p>
+    <audio controls preload="none" aria-label="English summary audio">
+      <source src="/blog/assets/audio/2026-09-14_ai-blog-openai-custom-code-review-rules-for-codex.en.289d670a4bfbc1a2.mp3" type="audio/mpeg">
+      Your browser does not support audio playback.
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">Back 15s</button>
+      <button type="button" data-audio-seek="15">Forward 15s</button>
+      <label>Speed <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">Audio is temporarily unavailable. The full text remains available below.</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>OpenAI&#39;s custom Code Review rules turn recurring reviewer knowledge into scoped repository guidance. Their value is not replacing tests; it is making consequential, non-obvious invariants visible at the moment a pull request can still be changed.</p>
+</blockquote>
+<h2>Editorial summary</h2>
+<p>The article starts from a capacity problem. Coding agents can produce larger changes over longer periods, and OpenAI says its weekly pull-request volume has more than doubled since Q4. More code shifts pressure toward review, where a plausible diff can still violate an old API contract, cross a data boundary, or break a consumer the author does not know exists.</p>
+<p>Codex Code Review can now read custom review guidance from <code>AGENTS.md</code>. Repository-wide rules can live at the root, while service-specific rules can sit closer to the files they govern. A finding can cite the applicable guidance, giving an author both the concern and the repository&#39;s intended safe path.</p>
+<p>OpenAI illustrates the idea with the <code>rawResponseItem/completed</code> app-server notification. Although marked experimental, Codex Cloud consumes that wire name. A cleanup that renames it could compile while silently breaking a real integration. A repository rule calls out the event family as an external surface and asks reviewers to preserve compatibility or add a backward-compatible alternative.</p>
+<p>The distinction from conventional automation matters. Tests and linters are best for deterministic conditions. Repository rules capture judgment that is hard to encode but repeatedly explained by experienced reviewers: compatibility promises, security boundaries, logging restrictions, or known coupling between services. They should not become a second style guide.</p>
+<p>OpenAI reports an evaluation in which rule-guided variants recovered 98% of required custom findings, compared with 58.3% for the baseline control. The evaluation also considered restraint on safe changes, retention of ordinary bug finding, and actionability. The article does not provide the complete suite, uncertainty estimates, or false-positive counts, so the percentage should be treated as evidence for this tested setup rather than a universal review-quality score.</p>
+<p>The writing guidance is pragmatic:</p>
+<ol>
+<li>Start with a consequential invariant reviewers repeatedly explain.</li>
+<li>Scope guidance to the directory or service it governs.</li>
+<li>State both the risk and an acceptable repair path.</li>
+<li>Describe durable outcomes instead of fragile symbol names where possible.</li>
+<li>Remove rules that create noise, and leave mechanical checks in CI.</li>
+</ol>
+<p>The proposed adoption test is small: add two or three rules, open a representative pull request, and try one violating change, one safe counterexample, and one unrelated change. That is a useful operational pattern because it treats instructions as behavior that must be evaluated, not prose that is correct merely because it sounds precise.</p>
+<p>My takeaway is that <code>AGENTS.md</code> becomes an interface between institutional memory and automated review. The gain depends on curation. Narrow rules can expose hidden constraints early; broad or stale rules can flood authors with plausible but irrelevant findings. Branch protection, tests, and required human approvals remain the enforcement layer.</p>
+<hr>
+<blockquote>
+<p><strong>Source boundary:</strong> The section below contains a sourced paraphrase and attribution. Unless the metadata records explicit compatible permission, read the complete original at the official link.</p>
+</blockquote>
+<h2>Source material</h2>
+<h3>OpenAI: Custom Code Review rules for Codex</h3>
+<ul>
+<li><strong>Published:</strong> July 20, 2026</li>
+<li><strong>Author:</strong> Hari Srikanth</li>
+<li><strong>Original:</strong> <a href="https://developers.openai.com/blog/custom-code-review-rules-for-codex">Read the article</a></li>
+<li><strong>Official Chinese edition:</strong> Not found</li>
+<li><strong>Reuse:</strong> Summary and attribution; original copyright remains with OpenAI.</li>
+</ul>
+<h4>What the original covers</h4>
+<p>The article explains how Codex Code Review applies custom instructions from <code>AGENTS.md</code>, how nested files scope guidance, and why repository rules are useful for contextual checks that tests and linters do not express well. A compatibility example shows how a compiling event-name change could break an existing Codex Cloud consumer.</p>
+<p>It also describes an internal evaluation, four review-quality dimensions, rule-writing recommendations, and a small rollout experiment. OpenAI explicitly positions Codex as an additional reviewer rather than a replacement for tests, branch protections, or required approvals.</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/ai-blog-openai-custom-code-review-rules-for-codex/" data-page-title="Custom Codex Review Rules: Turn Repository Memory into Focused Checks" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
