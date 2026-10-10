@@ -1,0 +1,625 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Why a Local Codex Project Does Not Automatically Appear in Mobile Projects · LATENTX</title>
+    <meta name="description" content="A practical guide to ChatGPT Projects, local Codex folders, Remote, Codex Cloud, and a hybrid workflow for deep local debugging after cloud development.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Why a Local Codex Project Does Not Automatically Appear in Mobile Projects · LATENTX">
+    <meta property="og:description" content="A practical guide to ChatGPT Projects, local Codex folders, Remote, Codex Cloud, and a hybrid workflow for deep local debugging after cloud development.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/codex-local-projects-mobile-projects-remote-cloud/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/codex-local-projects-mobile-projects-remote-cloud/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/codex-local-projects-mobile-projects-remote-cloud/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/codex-local-projects-mobile-projects-remote-cloud/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/codex-local-projects-mobile-projects-remote-cloud/"
+    data-page-title="Why a Local Codex Project Does Not Automatically Appear in Mobile Projects"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/codex-local-projects-mobile-projects-remote-cloud/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/codex-local-projects-mobile-projects-remote-cloud/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat codex-local-projects-mobile-projects-remote-cloud.md</div>
+    <h1>Why a Local Codex Project Does Not Automatically Appear in Mobile Projects</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-10">PUBLISHED 2026.10.10</time>
+      <span>16 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#ChatGPT Projects</span><span>#Codex</span><span>#Remote</span><span>#Codex Cloud</span><span>#Developer Workflow</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/codex-local-projects-mobile-projects-remote-cloud/" data-page-title="Why a Local Codex Project Does Not Automatically Appear in Mobile Projects" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>Why does a local project opened by Codex on a desktop not automatically appear in the Projects list on a phone? Because a local project and a ChatGPT Project are different underlying objects. The former uses a folder and toolchain on a particular development host; the latter is shared cloud context made of chats, files, instructions, and connected sources.</p>
+</blockquote>
+<h2>TL;DR</h2>
+<ol>
+<li><strong>A local Codex project is not a ChatGPT Project that automatically syncs to the cloud.</strong> A desktop can use a local folder as project context, but a phone cannot reconstruct that computer&#39;s files, Git state, terminal, databases, and toolchain from a project name.</li>
+<li><strong>Local-folder development is best when the environment lives on one machine.</strong> It is often the most direct and faithful option when uncommitted code, local databases, simulators, specialized SDKs, private-network services, or large build caches matter.</li>
+<li><strong>ChatGPT Projects solve context organization.</strong> They are useful for requirements, architecture, decisions, documents, and long-running discussions, but they are not an executable local code environment.</li>
+<li><strong>Codex Remote solves remote control.</strong> The phone sends prompts, approvals, and review feedback while the connected host still supplies files, commands, tools, and security controls.</li>
+<li><strong>Codex Cloud solves hosted execution.</strong> Repositories, dependencies, tools, and access settings are prepared as a reusable cloud environment that can keep working while the computer sleeps.</li>
+<li><strong>Cloud-first does not mean cloud-only.</strong> Routine implementation can run in the cloud, while breakpoints, simulators, hardware, private networks, and local data can move to a MacBook through a controlled Git/PR or <code>codex apply</code> handoff.</li>
+</ol>
+<p>For an established local development setup, the best short-term pattern is:</p>
+<blockquote>
+<p><strong>Local Codex folder + Remote, with a ChatGPT Project for durable knowledge.</strong></p>
+</blockquote>
+<p>For sustainable cross-device development, evolve toward:</p>
+<blockquote>
+<p><strong>Git repository + Codex Cloud environment, while retaining a ChatGPT Project for requirements and decisions.</strong></p>
+</blockquote>
+<h2>1. One “Project” label, several different objects</h2>
+<p>The most common source of confusion is treating these as the same thing:</p>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>What it contains</th>
+<th>Where its primary state lives</th>
+<th>Executable code environment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ChatGPT Project</td>
+<td>Chats, uploaded files, project instructions, connected sources</td>
+<td>ChatGPT cloud</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Local Codex project</td>
+<td>Local folders, working trees, terminals, toolchains</td>
+<td>A selected development host</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Codex Remote</td>
+<td>A remote control surface for Codex work on a connected host</td>
+<td>A controlled phone-to-host connection</td>
+<td>Uses the host environment</td>
+</tr>
+<tr>
+<td>Codex Cloud</td>
+<td>Repositories, dependencies, tools, network, and access settings</td>
+<td>Isolated cloud workspaces</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p>OpenAI&#39;s documentation separates ChatGPT Projects from local projects. A ChatGPT Project shares files, instructions, and sources across related chats, but it does not directly gain access to a folder on a computer. Codex CLI and IDE integrations instead derive local project context from a directory or workspace. <a href="https://learn.chatgpt.com/docs/projects">OpenAI: Projects and chats</a></p>
+<p>A desktop UI may show several project types together without giving them the same storage model.</p>
+<h2>2. Why the local project is not automatically listed on mobile</h2>
+<p>A local code project is more than a set of files. It commonly includes:</p>
+<ul>
+<li>the current working tree and uncommitted changes;</li>
+<li>local branches, the Git index, and worktrees;</li>
+<li>installed compilers, package managers, and system dependencies;</li>
+<li>local databases, containers, simulators, or hardware;</li>
+<li>services reachable only from the machine or a private network;</li>
+<li>environment variables, security policies, and approval state.</li>
+</ul>
+<p>Even if mobile displayed an item with the same name, it could not safely infer those resources or assume permission to use the computer&#39;s filesystem. Equal names do not imply equal filesystems, execution environments, or trust boundaries.</p>
+<h3>A current sync option does not mean the folder was uploaded</h3>
+<p>Current OpenAI documentation also describes a more nuanced path. When the capability is available and sync is enabled, eligible <strong>new tasks</strong> can use Local computer access with Work Cloud and continue across supported desktop, mobile, and web experiences. This is task coordination, not conversion of the entire local project into a cloud ChatGPT Project. <a href="https://learn.chatgpt.com/docs/projects">OpenAI: Projects and chats</a></p>
+<p>The same documentation explicitly separates conversation sync from project-file access. Syncing a conversation does not upload the full local folder or grant another computer automatic access to it. Existing tasks may remain local-only or run in the cloud without local-file access. Before continuing a task, verify its current execution location, sources, and available tools. <a href="https://learn.chatgpt.com/docs/projects">OpenAI: Projects and chats</a></p>
+<p>In this article, “does not automatically appear” therefore means: <strong>naming a desktop folder as a project does not turn it into a cloud object with equivalent file permissions in mobile Projects.</strong> A product can synchronize a task entry or transcript without collapsing the filesystem and execution boundaries.</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph Desktop[&quot;Development host&quot;]
+        LF[&quot;Local folder / Git working tree&quot;] --&gt; LC[&quot;Local Codex task&quot;]
+    end
+
+    subgraph ChatGPTCloud[&quot;ChatGPT cloud context&quot;]
+        CP[&quot;ChatGPT Project\nchats · files · instructions · sources&quot;]
+    end
+
+    subgraph Mobile[&quot;Mobile app&quot;]
+        PL[&quot;Projects&quot;]
+        RM[&quot;Codex / Remote&quot;]
+        CM[&quot;Codex Cloud tasks&quot;]
+    end
+
+    CP --&gt; PL
+    LC --&gt;|&quot;host online and authorized&quot;| RM
+    GR[&quot;Git repository&quot;] --&gt; CE[&quot;Published Cloud Environment&quot;] --&gt; CM
+</code></pre>
+<p>ASCII fallback:</p>
+<pre><code class="language-text">ChatGPT Project ───────────────&gt; Mobile Projects
+  └─ chats / files / instructions / sources
+
+Local folder ─&gt; Local Codex task ─&gt; Mobile Codex / Remote
+  └─ code / Git / terminal / tools      host must be online and authorized
+
+Git repository ─&gt; Codex Cloud Environment ─&gt; desktop / web / mobile
+  └─ standardized dependencies, tools, network, and access
+</code></pre>
+<p>This is not simply failed synchronization. <strong>Projects organize cloud context, Remote controls work on a host, and Cloud Environments provide reusable hosted execution.</strong></p>
+<h2>3. When to use local-folder development in Codex</h2>
+<p>Local-folder mode is not a fourth cross-device solution. It is the execution foundation for local development and can also be controlled from a phone through Remote.</p>
+<p>OpenAI&#39;s Local environment documentation includes the integrated terminal, environment configuration, and debugging among the local workflow&#39;s capabilities. When isolation is useful but the IDE, debugger, and host services must remain available, the task can run in a dedicated worktree. <a href="https://learn.chatgpt.com/docs/environments/local-environment">OpenAI: Local environments</a> <a href="https://learn.chatgpt.com/docs/environments/git-worktrees">OpenAI: Worktrees</a></p>
+<h3>Prefer it when local state matters</h3>
+<h4>Uncommitted work is part of the task</h4>
+<p>An active refactor, temporary patch, local configuration, or unpushed branch may exist only in the current working tree. Running Codex in that folder gives it the real diff, tests, and file relationships without forcing unfinished work into a commit merely to make it visible elsewhere.</p>
+<h4>The development environment is expensive to reproduce</h4>
+<p>Typical examples include:</p>
+<ul>
+<li>a prepared local database and test data;</li>
+<li>mobile simulators, browser profiles, or desktop applications;</li>
+<li>specialized SDKs, compilers, or large build caches;</li>
+<li>GPUs, USB devices, or other attached hardware;</li>
+<li>VPNs, private services, or restricted development networks.</li>
+</ul>
+<p>When these dependencies already work on the host, local mode usually offers the highest fidelity and lowest startup cost.</p>
+<h4>The task needs a tight human review loop</h4>
+<p>Local mode fits work that requires frequent diff inspection, interactive debugging, UI observation, or immediate interruption of risky actions. Codex can execute focused tasks while important state remains visible in familiar developer tools.</p>
+<h4>The repository cannot yet reproduce its environment</h4>
+<p>Some repositories still depend on “whatever is already installed on this machine.” The long-term fix is to define dependencies, startup commands, and test entry points. Until then, local development may be more reliable than a rushed cloud migration.</p>
+<h3>Do not rely on it as the only option when</h3>
+<ul>
+<li>work must continue after the computer sleeps or disconnects;</li>
+<li>several people need the same validated environment;</li>
+<li>a phone should start an independent task rather than control a host;</li>
+<li>long builds compete with daily work for local resources;</li>
+<li>the repository can already rebuild the environment from source.</li>
+</ul>
+<p>Also, <strong>local execution does not mean that every message and every piece of context is guaranteed to remain on the device.</strong> Evaluate account, workspace, product, and data-control policies instead of inferring privacy solely from the execution location.</p>
+<h2>4. Comparing the three cross-device options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Pros</th>
+<th>Cons</th>
+<th>Best use</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ChatGPT Project</strong></td>
+<td>Organizes chats, files, instructions, and durable context across devices; good for requirements, architecture, decisions, and collaboration</td>
+<td>Does not automatically receive local folders, uncommitted code, terminals, or tools; uploaded material can drift from the repository</td>
+<td>Project knowledge, planning, architecture, and documentation</td>
+<td><strong>Knowledge layer: high</strong></td>
+</tr>
+<tr>
+<td><strong>Codex Remote</strong></td>
+<td>Uses the real code and tools on the development host; supports prompts, approvals, and diff review from a phone; low migration cost</td>
+<td>Host must remain running, online, and authorized; still constrained by host resources; not an independent cloud environment</td>
+<td>Continuing, reviewing, or unblocking an existing local task while away</td>
+<td><strong>Short term: highest</strong></td>
+</tr>
+<tr>
+<td><strong>Codex Cloud</strong></td>
+<td>Continues while the computer sleeps; reusable environments; accessible from desktop, web, and mobile; good for parallel and standardized work</td>
+<td>Requires repository, dependencies, tools, network, and credentials to be prepared; local uncommitted state is not automatically part of a new cloud task</td>
+<td>Long-term cross-device development and CI-friendly repositories</td>
+<td><strong>Long term: highest</strong></td>
+</tr>
+</tbody></table>
+<p>There is no context-free winner:</p>
+<ul>
+<li>ChatGPT Project is the <strong>knowledge and collaboration layer</strong>.</li>
+<li>Remote is the <strong>remote-control layer for local execution</strong>.</li>
+<li>Codex Cloud is the <strong>hosted execution layer</strong>.</li>
+</ul>
+<p>They compose well and do not need to be mutually exclusive.</p>
+<h2>5. ChatGPT Project: build the knowledge layer</h2>
+<p>A ChatGPT Project is well suited to information that should outlive a single development session:</p>
+<ul>
+<li>product goals and non-goals;</li>
+<li>requirements, architecture, and interface contracts;</li>
+<li>decision records and roadmaps;</li>
+<li>research, meeting material, and runbooks;</li>
+<li>project instructions and shared sources.</li>
+</ul>
+<h3>Pros</h3>
+<ul>
+<li>Keeps durable context centralized across devices.</li>
+<li>Lets non-developers participate in requirements and documentation.</li>
+<li>Does not bind long-lived knowledge to a temporary working tree.</li>
+<li>Can include material that does not belong in the code repository.</li>
+</ul>
+<h3>Cons</h3>
+<ul>
+<li>It is not a live mirror of a Git working tree.</li>
+<li>Uploaded code and documents need version and freshness controls.</li>
+<li>It cannot reproduce a local database, simulator, or command environment by itself.</li>
+<li>Sensitive files should not be uploaded indiscriminately.</li>
+</ul>
+<p>Treat a ChatGPT Project as the project&#39;s brain, not as a remote disk. Durable engineering facts should also live in repository documentation or another controlled source. Fast-changing code state belongs in local Codex tasks or Cloud Environments.</p>
+<h2>6. Codex Remote: use the phone as a control plane</h2>
+<p>OpenAI&#39;s Remote documentation describes a clear division of responsibility: the phone sends prompts, approvals, and follow-up messages, while the connected host supplies files, shells, skills, tools, and security controls. The host must be awake, online, running the desktop app, and paired with the appropriate account and workspace. <a href="https://learn.chatgpt.com/docs/remote-connections">OpenAI: Remote connections</a></p>
+<h3>Pros</h3>
+<ul>
+<li>No need to migrate an existing local project first.</li>
+<li>Works with the host&#39;s real working tree and uncommitted changes.</li>
+<li>Good for approving commands, steering tasks, and reviewing results from a phone.</li>
+<li>Reuses dependencies already configured on the host.</li>
+</ul>
+<h3>Cons</h3>
+<ul>
+<li>Work disconnects if the host sleeps, goes offline, or closes the app.</li>
+<li>The host remains the compute and permission boundary.</li>
+<li>A phone is not ideal for long, broad code-reading sessions.</li>
+<li>Pairings, workspace access, and approvals require careful management.</li>
+</ul>
+<p>Remote works best for the small number of decisions that block an engineering loop: approving a known command, reading a test result, reviewing a focused diff, supplying missing context, or correcting direction. It should not turn a phone into a miniature IDE.</p>
+<h2>7. Codex Cloud: make the environment reusable</h2>
+<p>Codex Cloud uses a published Cloud Environment containing repositories, dependencies, tools, and access settings. New tasks receive isolated workspaces from that prepared environment. OpenAI documents that cloud tasks can continue while the computer sleeps and can be resumed from desktop, web, or mobile. <a href="https://learn.chatgpt.com/docs/environments/cloud-environments">OpenAI: Cloud environments</a> Each cloud task has its own working files, and local files, processes, browser sessions, and VPN access do not automatically transfer into it. <a href="https://learn.chatgpt.com/docs/environments/modes">OpenAI: Codex environments</a></p>
+<h3>Pros</h3>
+<ul>
+<li>Execution does not depend on a personal computer staying online.</li>
+<li>A prepared environment can support multiple new tasks.</li>
+<li>Suitable for parallel work, long test runs, and standardized workflows.</li>
+<li>Makes dependencies, network access, and credentials more explicit.</li>
+</ul>
+<h3>Cons</h3>
+<ul>
+<li>The repository must be available and buildable in the environment.</li>
+<li>Local uncommitted files do not automatically appear in a new cloud task.</li>
+<li>Private dependencies, internal services, and credentials need configuration.</li>
+<li>The cloud and local environment can still drift in versions, data, or capabilities.</li>
+</ul>
+<p>Uploading code is not the same as completing a cloud migration. A meaningful readiness bar includes:</p>
+<ol>
+<li>installing dependencies from a clean checkout;</li>
+<li>starting the application and required services;</li>
+<li>running tests and static checks;</li>
+<li>configuring minimal network and credential access;</li>
+<li>defining how task changes are reviewed, committed, and merged.</li>
+</ol>
+<h2>8. How does a cloud-first project return to a MacBook for deep debugging?</h2>
+<p>This is not a retreat from the cloud. It is a normal hybrid engineering loop. Cloud is a good fit for reproducible implementation, static checks, and long test runs. A MacBook remains the better environment for breakpoints, UI and animation tuning, simulators or physical devices, desktop applications, hardware, private networks, local databases, and performance profiling.</p>
+<p>The governing rule is: <strong>transfer changes; do not assume the whole runtime state is synchronized.</strong> A cloud workspace and a MacBook workspace are separate state domains. Use a reviewable diff, Git branch, or pull request as the boundary instead of treating them as a live bidirectional folder. Cloud tasks also have independent working files, and changing an environment template does not retroactively synchronize every existing task. <a href="https://learn.chatgpt.com/docs/environments/modes">OpenAI: Codex environments</a></p>
+<h3>Path 1: apply a cloud diff locally with <code>codex apply</code></h3>
+<p>The Codex CLI provides the stable <code>codex apply &lt;TASK_ID&gt;</code> command, which applies the latest diff from a specified cloud task to the current local working tree. <a href="https://learn.chatgpt.com/docs/developer-commands">OpenAI: Developer commands</a> This is an explicit transfer of changes, not continuous synchronization.</p>
+<p>A controlled sequence is:</p>
+<ol>
+<li>Confirm the cloud task ID, base commit, and target local branch.</li>
+<li>Start from a clean working tree or create an isolated worktree.</li>
+<li>Inspect the Git diff and any conflicts immediately after applying it.</li>
+<li>Run host-specific debugging, tests, and security checks on the MacBook.</li>
+<li>Commit validated fixes to a feature branch, then push them through the normal review path.</li>
+</ol>
+<p>This path is ideal when a cloud task has produced a coherent diff that now needs host-specific validation. If the local checkout already contains substantial uncommitted work, isolate the handoff in a worktree or new branch first.</p>
+<h3>Path 2: use a Git branch or pull request for repeated round trips</h3>
+<p>For several rounds of deep development, a durable flow is: the cloud task creates commits or a pull request on a feature branch; the MacBook fetches that branch into a separate worktree; local debugging produces fixes and pushes them; the next cloud task starts from the updated remote branch. A Codex worktree can be opened directly in an IDE while retaining local servers and debugging tools. <a href="https://learn.chatgpt.com/docs/environments/git-worktrees">OpenAI: Worktrees</a></p>
+<pre><code class="language-mermaid">flowchart LR
+    CT[&quot;Codex Cloud task\nimplementation · tests · diff&quot;] --&gt; X[&quot;Handoff boundary\ncodex apply or branch / PR&quot;]
+    X --&gt; LW[&quot;Isolated MacBook worktree&quot;]
+    LW --&gt; LD[&quot;Breakpoints · UI · devices · VPN · profiling&quot;]
+    LD --&gt; V[&quot;Local tests · commit · review&quot;]
+    V --&gt; GR[&quot;Remote Git repository&quot;]
+    GR --&gt; NT[&quot;Next cloud task\nstarts from updated branch&quot;]
+</code></pre>
+<p>Two distinctions prevent most failures:</p>
+<ul>
+<li><strong>A Local/Worktree handoff is not a cloud migration.</strong> Codex supports moving between Local and Worktree modes on the local host, but directly handing a host task to a Codex Cloud Environment is not the same capability. <a href="https://learn.chatgpt.com/docs/remote-connections">OpenAI: Remote connections</a> <a href="https://learn.chatgpt.com/docs/environments/git-worktrees">OpenAI: Worktrees</a></li>
+<li><strong>Do not let cloud and local writers mutate the same branch without coordination.</strong> Prefer one active writer per branch. Let the other side take over through a commit, PR, or new worktree, recording the base commit, test evidence, and unresolved issues at each handoff.</li>
+</ul>
+<h3>Make the hybrid loop sustainable</h3>
+<p>Commit lockfiles, reproducible setup and startup scripts, test entry points, minimal fixtures, and required environment documentation. Do not commit secrets, real production data, or personal machine paths. For databases, hardware, VPNs, or commercial SDKs that must remain local, document the substitute available in cloud and who owns final validation.</p>
+<p>Codex Cloud then acts as the standardized production line, the MacBook as the high-fidelity diagnostic bench, and Git/PR/diff as the auditable handoff record between them.</p>
+<h2>9. Priorities differ in the short and long term</h2>
+<h3>Short term: use the local environment that already works</h3>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Choice</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Local Codex folder + Remote</td>
+<td>Lowest migration cost; directly uses real code, tools, and uncommitted state</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ChatGPT Project</td>
+<td>Adds a cross-device knowledge layer for requirements, architecture, and decisions</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Codex Cloud</td>
+<td>Validate reproducibility with one low-risk repository or workflow first</td>
+</tr>
+</tbody></table>
+<pre><code class="language-mermaid">flowchart TB
+    P[&quot;ChatGPT Project\nrequirements · architecture · decisions&quot;] --&gt; D[&quot;Developer&quot;]
+    D --&gt; M[&quot;Mobile Codex / Remote&quot;]
+    M --&gt; H[&quot;Online development host&quot;]
+    H --&gt; L[&quot;Local Codex folder&quot;]
+    L --&gt; G[&quot;Git repository&quot;]
+</code></pre>
+<p>This phase does not require redesigning the whole toolchain. The goal is cross-device visibility without destabilizing a working local workflow.</p>
+<h3>Long term: make the repository and environment independently reproducible</h3>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Choice</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Codex Cloud</td>
+<td>Primary execution layer for cross-device and long-running work</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ChatGPT Project</td>
+<td>Retains product knowledge, decisions, and non-code material</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Codex Remote</td>
+<td>Reserved for local-only tools, hardware, and difficult debugging</td>
+</tr>
+</tbody></table>
+<pre><code class="language-mermaid">flowchart LR
+    CP[&quot;ChatGPT Project\nrequirements · ADRs · runbooks&quot;] --&gt; DEV[&quot;Development and review&quot;]
+    GH[&quot;Git repository\ncode · tests · environment definition&quot;] --&gt; CE[&quot;Codex Cloud Environment&quot;]
+    CE --&gt; CT[&quot;Isolated cloud task&quot;]
+    CT --&gt; RV[&quot;Tests · diff · review&quot;]
+    RV --&gt; GH
+    DEV --&gt; CT
+    LF[&quot;Local folder&quot;] --&gt;|&quot;specialized tools / hardware / deep debugging&quot;| DEV
+    RM[&quot;Remote&quot;] --&gt; LF
+</code></pre>
+<p>The long-term architecture does not eliminate local development. It changes the default from “every task depends on one personal computer” to “routine tasks run in a standard environment, while specialized work returns to local tools.”</p>
+<h2>10. A migration checklist for Codex Cloud</h2>
+<h3>Code and dependencies</h3>
+<ul>
+<li>Important work is committed to the correct repository and branch.</li>
+<li>Dependency versions are locked rather than inherited from one machine.</li>
+<li>Build, test, and startup commands have clear entry points.</li>
+<li>Large files, generated outputs, and caches have explicit policies.</li>
+</ul>
+<h3>Configuration and data</h3>
+<ul>
+<li>Public configuration is separated from secret values.</li>
+<li>Credentials do not enter repositories, logs, or build artifacts.</li>
+<li>Local databases have a minimal test substitute.</li>
+<li>External services and network domains follow least privilege.</li>
+</ul>
+<h3>Collaboration and delivery</h3>
+<ul>
+<li>Every task has an explicit base branch.</li>
+<li>Diff review, test evidence, and ownership are defined.</li>
+<li>Uncommitted cloud state is not the only copy of important work.</li>
+<li>Durable results enter version control or a downloadable artifact.</li>
+</ul>
+<h2>11. Common misconceptions</h2>
+<h3>Same project name means the same files</h3>
+<p>A name is a presentation-layer identifier. Capability depends on whether it is bound to cloud context, a local folder, a connected host, or a Cloud Environment.</p>
+<h3>Remote uploads the local project to the phone</h3>
+<p>Remote provides a control and review surface. Files and commands still come from the host; the phone does not receive an automatically synchronized working tree.</p>
+<h3>A ChatGPT Project can replace Git</h3>
+<p>Projects organize context, while repositories and engineering workflows remain responsible for versions, branches, diffs, merges, and reproducible builds.</p>
+<h3>Codex Cloud automatically has everything from the computer</h3>
+<p>A Cloud Environment must explicitly prepare repositories, dependencies, tools, network access, and credentials. A new task does not automatically inherit local or unrelated task state.</p>
+<h3>Local mode is automatically more private</h3>
+<p>Execution location is only one part of the data boundary. Account type, workspace policy, connected tools, logging, and product data controls also matter.</p>
+<h2>Conclusion</h2>
+<p>When a desktop Codex project does not automatically appear in mobile Projects, the most useful explanation is not that one synchronization button failed. It is that <strong>cloud project context, a host filesystem, and hosted execution are different resources with different trust boundaries.</strong></p>
+<p>Use the following decision order:</p>
+<ol>
+<li>Need real local state, specialized tools, or uncommitted code: use a <strong>local Codex folder</strong>.</li>
+<li>Need to continue controlling that host from a phone: add <strong>Codex Remote</strong>.</li>
+<li>Need requirements, architecture, and durable discussion across devices: create a <strong>ChatGPT Project</strong>.</li>
+<li>Need work to continue while the computer sleeps and a reusable execution environment: invest in <strong>Codex Cloud</strong>.</li>
+<li>Need deep local debugging after cloud implementation: use <strong><code>codex apply</code> or a Git branch/PR</strong> to move the change into an isolated local worktree, validate it, and return the resulting commits to the repository.</li>
+</ol>
+<p>The robust architecture assigns one responsibility to each layer:</p>
+<blockquote>
+<p><strong>ChatGPT Project manages knowledge, Remote manages the connection, local Codex folders manage machine-specific state, and Codex Cloud manages standardized execution.</strong></p>
+</blockquote>
+<h2>References</h2>
+<ol>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/projects">“Projects and chats.”</a> <em>ChatGPT Learn</em>. Accessed October 10, 2026.</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/remote-connections">“Remote connections.”</a> <em>ChatGPT Learn</em>. Accessed October 10, 2026.</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/environments/cloud-environments">“Cloud environments.”</a> <em>ChatGPT Learn</em>. Accessed October 10, 2026.</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/environments/modes">“Codex environments.”</a> <em>ChatGPT Learn</em>. Accessed October 10, 2026.</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/developer-commands">“Developer commands.”</a> <em>ChatGPT Learn</em>. Accessed October 10, 2026.</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/environments/git-worktrees">“Worktrees.”</a> <em>ChatGPT Learn</em>. Accessed October 10, 2026.</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/environments/local-environment">“Local environments.”</a> <em>ChatGPT Learn</em>. Accessed October 10, 2026.</li>
+</ol>
+<blockquote>
+<p>Product entry points, labels, and availability can vary with app version, plan, workspace permissions, and staged rollout. This article reflects OpenAI&#39;s official documentation available on October 10, 2026; recheck the current interface and access controls before implementation.</p>
+</blockquote>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/codex-local-projects-mobile-projects-remote-cloud/" data-page-title="Why a Local Codex Project Does Not Automatically Appear in Mobile Projects" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+      <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs';
+
+        const diagramBlocks = document.querySelectorAll('pre > code.language-mermaid');
+        diagramBlocks.forEach((code) => {
+          const container = code.parentElement;
+          container.className = 'mermaid';
+          container.textContent = code.textContent;
+        });
+
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'dark',
+          themeVariables: {
+            background: '#070b08',
+            primaryColor: '#102119',
+            primaryTextColor: '#edf3ef',
+            primaryBorderColor: '#00ff88',
+            lineColor: '#65d89a',
+            secondaryColor: '#17241c',
+            tertiaryColor: '#111712'
+          }
+        });
+
+        if (diagramBlocks.length > 0) {
+          await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+        }
+      </script>
+    
+  </body>
+</html>

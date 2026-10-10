@@ -1,0 +1,644 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>为什么桌面端 Codex 本地项目不会自动出现在手机 Projects？ · LATENTX</title>
+    <meta name="description" content="解释 ChatGPT Project、Codex 本地文件夹、Remote 与 Codex Cloud 的对象边界，并给出跨设备开发及 Cloud 与本地深度调试协作的工程架构。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="为什么桌面端 Codex 本地项目不会自动出现在手机 Projects？ · LATENTX">
+    <meta property="og:description" content="解释 ChatGPT Project、Codex 本地文件夹、Remote 与 Codex Cloud 的对象边界，并给出跨设备开发及 Cloud 与本地深度调试协作的工程架构。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/codex-local-projects-mobile-projects-remote-cloud/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/codex-local-projects-mobile-projects-remote-cloud/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/codex-local-projects-mobile-projects-remote-cloud/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/codex-local-projects-mobile-projects-remote-cloud/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/codex-local-projects-mobile-projects-remote-cloud/"
+    data-page-title="为什么桌面端 Codex 本地项目不会自动出现在手机 Projects？"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/codex-local-projects-mobile-projects-remote-cloud/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/codex-local-projects-mobile-projects-remote-cloud/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat codex-local-projects-mobile-projects-remote-cloud.md</div>
+    <h1>为什么桌面端 Codex 本地项目不会自动出现在手机 Projects？</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-10">发布于 2026.10.10</time>
+      <span>17 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#ChatGPT Projects</span><span>#Codex</span><span>#Remote</span><span>#Codex Cloud</span><span>#Developer Workflow</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/codex-local-projects-mobile-projects-remote-cloud/" data-page-title="为什么桌面端 Codex 本地项目不会自动出现在手机 Projects？" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>桌面端 Codex 打开的本地项目，为什么没有自动出现在手机 App 的 Projects 列表里？因为“本地项目”和“ChatGPT Project”虽然在界面中都可能被称为项目，背后却不是同一种对象：前者以某台开发主机上的文件夹和工具链为执行上下文，后者以云端保存的聊天、文件、指令与连接来源为共享上下文。</p>
+</blockquote>
+<h2>TL;DR</h2>
+<p>先给出结论：</p>
+<ol>
+<li><strong>Codex 本地项目不是自动同步到云端的 ChatGPT Project。</strong> 桌面端可以把本地文件夹作为项目上下文，但手机不能仅凭一个项目名称重建那台电脑上的文件、Git 状态、终端、数据库与工具链。</li>
+<li><strong>Codex 本地文件夹模式适合“环境就在这台机器上”的开发。</strong> 未提交代码、本地数据库、模拟器、专用 SDK、内网服务或大体积构建缓存很重要时，它通常是最直接、最保真的选择。</li>
+<li><strong>ChatGPT Project 解决的是上下文组织问题。</strong> 它适合保存需求、架构、决策、文档和长期讨论，但不等于一个可执行的本地代码环境。</li>
+<li><strong>Codex Remote 解决的是远程控制问题。</strong> 手机负责发送提示、批准操作和审查结果，文件与命令仍来自已连接且在线的开发主机。</li>
+<li><strong>Codex Cloud 解决的是托管执行问题。</strong> 仓库、依赖、工具与访问配置被准备成可复用的云环境，任务可以在电脑休眠时继续，并从桌面、Web 或手机访问。</li>
+<li><strong>Cloud-first 不等于 Cloud-only。</strong> 常规实现可以放在云端，遇到断点调试、模拟器、硬件、内网或本地数据问题时，再通过 Git 分支/PR 或 <code>codex apply</code> 把明确的变更交接到 MacBook 深度开发。</li>
+</ol>
+<p>如果已有成熟的本地开发环境，短期优先采用：</p>
+<blockquote>
+<p><strong>Codex 本地文件夹 + Remote，再用 ChatGPT Project 保存长期知识。</strong></p>
+</blockquote>
+<p>如果目标是长期、稳定的跨设备开发，逐步演进到：</p>
+<blockquote>
+<p><strong>Git 仓库 + Codex Cloud 环境，并继续用 ChatGPT Project 管理需求与决策。</strong></p>
+</blockquote>
+<h2>1. 问题的根源：同一个“Project”标签下有不同对象</h2>
+<p>讨论这个问题时，最容易犯的错误是把以下对象混为一谈：</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>核心内容</th>
+<th>主要状态在哪里</th>
+<th>是否天然包含可执行代码环境</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ChatGPT Project</td>
+<td>聊天、上传文件、项目指令、连接来源</td>
+<td>ChatGPT 云端</td>
+<td>否</td>
+</tr>
+<tr>
+<td>Codex 本地项目</td>
+<td>本地文件夹、工作树、终端、工具链</td>
+<td>指定开发主机</td>
+<td>是</td>
+</tr>
+<tr>
+<td>Codex Remote</td>
+<td>对已连接主机上 Codex 工作的远程控制入口</td>
+<td>手机与主机之间的受控连接</td>
+<td>使用主机环境</td>
+</tr>
+<tr>
+<td>Codex Cloud</td>
+<td>仓库、依赖、工具、网络与访问设置组成的托管环境</td>
+<td>云端隔离工作区</td>
+<td>是</td>
+</tr>
+</tbody></table>
+<p>OpenAI 官方文档明确区分了 ChatGPT Project 与本地项目：ChatGPT Project 为相关聊天提供共享的文件、指令和连接来源，但不会因此直接获得电脑上的文件夹；Codex CLI 和 IDE 扩展则以启动目录、IDE 工作区或显式选择的文件夹作为本地项目上下文。<a href="https://learn.chatgpt.com/docs/projects">OpenAI：Projects and chats</a></p>
+<p>因此，桌面端看到的“项目”列表可以在一个界面里呈现多种工作入口，但这不意味着它们共享同一个存储模型。</p>
+<h2>2. 为什么本地项目不会自动出现在手机 Projects 列表？</h2>
+<p>一个本地代码项目通常不仅是一组文件。它还包含：</p>
+<ul>
+<li>当前工作树与未提交改动；</li>
+<li>本地分支、Git 索引和 Worktree；</li>
+<li>已安装的编译器、包管理器与系统依赖；</li>
+<li>本地数据库、容器、模拟器或硬件设备；</li>
+<li>仅在本机或内网可访问的服务；</li>
+<li>环境变量、权限策略和审批状态。</li>
+</ul>
+<p>手机 Projects 列表即使同步了一个同名条目，也无法安全地推导出这些状态，更不能假设自己拥有那台电脑的文件权限。项目名称相同，不代表文件系统、执行环境和权限边界相同。</p>
+<h3>当前版本中的同步例外，仍然不等于文件夹上传</h3>
+<p>当前官方文档还描述了一条更细的路径：当账户具备相应能力并开启同步时，符合条件的<strong>新任务</strong>可以通过 Local computer access 与 Work Cloud 在桌面、手机和 Web 之间继续。这里的关键词仍然是“任务协调”，不是“把整个本地项目变成云端 Project”。<a href="https://learn.chatgpt.com/docs/projects">OpenAI：Projects and chats</a></p>
+<p>官方文档同时强调：对话同步与项目文件访问是两件事。同步对话不会上传整个本地文件夹，也不会让另一台电脑自动获得这些文件；既有任务可能继续保持本地执行，或在没有本地文件访问能力的云端运行。实际继续任务前，仍应检查当前执行位置、可访问的来源和工具。<a href="https://learn.chatgpt.com/docs/projects">OpenAI：Projects and chats</a></p>
+<p>因此，本文所说的“不会自动出现”更准确地指向：<strong>一个本地文件夹不会仅因为在桌面端被命名为项目，就自动成为手机 Projects 中具有同等文件权限的云端对象。</strong> 产品可以同步任务入口或对话，但不能绕过文件与执行边界。</p>
+<p>更准确的关系是：</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph Desktop[&quot;开发主机&quot;]
+        LF[&quot;本地文件夹 / Git 工作树&quot;] --&gt; LC[&quot;Codex 本地任务&quot;]
+    end
+
+    subgraph ChatGPTCloud[&quot;ChatGPT 云端上下文&quot;]
+        CP[&quot;ChatGPT Project\n聊天 · 文件 · 指令 · 来源&quot;]
+    end
+
+    subgraph Mobile[&quot;手机 App&quot;]
+        PL[&quot;Projects&quot;]
+        RM[&quot;Codex / Remote&quot;]
+        CM[&quot;Codex Cloud 任务&quot;]
+    end
+
+    CP --&gt; PL
+    LC --&gt;|&quot;主机在线且已授权&quot;| RM
+    GR[&quot;Git 仓库&quot;] --&gt; CE[&quot;已发布的 Cloud Environment&quot;] --&gt; CM
+</code></pre>
+<p>如果阅读环境不支持 Mermaid，可以把它理解成下面这张 ASCII 图：</p>
+<pre><code class="language-text">ChatGPT Project ───────────────&gt; 手机 Projects
+  └─ 聊天 / 文件 / 指令 / 来源
+
+本地文件夹 ─&gt; Codex 本地任务 ─&gt; 手机 Codex / Remote
+  └─ 代码 / Git / 终端 / 本机工具       依赖主机在线与授权
+
+Git 仓库 ─&gt; Codex Cloud Environment ─&gt; 桌面 / Web / 手机
+  └─ 标准化依赖、工具、网络与访问设置
+</code></pre>
+<p>这不是“同步失败”，而是产品边界不同：<strong>Projects 用于组织云端上下文；Remote 用于控制主机上的工作；Cloud Environment 用于提供可复用的云端执行环境。</strong></p>
+<h2>3. 什么时候使用 Codex 本地文件夹开发模式？</h2>
+<p>Codex 本地文件夹模式不是第四种跨设备方案。它是本地开发的执行底座，也可以被 Remote 从手机端控制。</p>
+<p>官方的 Local 环境说明把集成终端、环境配置和调试列为本地开发能力；如果希望隔离任务，又要保留 IDE、调试器和本机服务，可以在独立 Worktree 中工作。<a href="https://learn.chatgpt.com/docs/environments/local-environment">OpenAI：Local environments</a> <a href="https://learn.chatgpt.com/docs/environments/git-worktrees">OpenAI：Worktrees</a></p>
+<h3>适合优先使用的情况</h3>
+<h4>3.1 工作依赖尚未提交的本地状态</h4>
+<p>正在重构的代码、临时补丁、未提交配置或尚未推送的分支只存在于当前工作树中。此时在本地文件夹中运行 Codex，能够直接看到真实的 Diff、测试状态和文件关系，不需要为了让云环境访问而提前提交半成品。</p>
+<h4>3.2 开发环境难以快速复制</h4>
+<p>例如项目依赖：</p>
+<ul>
+<li>已准备好的本地数据库与测试数据；</li>
+<li>手机模拟器、浏览器配置或桌面应用；</li>
+<li>专用 SDK、编译器或大型构建缓存；</li>
+<li>GPU、USB 设备或其他本机硬件；</li>
+<li>VPN、内网服务或受限开发网络。</li>
+</ul>
+<p>这些依赖已经在开发机上工作时，本地模式的环境保真度通常最高，启动成本也最低。</p>
+<h4>3.3 需要紧密的人机审查循环</h4>
+<p>如果开发者需要频繁查看 Diff、运行交互式调试、观察界面或随时中止高风险操作，本地模式更接近传统 IDE 和终端工作流。Codex 可以执行具体任务，但关键状态仍留在开发者熟悉的工具中。</p>
+<h4>3.4 项目还不具备可重复的环境定义</h4>
+<p>有些仓库依赖“这台机器上已经装好的东西”。长期看，应逐步补齐依赖锁定、启动脚本和测试入口；在完成标准化之前，本地文件夹模式往往比仓促迁移到云端更可靠。</p>
+<h3>不适合把它作为唯一方案的情况</h3>
+<ul>
+<li>希望电脑休眠或断网后任务仍继续；</li>
+<li>需要多人复用同一套经过验证的环境；</li>
+<li>需要从手机直接创建独立的新任务，而不是控制一台主机；</li>
+<li>本地机器资源紧张，长时间构建会影响日常工作；</li>
+<li>项目已经能够通过仓库和环境配置完整重建。</li>
+</ul>
+<p>还要注意：<strong>“本地执行”不应被理解成“所有消息和上下文都绝不会离开设备”。</strong> 应根据账户、工作区和产品的数据策略判断信息边界，而不是仅凭执行位置推断隐私属性。</p>
+<h2>4. 三种跨设备方案对比</h2>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>Pros</th>
+<th>Cons</th>
+<th>最适合的场景</th>
+<th>推荐优先级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ChatGPT Project</strong></td>
+<td>跨设备组织聊天、文件、指令与长期上下文；适合需求、架构、决策和协作；使用门槛低</td>
+<td>不会自动获得本地文件夹、未提交代码、终端和本机工具；上传内容可能与代码实际状态产生漂移</td>
+<td>项目知识库、需求讨论、架构记录、文档协作</td>
+<td><strong>知识层：高</strong></td>
+</tr>
+<tr>
+<td><strong>Codex Remote</strong></td>
+<td>直接使用真实开发主机上的代码和工具；可从手机发起或继续工作、审批命令、查看 Diff；迁移成本低</td>
+<td>主机需要保持运行、在线并正确授权；仍受本机资源和网络影响；不是独立云环境</td>
+<td>已有本地项目，人在外面需要继续、审查或解锁任务</td>
+<td><strong>短期开发：最高</strong></td>
+</tr>
+<tr>
+<td><strong>Codex Cloud</strong></td>
+<td>电脑休眠后仍可运行；环境可复用；桌面、Web、手机可继续任务；更适合标准化与并行工作</td>
+<td>需要准备仓库、依赖、工具、网络与凭据；本地未提交状态不会自动成为新云任务的一部分；需维护环境一致性</td>
+<td>长期跨设备开发、CI 友好项目、多人或多任务并行</td>
+<td><strong>长期平台：最高</strong></td>
+</tr>
+</tbody></table>
+<p>这里没有脱离场景的总冠军：</p>
+<ul>
+<li>ChatGPT Project 是<strong>知识与协作层</strong>；</li>
+<li>Remote 是<strong>本地执行的远程控制层</strong>；</li>
+<li>Codex Cloud 是<strong>托管执行层</strong>。</li>
+</ul>
+<p>它们可以组合，而不是三选一。</p>
+<h2>5. 方案一：ChatGPT Project——建立项目知识层</h2>
+<p>ChatGPT Project 适合保存不应该散落在单次开发会话里的信息：</p>
+<ul>
+<li>产品目标与非目标；</li>
+<li>PRD、架构说明和接口约定；</li>
+<li>决策记录与 Roadmap；</li>
+<li>用户研究、会议材料与运维手册；</li>
+<li>项目级指令和共享来源。</li>
+</ul>
+<h3>Pros</h3>
+<ul>
+<li>从不同设备进入时，项目上下文保持集中；</li>
+<li>非开发者也能参与需求、文档和决策讨论；</li>
+<li>适合长期积累，而不是绑定某个临时工作树；</li>
+<li>可以把代码仓库之外的材料纳入同一语境。</li>
+</ul>
+<h3>Cons</h3>
+<ul>
+<li>它不是本地 Git 工作树的实时镜像；</li>
+<li>上传的代码或文档需要维护版本与更新时间；</li>
+<li>无法仅靠 Project 重现本地数据库、模拟器或命令环境；</li>
+<li>不应把敏感文件无差别地上传为项目来源。</li>
+</ul>
+<h3>工程建议</h3>
+<p>把 ChatGPT Project 当成“项目大脑”，而不是“远程磁盘”。长期事实尽量沉淀到仓库文档或受控来源中；会快速变化的代码状态，交给 Codex 本地任务或 Cloud Environment。</p>
+<h2>6. 方案二：Codex Remote——手机是控制平面</h2>
+<p>OpenAI 的 Remote 文档给出的边界很清楚：手机发送提示、批准和后续消息，已连接主机提供文件、Shell、技能、工具与安全配置。主机需要运行桌面 App、保持唤醒和联网，并与手机使用匹配的账户与工作区。<a href="https://learn.chatgpt.com/docs/remote-connections">OpenAI：Remote connections</a></p>
+<h3>Pros</h3>
+<ul>
+<li>不需要先迁移现有本地项目；</li>
+<li>可以访问主机上的真实工作树和未提交改动；</li>
+<li>适合在手机上回答批准请求、改变任务方向或检查结果；</li>
+<li>能继续使用本机已经配置好的开发依赖。</li>
+</ul>
+<h3>Cons</h3>
+<ul>
+<li>主机休眠、离线或关闭 App 时，远程工作会中断；</li>
+<li>主机仍是计算与权限边界，手机不是独立执行节点；</li>
+<li>不适合用手机进行长时间、大范围的代码阅读；</li>
+<li>需要认真管理配对设备、工作区权限和操作审批。</li>
+</ul>
+<h3>工程建议</h3>
+<p>Remote 最适合处理“阻塞开发流程的少数决定”：批准一个明确命令、查看测试结果、审查小范围 Diff、补充缺失信息或纠正方向。不要把手机强行变成缩小版 IDE。</p>
+<h2>7. 方案三：Codex Cloud——把环境变成可复用资产</h2>
+<p>Codex Cloud 使用已发布的 Cloud Environment。环境包含仓库、依赖、工具和访问设置；新任务从该环境启动独立工作区。官方文档说明，Cloud 任务可在电脑休眠时继续，并能从桌面、Web 或手机返回同一任务。<a href="https://learn.chatgpt.com/docs/environments/cloud-environments">OpenAI：Cloud environments</a> 每个 Cloud 任务拥有自己的工作文件，本地文件、进程、浏览器登录状态与 VPN 不会自动传入云端。<a href="https://learn.chatgpt.com/docs/environments/modes">OpenAI：Codex environments</a></p>
+<h3>Pros</h3>
+<ul>
+<li>执行不依赖某台个人电脑持续在线；</li>
+<li>环境准备一次后可用于多个新任务；</li>
+<li>适合并行任务、长时间测试和标准化工作流；</li>
+<li>更容易把依赖、网络和访问需求显式化。</li>
+</ul>
+<h3>Cons</h3>
+<ul>
+<li>需要仓库能够被云环境检出和构建；</li>
+<li>本地未提交文件不会自动出现在新 Cloud 任务中；</li>
+<li>私有依赖、内网服务和凭据需要单独配置；</li>
+<li>云环境与开发机仍可能出现版本、数据或能力差异。</li>
+</ul>
+<h3>工程建议</h3>
+<p>不要把“上传代码”当成云迁移完成。真正的完成标准应包括：</p>
+<ol>
+<li>从干净检出安装依赖；</li>
+<li>启动项目和必要服务；</li>
+<li>运行测试与静态检查；</li>
+<li>配置最小化的网络和凭据访问；</li>
+<li>明确任务如何提交、审查和合并。</li>
+</ol>
+<h2>8. Cloud-first 项目如何回到 MacBook 深度调试？</h2>
+<p>这不是从 Cloud “退回”本地，而是一种正常的混合开发闭环。Cloud 适合可重现的批量实现、静态检查和长时间测试；MacBook 适合依赖本机观察与设备能力的工作，例如断点调试、UI/动画调优、模拟器或真机联调、桌面应用、硬件、私有网络、本地数据库和性能剖析。</p>
+<p>关键原则是：<strong>同步变更，不假设同步整个运行现场。</strong> Cloud 工作区与 MacBook 工作区是两个独立状态域，应该用可审查的 Diff、Git 分支或 PR 交接，而不是把它们想象成一个实时双向同步目录。Cloud 任务之间也有独立工作文件；环境模板的更新不等于现有任务立即获得相同状态。<a href="https://learn.chatgpt.com/docs/environments/modes">OpenAI：Codex environments</a></p>
+<h3>路径一：用 <code>codex apply</code> 把 Cloud Diff 应用到本地</h3>
+<p>Codex CLI 提供稳定的 <code>codex apply &lt;TASK_ID&gt;</code> 命令，可把指定 Cloud 任务的最新 Diff 应用到当前本地工作树。<a href="https://learn.chatgpt.com/docs/developer-commands">OpenAI：Developer commands</a> 它是一次明确的变更传递，不是持续同步。</p>
+<p>建议在应用前后执行以下控制：</p>
+<ol>
+<li>确认 Cloud 任务 ID、基线提交和目标本地分支；</li>
+<li>保持当前工作树干净，或先创建独立 Worktree；</li>
+<li>应用后立即检查 Git Diff 和冲突；</li>
+<li>在 MacBook 上运行本地专属的调试、测试和安全检查；</li>
+<li>把验证后的修复提交到功能分支，再推送并进入正常审查流程。</li>
+</ol>
+<p>这种路径适合“云端已经产出一个完整 Diff，现在需要本机验证”的单次交接。若本地已有大量未提交改动，先隔离到 Worktree 或新分支通常更安全。</p>
+<h3>路径二：用 Git 分支或 PR 建立长期往返通道</h3>
+<p>对于多轮深度开发，更稳妥的工程路径是：Cloud 任务在功能分支形成提交或 PR；MacBook 拉取该分支到独立 Worktree；本地完成深度调试并推送修复；后续 Cloud 任务再从已更新的远程分支开始。Codex Worktree 可以直接用 IDE 打开，并继续使用本地服务器和调试工具。<a href="https://learn.chatgpt.com/docs/environments/git-worktrees">OpenAI：Worktrees</a></p>
+<pre><code class="language-mermaid">flowchart LR
+    CT[&quot;Codex Cloud Task\n实现 · 测试 · Diff&quot;] --&gt; X[&quot;交接边界\ncodex apply 或分支 / PR&quot;]
+    X --&gt; LW[&quot;MacBook 独立 Worktree&quot;]
+    LW --&gt; LD[&quot;断点 · UI · 设备 · 内网 · 性能调试&quot;]
+    LD --&gt; V[&quot;本地测试 · 提交 · Review&quot;]
+    V --&gt; GR[&quot;远程 Git 仓库&quot;]
+    GR --&gt; NT[&quot;后续 Cloud Task\n从已更新分支开始&quot;]
+</code></pre>
+<p>需要特别避免两个误解：</p>
+<ul>
+<li><strong>不能把 Local/Worktree 的 handoff 当成 Cloud 迁移。</strong> 官方支持在本地主机的 Local 与 Worktree 模式间切换，但直接把主机任务 handoff 到 Codex Cloud Environment 并不是同一种能力。<a href="https://learn.chatgpt.com/docs/remote-connections">OpenAI：Remote connections</a> <a href="https://learn.chatgpt.com/docs/environments/git-worktrees">OpenAI：Worktrees</a></li>
+<li><strong>不要让 Cloud 与本地同时无序改写同一分支。</strong> 推荐“一条分支一个当前写入者”，另一端通过 PR、提交或新 Worktree 接力；交接时记录基线提交、测试结果和未解决问题。</li>
+</ul>
+<h3>让混合开发真正可持续</h3>
+<p>应进入 Git 的内容包括依赖锁文件、可重复的安装/启动脚本、测试入口、最小测试数据和必要的环境说明；密钥、真实生产数据与个人机器路径不应提交。对必须留在本地的数据库、硬件、VPN 或商业 SDK，应在文档中写明替代方案和验证责任。</p>
+<p>这样，Codex Cloud 是标准化生产线，MacBook 是高保真诊断台，Git/PR/Diff 则是两者之间可审计的交接单。</p>
+<h2>9. 推荐优先级：短期和长期并不相同</h2>
+<h3>短期：先利用已经工作的本地环境</h3>
+<table>
+<thead>
+<tr>
+<th>排名</th>
+<th>选择</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Codex 本地文件夹 + Remote</td>
+<td>最低迁移成本，直接复用真实代码、工具链和未提交状态</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ChatGPT Project</td>
+<td>建立跨设备知识层，保存需求、架构和决策</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Codex Cloud</td>
+<td>先选择一个低风险仓库或任务验证环境可重复性</td>
+</tr>
+</tbody></table>
+<p>推荐架构：</p>
+<pre><code class="language-mermaid">flowchart TB
+    P[&quot;ChatGPT Project\n需求 · 架构 · 决策&quot;] --&gt; D[&quot;开发者&quot;]
+    D --&gt; M[&quot;手机 Codex / Remote&quot;]
+    M --&gt; H[&quot;保持在线的开发主机&quot;]
+    H --&gt; L[&quot;Codex 本地文件夹&quot;]
+    L --&gt; G[&quot;Git 仓库&quot;]
+</code></pre>
+<p>这个阶段不要求立即重构整个开发环境。重点是先获得跨设备可见性，同时保持现有本地流程稳定。</p>
+<h3>长期：让仓库与环境可以被独立重建</h3>
+<table>
+<thead>
+<tr>
+<th>排名</th>
+<th>选择</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Codex Cloud</td>
+<td>成为跨设备和长任务的主要执行层</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ChatGPT Project</td>
+<td>继续承担产品知识、决策和非代码材料</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Codex Remote</td>
+<td>保留给本地专用工具、硬件和疑难调试</td>
+</tr>
+</tbody></table>
+<p>推荐架构：</p>
+<pre><code class="language-mermaid">flowchart LR
+    CP[&quot;ChatGPT Project\n需求 · ADR · Runbook&quot;] --&gt; DEV[&quot;开发与审查&quot;]
+    GH[&quot;Git 仓库\n代码 · 测试 · 环境定义&quot;] --&gt; CE[&quot;Codex Cloud Environment&quot;]
+    CE --&gt; CT[&quot;隔离 Cloud Task&quot;]
+    CT --&gt; RV[&quot;测试 · Diff · Review&quot;]
+    RV --&gt; GH
+    DEV --&gt; CT
+    LF[&quot;本地文件夹&quot;] --&gt;|&quot;专用工具 / 硬件 / 深度调试&quot;| DEV
+    RM[&quot;Remote&quot;] --&gt; LF
+</code></pre>
+<p>长期架构并不淘汰本地模式。它只是把“任何任务都必须依赖某台个人电脑”改成“普通任务可在标准环境运行，特殊任务再回到本地”。</p>
+<h2>10. 从本地模式迁移到 Cloud 的检查清单</h2>
+<p>在正式迁移前，可以按下面的顺序收敛环境：</p>
+<h3>代码与依赖</h3>
+<ul>
+<li>关键代码已经提交到正确的仓库和分支；</li>
+<li>依赖版本被锁定，不依赖开发机上的偶然状态；</li>
+<li>构建、测试和启动命令有明确入口；</li>
+<li>大文件、生成物和缓存有清晰策略。</li>
+</ul>
+<h3>配置与数据</h3>
+<ul>
+<li>环境变量分为公开配置与秘密值；</li>
+<li>凭据不进入仓库、日志或构建产物；</li>
+<li>本地数据库有最小可用的测试替代方案；</li>
+<li>外部服务和网络域名遵循最小权限原则。</li>
+</ul>
+<h3>协作与交付</h3>
+<ul>
+<li>每个任务从哪个基线分支开始是明确的；</li>
+<li>Diff、测试结果和审查责任有固定流程；</li>
+<li>云端任务的未提交状态不是唯一副本；</li>
+<li>重要结果及时进入版本控制或可下载产物。</li>
+</ul>
+<h2>11. 常见误区</h2>
+<h3>误区一：同名 Project 就是同一套文件</h3>
+<p>名称只是展示层标识。判断能力边界时，要看它绑定的是云端上下文、本地文件夹、已连接主机，还是 Cloud Environment。</p>
+<h3>误区二：Remote 会把本地项目上传到手机</h3>
+<p>Remote 提供控制与审查入口。文件和命令仍来自主机；手机并没有获得一份自动同步的完整工作树。</p>
+<h3>误区三：ChatGPT Project 可以替代 Git</h3>
+<p>Project 适合组织上下文，但版本、分支、Diff、合并与可重现构建仍应由代码仓库和工程流程负责。</p>
+<h3>误区四：Codex Cloud 会自动拥有本机的一切</h3>
+<p>Cloud Environment 必须显式准备仓库、依赖、工具、网络和访问设置。新任务也不会自动继承另一个任务或本地机器上的未提交状态。</p>
+<h3>误区五：本地模式一定更私密</h3>
+<p>执行位置只是数据边界的一部分。还需要结合账户类型、工作区策略、连接的工具、日志和产品数据控制进行判断。</p>
+<h2>结语</h2>
+<p>桌面端 Codex 本地项目没有自动出现在手机 Projects 中，通常不是因为一个同步按钮失效，而是因为系统正在保护一个重要边界：<strong>云端项目上下文、主机文件系统与托管执行环境不是同一种资源。</strong></p>
+<p>面向实际工程工作，可以采用下面的决策顺序：</p>
+<ol>
+<li>需要真实本地状态、专用工具或未提交代码：使用 <strong>Codex 本地文件夹</strong>。</li>
+<li>需要从手机继续控制这台主机：叠加 <strong>Codex Remote</strong>。</li>
+<li>需要跨设备保存需求、架构与长期讨论：建立 <strong>ChatGPT Project</strong>。</li>
+<li>需要电脑休眠后继续、可复用环境和长期并行开发：建设 <strong>Codex Cloud</strong>。</li>
+<li>Cloud 实现后仍需本机深度调试：通过 <strong><code>codex apply</code> 或 Git 分支/PR</strong> 交接到独立本地 Worktree，验证后再把提交送回仓库。</li>
+</ol>
+<p>最稳妥的架构不是强迫一种产品承担所有职责，而是把知识、控制与执行分层：</p>
+<blockquote>
+<p><strong>ChatGPT Project 管知识，Remote 管连接，Codex 本地文件夹管本机状态，Codex Cloud 管标准化执行。</strong></p>
+</blockquote>
+<h2>参考文献</h2>
+<ol>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/projects">“Projects and chats.”</a> <em>ChatGPT Learn</em>. 访问日期：2026-10-10。</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/remote-connections">“Remote connections.”</a> <em>ChatGPT Learn</em>. 访问日期：2026-10-10。</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/environments/cloud-environments">“Cloud environments.”</a> <em>ChatGPT Learn</em>. 访问日期：2026-10-10。</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/environments/modes">“Codex environments.”</a> <em>ChatGPT Learn</em>. 访问日期：2026-10-10。</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/developer-commands">“Developer commands.”</a> <em>ChatGPT Learn</em>. 访问日期：2026-10-10。</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/environments/git-worktrees">“Worktrees.”</a> <em>ChatGPT Learn</em>. 访问日期：2026-10-10。</li>
+<li>OpenAI. <a href="https://learn.chatgpt.com/docs/environments/local-environment">“Local environments.”</a> <em>ChatGPT Learn</em>. 访问日期：2026-10-10。</li>
+</ol>
+<blockquote>
+<p>产品入口、名称和可用性可能随应用版本、账户套餐、工作区权限及分阶段发布而变化。本文依据 2026 年 10 月 10 日可访问的 OpenAI 官方文档描述产品边界；实际操作前应重新核对当前界面与权限。</p>
+</blockquote>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/codex-local-projects-mobile-projects-remote-cloud/" data-page-title="为什么桌面端 Codex 本地项目不会自动出现在手机 Projects？" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+      <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs';
+
+        const diagramBlocks = document.querySelectorAll('pre > code.language-mermaid');
+        diagramBlocks.forEach((code) => {
+          const container = code.parentElement;
+          container.className = 'mermaid';
+          container.textContent = code.textContent;
+        });
+
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'dark',
+          themeVariables: {
+            background: '#070b08',
+            primaryColor: '#102119',
+            primaryTextColor: '#edf3ef',
+            primaryBorderColor: '#00ff88',
+            lineColor: '#65d89a',
+            secondaryColor: '#17241c',
+            tertiaryColor: '#111712'
+          }
+        });
+
+        if (diagramBlocks.length > 0) {
+          await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+        }
+      </script>
+    
+  </body>
+</html>
