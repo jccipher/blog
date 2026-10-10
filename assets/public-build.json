@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "build_id": "20261004T055133+0800-8f45bca1",
-  "built_at": "2026-10-04T05:51:33+08:00",
+  "build_id": "20261010T105921+0800-3ebc0d6e",
+  "built_at": "2026-10-10T10:59:21+08:00",
   "files": [
     {
       "path": ".github/workflows/pages.yml",
@@ -25,8 +25,8 @@
     },
     {
       "path": "archives/index.html",
-      "bytes": 19575,
-      "sha256": "40ec28d4cba4b863d411892a98e649b950de240a3812c9d6c64a2086db22dc3c"
+      "bytes": 19829,
+      "sha256": "740eb4498024575cde7f6ead35ad2971770664e28328541510f2e335b7d9e18c"
     },
     {
       "path": "assets/audio-manifest.json",
@@ -425,13 +425,13 @@
     },
     {
       "path": "favorites/index.html",
-      "bytes": 53107,
-      "sha256": "974c6fcd1a95d5b54923541f10690bce32aed704e84c44967fa0cd94e49b7101"
+      "bytes": 54017,
+      "sha256": "42d09c5629112bd261954e6a811042d37777c51f77d3e56f7913da676d244050"
     },
     {
       "path": "index.html",
-      "bytes": 14873,
-      "sha256": "e903c96904bfd8c9822be8f8d8a94e87e96a363ba583e367fb76504e62297317"
+      "bytes": 15003,
+      "sha256": "c96e2d0515f9a059291a1ce6446968ff68351ded1da91f3eb5c254994ff3ed04"
     },
     {
       "path": "posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -674,6 +674,11 @@
       "sha256": "d87d56451fc93d13191560941c166b4c37c8eba711124359ee99b0c6e731f88a"
     },
     {
+      "path": "posts/ai-workspace-directory-mismatch-postmortem/index.html",
+      "bytes": 25308,
+      "sha256": "e6f6b10530181e185378bd5c61ded2d41e9363f3f79841d901f70738f0b18e25"
+    },
+    {
       "path": "posts/mysql-alter-table-lock-wait-timeout-postmortem/index.html",
       "bytes": 41997,
       "sha256": "200b57b9f42c356412096d59cf111a635140f39938d9a8828981688d42987c77"
@@ -705,18 +710,18 @@
     },
     {
       "path": "zh/archives/index.html",
-      "bytes": 19525,
-      "sha256": "f256f90cd67e6108b54de3b38db5974441e49ec38eedac903c6dd82e2c73fc27"
+      "bytes": 19794,
+      "sha256": "a0ee27e86e5e42d2959ae2be34d9c74389dd511eac132db50c9c3db7b2e55812"
     },
     {
       "path": "zh/favorites/index.html",
-      "bytes": 57576,
-      "sha256": "67306de8f9b3fde43b4fc92e2fffc14ebc41478d959adc00febe80ac0ba9bfa1"
+      "bytes": 58609,
+      "sha256": "180d35afe6924dc74ac531dfee136e7052cccf05352bd89f8ffc576a6f10140a"
     },
     {
       "path": "zh/index.html",
-      "bytes": 15007,
-      "sha256": "7fc91018d342daac408a375cb13022e8986659a5d1716f6f983f65ce4898b47d"
+      "bytes": 15268,
+      "sha256": "a0859cd922972dafc7d3b1d3cba2e315c3bc187c85c5b08f200aef2adda083c2"
     },
     {
       "path": "zh/posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -957,6 +962,11 @@
       "path": "zh/posts/ai-blog-openai-what-makes-a-great-chatgpt-app/index.html",
       "bytes": 10881,
       "sha256": "e718af84fb1da23fe5bd300a006d397903a1ec32cb2b030d8119702386e93158"
+    },
+    {
+      "path": "zh/posts/ai-workspace-directory-mismatch-postmortem/index.html",
+      "bytes": 23282,
+      "sha256": "d7c9324a028a1d1afbf28a4dfdce08b210eed264fde31c9ca7e4a264003225fc"
     },
     {
       "path": "zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/index.html",

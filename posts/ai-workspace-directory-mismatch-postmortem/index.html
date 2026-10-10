@@ -1,0 +1,475 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>An AI Workspace Mix-Up: How Captain Noodle's Notes Landed in Disco Potato · LATENTX</title>
+    <meta name="description" content="A postmortem of a mismatch between chat project membership and a local working directory: tracing the write through creation records and forks without overstating the unresolved initial trigger.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="An AI Workspace Mix-Up: How Captain Noodle's Notes Landed in Disco Potato · LATENTX">
+    <meta property="og:description" content="A postmortem of a mismatch between chat project membership and a local working directory: tracing the write through creation records and forks without overstating the unresolved initial trigger.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/ai-workspace-directory-mismatch-postmortem/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-workspace-directory-mismatch-postmortem/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-workspace-directory-mismatch-postmortem/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-workspace-directory-mismatch-postmortem/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/ai-workspace-directory-mismatch-postmortem/"
+    data-page-title="An AI Workspace Mix-Up: How Captain Noodle&#39;s Notes Landed in Disco Potato"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/ai-workspace-directory-mismatch-postmortem/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-workspace-directory-mismatch-postmortem/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-workspace-directory-mismatch-postmortem.md</div>
+    <h1>An AI Workspace Mix-Up: How Captain Noodle's Notes Landed in Disco Potato</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-10">PUBLISHED 2026.10.10</time>
+      <span>10 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#AI Agents</span><span>#ChatGPT</span><span>#Codex</span><span>#Workspace Isolation</span><span>#Incident Response</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/ai-workspace-directory-mismatch-postmortem/" data-page-title="An AI Workspace Mix-Up: How Captain Noodle&#39;s Notes Landed in Disco Potato" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>My project was Captain Noodle, but the assistant saved its notes in Disco Potato. The project had not been renamed. Chat membership and the local working directory had diverged—and the assistant treated execution context as user intent.</p>
+</blockquote>
+<p><strong>Anonymization note:</strong> Project names, chat names, and the notes filename are fictional aliases, not actual renames. Device details have been generalized, and incident dates and times are expressed as relative order. The factual relationships and investigation conclusions remain unchanged. The date displayed on this page is the article&#39;s publication date, not the incident date.</p>
+<h2>TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Finding</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Symptom</td>
+<td>Notes intended for Captain Noodle were saved in the directory of a separate existing project, Disco Potato</td>
+</tr>
+<tr>
+<td>Confirmed mechanism</td>
+<td>The earliest relevant chat already had the old directory at creation; the same directory remained after two forks</td>
+</tr>
+<tr>
+<td>Amplifying factor</td>
+<td>The assistant mistook the working directory for project identity, introduced unrelated context, and failed to verify the write destination</td>
+</tr>
+<tr>
+<td>Still unresolved</td>
+<td>Why the client initially selected that directory, and the complete history of changes to chat project membership</td>
+</tr>
+<tr>
+<td>Unsupported conclusions</td>
+<td>This does not establish a project rename, conversion to Work, or a directory manually selected by the user</td>
+</tr>
+<tr>
+<td>Main improvement</td>
+<td>Verify project membership, execution mode, working directory, and the destination of the current write separately</td>
+</tr>
+</tbody></table>
+<p>In one sentence:</p>
+<blockquote>
+<p><strong>Being able to write to a directory does not mean the user wants this content saved there.</strong></p>
+</blockquote>
+<h2>1. One notes file exposed a mismatch between two projects</h2>
+<p>I created a ChatGPT project named <strong>Captain Noodle</strong> to turn idle computers into a home development and services environment.</p>
+<p>To keep the discussions focused, I used several chats: <strong>Sock Drawer</strong>, <strong>Deploy-o-Saurus</strong>, and <strong>Hamster Gym</strong>. During the discussion, I asked the assistant to save a passage of notes as <code>snack_notes.md</code> and keep appending future entries.</p>
+<p>The assistant reported that the file had been saved. Its link, however, pointed to another existing project: <strong>Disco Potato</strong>.</p>
+<p>That raised an obvious question:</p>
+<blockquote>
+<p>My project is Captain Noodle. Why did its notes end up in Disco Potato?</p>
+</blockquote>
+<p>I clarified that this was a ChatGPT project, that I had not configured that local directory for it, and that I could not find the directory-setting entry the assistant described.</p>
+<p>The investigation could not stop at the visible symptom: two different names. It needed to answer four separate questions:</p>
+<ol>
+<li>Which project does the application currently assign this chat to?</li>
+<li>Which directory does the local executor actually use?</li>
+<li>When did that directory enter the chat&#39;s execution context?</li>
+<li>What evidence explains the initial selection—and what evidence does not?</li>
+</ol>
+<h2>2. No project rename: three identities must stay separate</h2>
+<p>Cross-checking the application project list and chat execution records produced the following relationship:</p>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Recorded identity</th>
+<th>File access</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Captain Noodle</td>
+<td>ChatGPT project</td>
+<td>The returned project record had no local directory field</td>
+</tr>
+<tr>
+<td>Disco Potato</td>
+<td>Separate local project</td>
+<td>Associated with another existing directory</td>
+</tr>
+<tr>
+<td>Hamster Gym chat</td>
+<td>Local Codex execution thread assigned to Captain Noodle</td>
+<td>Its working directory still pointed to Disco Potato</td>
+</tr>
+</tbody></table>
+<p>Three concepts matter here:</p>
+<ul>
+<li><strong>Project membership:</strong> Which project the application assigns the chat to.</li>
+<li><strong>Execution mode:</strong> Which executor runs the chat and whether local tools are available.</li>
+<li><strong>Working directory:</strong> Where those tools actually read and write files.</li>
+</ul>
+<p>“The chat belongs to Captain Noodle” does not imply that its local working directory is Captain Noodle. Local tool access also does not establish that the user converted the project to Work.</p>
+<p>OpenAI&#39;s official documentation distinguishes shared sources in ChatGPT projects from folder access in local projects, and describes chats retaining their recorded working directory. That clarifies the concepts; it does not establish the specific trigger in this incident. <a href="https://learn.chatgpt.com/docs/projects?surface=app">Official project and chat documentation</a></p>
+<h2>3. Investigation method: trace current state back to creation</h2>
+<p>Current state can establish a mismatch, but cannot by itself explain how it arose. The investigation continued through local session creation records, read-only database queries, and desktop client logs.</p>
+<p>Two principles guided the checks:</p>
+<ul>
+<li><strong>Cross-check records:</strong> Do session metadata and client request logs identify the same creation or fork event?</li>
+<li><strong>Trace backward in time:</strong> Did the wrong directory appear when the notes were saved, or was it already present?</li>
+</ul>
+<p>The chat aliases distinguish sessions; they do not imply that those sessions had these names at creation.</p>
+<table>
+<thead>
+<tr>
+<th>Order</th>
+<th>Event</th>
+<th>What the records establish</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Day one, initial creation</td>
+<td>Sock Drawer chat created</td>
+<td>The creation record already contained the Disco Potato directory; the client used a local execution environment</td>
+</tr>
+<tr>
+<td>Day one, later</td>
+<td>Deploy-o-Saurus forked from the previous chat</td>
+<td>The fork-source field identifies the parent; the directory stayed the same</td>
+</tr>
+<tr>
+<td>Day two</td>
+<td>Hamster Gym created through another fork</td>
+<td>The parent relationship is confirmed again; the directory still stayed the same</td>
+</tr>
+<tr>
+<td>Afterward</td>
+<td>Assistant answered a cross-chat access question</td>
+<td>It mistook the working directory&#39;s name for project identity</td>
+</tr>
+<tr>
+<td>Later</td>
+<td>Notes saved as requested</td>
+<td>The file and persistent append rule were written into the other project&#39;s directory</td>
+</tr>
+<tr>
+<td>After the user raised the discrepancy</td>
+<td>Project membership and execution records cross-checked</td>
+<td>The directory association predated the notes write and remained after two forks</td>
+</tr>
+</tbody></table>
+<p>This rules out one explanation:</p>
+<p><strong>Saving the notes was not the operation that first associated the chat with the other project&#39;s directory.</strong></p>
+<p>That directory was already present when an earlier chat was created, and remained in its descendants.</p>
+<h2>4. The confirmed propagation chain—and the assistant&#39;s responsibility</h2>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;Sock Drawer created with the Disco Potato directory&quot;] --&gt; B[&quot;Fork to Deploy-o-Saurus: same directory&quot;]
+    B --&gt; C[&quot;Fork to Hamster Gym: still the same directory&quot;]
+    C --&gt; D[&quot;Current membership: Captain Noodle; working directory: Disco Potato&quot;]
+    D --&gt; E[&quot;Assistant mistakes working directory for project identity&quot;]
+    E --&gt; F[&quot;Notes written to the other project without checking the destination&quot;]
+
+    classDef context fill:#0B1E19,stroke:#00FF9C,color:#EAFEF5,stroke-width:2px;
+    classDef mismatch fill:#211B08,stroke:#FFD166,color:#FFF7D6,stroke-width:1.5px;
+    classDef impact fill:#101820,stroke:#38BDF8,color:#E6F7FF,stroke-width:1.5px;
+    class A,B,C context;
+    class D mismatch;
+    class E,F impact;
+</code></pre>
+<p>There are two distinct layers.</p>
+<h3>4.1 Project membership and working directory diverged</h3>
+<p>The current project membership and local session directory point to different objects. That is directly supported by the records.</p>
+<p>The investigation did not recover the complete history of project membership changes. It therefore cannot establish that the chat was created first and moved into the project later, or that it was created directly from that project. The diagram describes observed relationships; it does not invent missing UI actions.</p>
+<h3>4.2 The assistant failed to recognize the mismatch and amplified it</h3>
+<p>The assistant treated the directory name as the project name and introduced background from the other project. When asked to save a file, it assumed that the current working directory was the right destination.</p>
+<p>“The environment supplied the wrong directory” is not enough to explain away that responsibility.</p>
+<p>The execution environment tells the assistant <strong>where it can operate</strong>. The user&#39;s request tells it <strong>what outcome it should achieve</strong>. A destination check is still needed between the two.</p>
+<p><strong>Interpreting execution context as user intent was the assistant&#39;s judgment error.</strong></p>
+<h2>5. Root-cause boundary: propagation is clear, the initial trigger is not</h2>
+<p>The earliest creation record shows that the client created a locally executed chat and used the Disco Potato directory.</p>
+<p>The available logs do not capture the complete UI interaction or preserve a parameter chain sufficient to explain the initial directory selection.</p>
+<table>
+<thead>
+<tr>
+<th>Candidate explanation</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The client reused a previous directory or composer state</td>
+<td>Creation-time state is missing; current state cannot reconstruct it</td>
+</tr>
+<tr>
+<td>The creation entry point or membership handling had a client defect</td>
+<td>The complete selection path and a controlled reproduction are missing</td>
+</tr>
+<tr>
+<td>The user selected a directory through some entry point</td>
+<td>The user says they did not configure it; the logs do not prove such a selection</td>
+</tr>
+<tr>
+<td>The chat was assigned to the project later while retaining its directory</td>
+<td>This can explain the state, but the timing of that membership change was not recovered</td>
+</tr>
+</tbody></table>
+<p>Two overreaches are especially tempting:</p>
+<ul>
+<li>Turning “the client submitted this directory” into “the user configured this directory.”</li>
+<li>Turning “a state mismatch was observed” into “a specific product defect has been proven.”</li>
+</ul>
+<p>Neither is supported by the available evidence.</p>
+<p>Further localization requires creation-time directory-selection parameters, the UI state at that time, or a controlled reproduction in an isolated directory. Product support should receive anonymized key fields, not complete local logs.</p>
+<blockquote>
+<p><strong>The propagation mechanism is confirmed; the trigger for the initial directory selection remains unresolved.</strong></p>
+</blockquote>
+<h2>6. Actual impact—and conclusions the evidence does not support</h2>
+<p>Confirmed effects include:</p>
+<ul>
+<li>The current discussion acquired background from another project.</li>
+<li><code>snack_notes.md</code> was saved in the other project&#39;s directory.</li>
+<li>The persistent append rule was written into that project&#39;s workspace instructions.</li>
+<li>Related discussion entered that project&#39;s conversation record.</li>
+</ul>
+<p>This does not establish a project rename, conversion to Work, or a cross-account permission breach.</p>
+<p>During the incident investigation, no application database was modified, no chat directory was rebound, and no existing notes were moved or deleted. That stage also made no GitHub commits, pushes, or publications. It consisted of relevant read-only checks and review materials.</p>
+<p><strong>Detecting a mismatch and fixing it must be reported separately.</strong> The prevention measures below are not a claim that a fix has already been implemented.</p>
+<h2>7. Prevention checklist: keep the next notes file from wandering off</h2>
+<h3>Check the project, directory, and destination before writing</h3>
+<p>Before saving a project file, establish separately:</p>
+<ol>
+<li>The project and outcome the user means.</li>
+<li>The executor&#39;s current working directory.</li>
+<li>The destination intended for this particular file.</li>
+</ol>
+<p>If they disagree, resolve the destination. Do not guess from a directory name.</p>
+<h3>Check execution context when forking—not just the topic</h3>
+<p>A fork can retain history and may retain execution context. A plausible chat name and project membership do not establish that the working directory is correct.</p>
+<p>For a discussion-only request, an in-chat Markdown draft can come first. If a local file is required, confirm its destination.</p>
+<h3>Separate permission checks from intent checks</h3>
+<p>Sandbox access answers a permissions question. Whether the user wants this content in that directory is an intent question.</p>
+<p>Permission validation cannot replace checks of project identity and write destination.</p>
+<h3>Leave room for uncertainty</h3>
+<p>A credible postmortem should state:</p>
+<ul>
+<li>Confirmed facts.</li>
+<li>Evidence-supported explanations.</li>
+<li>Hypotheses still awaiting validation.</li>
+<li>The evidence needed to continue.</li>
+</ul>
+<p>“Not fully established” is not a failed investigation. Packaging an unknown as a fact is what creates the next error.</p>
+<h2>8. Conclusion: Captain Noodle did not become Disco Potato</h2>
+<p>Captain Noodle did not become Disco Potato.</p>
+<p>What happened was a mismatch between chat membership, execution mode, and the local working directory. The old directory was present when the earliest relevant chat was created and remained after two forks. The assistant then treated execution context as user intent, and the notes landed in the wrong place.</p>
+<p>Why that directory was initially selected still requires more evidence.</p>
+<p>For an AI assistant that can read and write files, answering correctly is only the first step. It must also establish:</p>
+<p><strong>Which project am I working for, and where will I put the result?</strong></p>
+<h2>Sources and evidence boundaries</h2>
+<ul>
+<li>This article draws on first-hand records from a real incident and has been anonymized. Original session identifiers, logs, personal paths, and real names are not public.</li>
+<li><a href="https://learn.chatgpt.com/docs/projects?surface=app">OpenAI: Projects and chats</a> explains the project/directory concepts; it is not evidence that this incident&#39;s initial trigger has been established.</li>
+<li>This is a single-incident report of a confirmed mechanism and investigation limits, not a claim that the behavior applies to every project, chat, or client version.</li>
+</ul>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/ai-workspace-directory-mismatch-postmortem/" data-page-title="An AI Workspace Mix-Up: How Captain Noodle&#39;s Notes Landed in Disco Potato" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+      <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs';
+
+        const diagramBlocks = document.querySelectorAll('pre > code.language-mermaid');
+        diagramBlocks.forEach((code) => {
+          const container = code.parentElement;
+          container.className = 'mermaid';
+          container.textContent = code.textContent;
+        });
+
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'dark',
+          themeVariables: {
+            background: '#070b08',
+            primaryColor: '#102119',
+            primaryTextColor: '#edf3ef',
+            primaryBorderColor: '#00ff88',
+            lineColor: '#65d89a',
+            secondaryColor: '#17241c',
+            tertiaryColor: '#111712'
+          }
+        });
+
+        if (diagramBlocks.length > 0) {
+          await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+        }
+      </script>
+    
+  </body>
+</html>

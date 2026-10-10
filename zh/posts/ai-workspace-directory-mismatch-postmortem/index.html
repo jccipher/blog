@@ -1,0 +1,486 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>AI 工作空间错位复盘：Captain Noodle 的笔记为何掉进了 Disco Potato？ · LATENTX</title>
+    <meta name="description" content="复盘一次聊天项目归属与本地执行目录不一致的事件：用创建记录和分叉链追溯错误写入，区分已确认机制与尚未查明的初始触发原因。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="AI 工作空间错位复盘：Captain Noodle 的笔记为何掉进了 Disco Potato？ · LATENTX">
+    <meta property="og:description" content="复盘一次聊天项目归属与本地执行目录不一致的事件：用创建记录和分叉链追溯错误写入，区分已确认机制与尚未查明的初始触发原因。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/ai-workspace-directory-mismatch-postmortem/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/ai-workspace-directory-mismatch-postmortem/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/ai-workspace-directory-mismatch-postmortem/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/ai-workspace-directory-mismatch-postmortem/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/ai-workspace-directory-mismatch-postmortem/"
+    data-page-title="AI 工作空间错位复盘：Captain Noodle 的笔记为何掉进了 Disco Potato？"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/ai-workspace-directory-mismatch-postmortem/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/ai-workspace-directory-mismatch-postmortem/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat ai-workspace-directory-mismatch-postmortem.md</div>
+    <h1>AI 工作空间错位复盘：Captain Noodle 的笔记为何掉进了 Disco Potato？</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-10">发布于 2026.10.10</time>
+      <span>10 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#AI Agents</span><span>#ChatGPT</span><span>#Codex</span><span>#Workspace Isolation</span><span>#Incident Response</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-workspace-directory-mismatch-postmortem/" data-page-title="AI 工作空间错位复盘：Captain Noodle 的笔记为何掉进了 Disco Potato？" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>我的项目叫 Captain Noodle，助手却把笔记保存到了 Disco Potato。项目没有改名，真正错位的是聊天归属与本地执行目录；更危险的是，助手把执行上下文当成了用户意图。</p>
+</blockquote>
+<p><strong>脱敏说明：</strong> 项目名、聊天名和笔记文件名均为虚构代称，不代表实际改名。设备细节已泛化，事件日期与时间以相对顺序呈现；事实关系与调查结论保持不变。页面显示的是文章发布日期，不是事件发生时间。</p>
+<h2>TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>故障表现</td>
+<td>Captain Noodle 项目的笔记被保存到另一个已有项目 Disco Potato 的目录</td>
+</tr>
+<tr>
+<td>已确认机制</td>
+<td>最早的相关聊天创建时已带有旧目录；两次分叉后目录仍保持相同</td>
+</tr>
+<tr>
+<td>放大因素</td>
+<td>助手把执行目录误当成项目身份，引入不相关背景，并在写文件前未确认目的地</td>
+</tr>
+<tr>
+<td>尚未查明</td>
+<td>客户端最初为什么选择了那个目录，以及聊天项目归属变化的完整历史</td>
+</tr>
+<tr>
+<td>不支持的结论</td>
+<td>不能据此认定项目被改名、被转换为 Work，或用户手动设置过目录</td>
+</tr>
+<tr>
+<td>核心改进</td>
+<td>将项目归属、执行方式、执行目录与本次写入目的地分别核验</td>
+</tr>
+</tbody></table>
+<p>一句话总结：</p>
+<blockquote>
+<p><strong>能够在某个目录写文件，不等于用户希望把这次内容写在那里。</strong></p>
+</blockquote>
+<h2>1. 一份笔记，暴露了两个项目之间的错位</h2>
+<p>我创建了名为 <strong>Captain Noodle</strong> 的 ChatGPT 项目，准备把闲置电脑整合成家庭开发与服务环境。</p>
+<p>为了让讨论各自聚焦，我使用了几个聊天：<strong>Sock Drawer</strong>、<strong>Deploy-o-Saurus</strong> 和 <strong>Hamster Gym</strong>。讨论过程中，我让助手将一段笔记保存为 <code>snack_notes.md</code>，并要求以后持续追加。</p>
+<p>助手报告文件已经保存，但给出的链接指向另一个已有项目：<strong>Disco Potato</strong>。</p>
+<p>于是问题出现了：</p>
+<blockquote>
+<p>我的项目明明是 Captain Noodle，为什么笔记跑进了 Disco Potato？</p>
+</blockquote>
+<p>我进一步说明：这是 ChatGPT 项目，我没有为它设置那个本地目录，也找不到助手所说的目录设置入口。</p>
+<p>调查不能停在“目录不一样”这个表面现象上。需要分别回答：</p>
+<ol>
+<li>当前聊天在应用里属于哪个项目？</li>
+<li>本地执行器实际使用哪个目录？</li>
+<li>这个目录是在什么时候进入聊天上下文的？</li>
+<li>有哪些证据能解释最初的选择，哪些还不能？</li>
+</ol>
+<h2>2. 项目没有改名：三个身份不能合并理解</h2>
+<p>重新核对应用项目列表与聊天执行记录，得到以下关系：</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>记录中的身份</th>
+<th>文件访问情况</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Captain Noodle</td>
+<td>ChatGPT 项目</td>
+<td>返回的项目记录没有本地目录字段</td>
+</tr>
+<tr>
+<td>Disco Potato</td>
+<td>独立的本地项目</td>
+<td>对应另一个已有目录</td>
+</tr>
+<tr>
+<td>Hamster Gym 聊天</td>
+<td>归入 Captain Noodle 的本地 Codex 执行线程</td>
+<td>执行目录仍指向 Disco Potato</td>
+</tr>
+</tbody></table>
+<p>这里必须区分三个概念：</p>
+<ul>
+<li><strong>项目归属</strong>：聊天在应用中被归入哪个项目。</li>
+<li><strong>执行方式</strong>：聊天由什么执行器运行，是否具备本地工具。</li>
+<li><strong>执行目录</strong>：这些工具实际在哪个目录读取和写入文件。</li>
+</ul>
+<p>“聊天属于 Captain Noodle”，不能推出“它的本地执行目录就是 Captain Noodle”。“聊天具备本地工具”，也不能证明用户把项目转换成了 Work。</p>
+<p>OpenAI 官方文档区分了 ChatGPT 项目的共享来源与本地项目的文件夹访问，并说明聊天会保留记录的工作目录。这有助于理解概念，但不能单凭文档解释这次异常的具体触发原因。<a href="https://learn.chatgpt.com/docs/projects?surface=app">项目与聊天官方说明</a></p>
+<h2>3. 调查方法：从当前状态追溯到创建记录</h2>
+<p>当前状态可以证明错位，却不能单独解释错位如何形成。调查继续检查本地会话创建记录、只读数据库和桌面客户端日志。</p>
+<p>检查时采用两个原则：</p>
+<ul>
+<li><strong>交叉核验</strong>：会话元数据与客户端请求日志是否指向同一条创建或分叉事件？</li>
+<li><strong>按时间回溯</strong>：错误目录是在保存笔记时出现，还是更早就已存在？</li>
+</ul>
+<p>聊天代称只用于区分会话，并不代表它们创建时就使用了这些名称。</p>
+<table>
+<thead>
+<tr>
+<th>顺序</th>
+<th>发生的事件</th>
+<th>记录能够证明什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一天，首次创建</td>
+<td>创建 Sock Drawer 聊天</td>
+<td>创建记录已经带有 Disco Potato 目录；客户端使用本地执行环境</td>
+</tr>
+<tr>
+<td>第一天，稍后</td>
+<td>分叉出 Deploy-o-Saurus</td>
+<td>分叉来源字段确认父聊天，目录保持相同</td>
+</tr>
+<tr>
+<td>第二天</td>
+<td>再次分叉出 Hamster Gym</td>
+<td>父聊天关系再次确认，目录仍保持相同</td>
+</tr>
+<tr>
+<td>随后</td>
+<td>助手回答跨聊天访问问题</td>
+<td>把执行目录名称误当成项目身份</td>
+</tr>
+<tr>
+<td>再随后</td>
+<td>按要求保存笔记</td>
+<td>文件与持续追加规则写入另一个项目目录</td>
+</tr>
+<tr>
+<td>用户指出问题后</td>
+<td>核对项目归属与执行记录</td>
+<td>确认目录关联早于笔记写入，并在两次分叉后保留</td>
+</tr>
+</tbody></table>
+<p>因此，可以排除一个解释：</p>
+<p><strong>不是保存笔记的动作，才让聊天关联到另一个项目目录。</strong></p>
+<p>更早的聊天创建时就已携带那个目录，后续分叉继续保留它。</p>
+<h2>4. 已确认的传播链，以及助手的责任</h2>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;Sock Drawer 创建时已带有 Disco Potato 目录&quot;] --&gt; B[&quot;分叉出 Deploy-o-Saurus：目录相同&quot;]
+    B --&gt; C[&quot;再次分叉出 Hamster Gym：目录仍相同&quot;]
+    C --&gt; D[&quot;当前归属：Captain Noodle；执行目录：Disco Potato&quot;]
+    D --&gt; E[&quot;助手将执行目录误认成项目身份&quot;]
+    E --&gt; F[&quot;保存笔记时未核对目的地，写入另一个项目&quot;]
+
+    classDef context fill:#0B1E19,stroke:#00FF9C,color:#EAFEF5,stroke-width:2px;
+    classDef mismatch fill:#211B08,stroke:#FFD166,color:#FFF7D6,stroke-width:1.5px;
+    classDef impact fill:#101820,stroke:#38BDF8,color:#E6F7FF,stroke-width:1.5px;
+    class A,B,C context;
+    class D mismatch;
+    class E,F impact;
+</code></pre>
+<p>这个过程有两个不同层面。</p>
+<h3>4.1 项目归属与执行目录发生错位</h3>
+<p>当前项目归属与本地会话目录指向不同对象，这是有直接证据的事实。</p>
+<p>但调查没有找到完整的项目归属变化历史。因此，不能断言聊天是先创建后移入项目，也不能断言它直接从该项目中创建。传播图描述的是已观察到的关系，不是对缺失界面操作的补写。</p>
+<h3>4.2 助手没有识别错位，反而扩大了影响</h3>
+<p>助手将目录名称当作项目名称，并引入另一个项目的背景。用户要求保存文件时，助手又默认当前执行目录就是正确位置。</p>
+<p>这不是一句“执行环境提供了错误目录”就能免除的责任。</p>
+<p>执行环境告诉助手<strong>可以在哪里操作</strong>；用户请求告诉助手<strong>应该完成什么目标</strong>。两者之间仍需要目的地校验。</p>
+<p><strong>把执行上下文解释成用户意图，是助手的判断错误。</strong></p>
+<h2>5. 根因边界：传播机制明确，初始触发条件仍然开放</h2>
+<p>最早的创建记录显示：客户端以本地执行方式创建了聊天，并使用了 Disco Potato 目录。</p>
+<p>但现有日志没有记录那次界面操作的完整过程，也没有保留足以追溯最初目录选择的完整参数链。</p>
+<table>
+<thead>
+<tr>
+<th>候选解释</th>
+<th>证据边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>客户端沿用了此前的目录或输入框状态</td>
+<td>缺少创建时状态，不能用当前状态反推</td>
+</tr>
+<tr>
+<td>创建入口或项目归属处理存在客户端缺陷</td>
+<td>缺少完整选择链路和受控复现</td>
+</tr>
+<tr>
+<td>用户曾在某个入口选择过目录</td>
+<td>用户表示没有设置；日志也不能证明其选择过</td>
+</tr>
+<tr>
+<td>聊天后来被归入项目，但保留原目录</td>
+<td>可以解释现象，但没有找到此次归属变化的时间记录</td>
+</tr>
+</tbody></table>
+<p>这里最容易发生两次推断越界：</p>
+<ul>
+<li>把“客户端提交了这个目录”改写成“用户设置了这个目录”。</li>
+<li>把“观察到状态错位”改写成“已证实某个确定的产品缺陷”。</li>
+</ul>
+<p>两者都超出了现有证据。</p>
+<p>要进一步定位，需要创建时的目录选择参数、当时的界面状态，或在隔离目录中进行受控复现。向产品支持提交反馈时，也应提供脱敏后的关键字段，而非完整本地日志。</p>
+<blockquote>
+<p><strong>目前查清的是传播机制；最初目录选择的触发条件仍未完全查明。</strong></p>
+</blockquote>
+<h2>6. 实际影响，与不能推出的结论</h2>
+<p>已确认的影响包括：</p>
+<ul>
+<li>当前讨论被引入另一个项目的背景。</li>
+<li><code>snack_notes.md</code> 被保存到另一个项目目录。</li>
+<li>持续追加笔记的规则被写入那个项目的工作区规则。</li>
+<li>相关讨论也进入了那个项目的对话记录。</li>
+</ul>
+<p>这不等于项目被改名，也不能证明项目被转换为 Work，或存在跨账号权限突破。</p>
+<p>在事件调查阶段，没有修改应用数据库、重绑定聊天目录、迁移或删除已有笔记；也没有进行 GitHub 提交、推送或发布。该阶段只做与事件有关的只读检查，并生成审阅材料。</p>
+<p><strong>发现错位与修复错位，必须分开记录。</strong> 下面的防范建议不代表修复已经实施。</p>
+<h2>7. 防范清单：不要让笔记再次迷路</h2>
+<h3>写文件前，核对项目、目录与目的地</h3>
+<p>在保存项目文件之前，分别确认：</p>
+<ol>
+<li>用户所指的项目与目标。</li>
+<li>当前执行器的工作目录。</li>
+<li>本次文件应该保存的位置。</li>
+</ol>
+<p>三者不一致时，先明确位置，不能仅凭目录名猜测。</p>
+<h3>分叉聊天，不只检查话题</h3>
+<p>分叉可以保留历史，也可能保留原有执行上下文。聊天名称与项目归属看起来正确，不代表执行目录也已经正确。</p>
+<p>纯讨论可以先提供聊天内可审阅的 Markdown；需要本地文件时，再确认目的地。</p>
+<h3>将权限检查与意图检查分开</h3>
+<p>沙箱允许访问某个目录，解决的是权限问题；用户是否希望本次内容写入那里，解决的是意图问题。</p>
+<p>权限校验不能代替项目身份和写入目的地校验。</p>
+<h3>为未知保留位置</h3>
+<p>可信的复盘应该同时说明：</p>
+<ul>
+<li>已证实的事实。</li>
+<li>有依据的解释。</li>
+<li>仍待验证的假设。</li>
+<li>继续调查需要什么证据。</li>
+</ul>
+<p>“尚未完全查明”不是复盘失败。把未知包装成已知，才会制造下一次错误。</p>
+<h2>8. 结语：面条船长没有变成迪斯科土豆</h2>
+<p>Captain Noodle 没有变成 Disco Potato。</p>
+<p>真正发生的是：聊天归属、执行方式与本地工作目录出现错位。旧目录在最早的相关聊天创建时就已存在，经过两次分叉继续保留；助手随后把执行上下文误当成用户意图，导致笔记落到错误位置。</p>
+<p>最初为什么选中那个目录，仍然需要更多证据。</p>
+<p>对于能够读写文件的 AI 助手，正确回答问题只是第一步。它还必须确认：</p>
+<p><strong>自己正在替哪个项目工作，又将把结果写到哪里。</strong></p>
+<h2>来源与证据边界</h2>
+<ul>
+<li>本文基于一次真实事件的一手调查记录，已进行脱敏。原始会话标识、日志、个人路径与真实名称不公开。</li>
+<li><a href="https://learn.chatgpt.com/docs/projects?surface=app">OpenAI：Projects and chats</a> 用于解释项目与目录的概念，不作为此次初始触发条件已经确定的证据。</li>
+<li>本文报告单次事件的已确认机制与调查限制，不声称该现象适用于所有项目、聊天或客户端版本。</li>
+</ul>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/ai-workspace-directory-mismatch-postmortem/" data-page-title="AI 工作空间错位复盘：Captain Noodle 的笔记为何掉进了 Disco Potato？" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+      <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.17.2/dist/mermaid.esm.min.mjs';
+
+        const diagramBlocks = document.querySelectorAll('pre > code.language-mermaid');
+        diagramBlocks.forEach((code) => {
+          const container = code.parentElement;
+          container.className = 'mermaid';
+          container.textContent = code.textContent;
+        });
+
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'dark',
+          themeVariables: {
+            background: '#070b08',
+            primaryColor: '#102119',
+            primaryTextColor: '#edf3ef',
+            primaryBorderColor: '#00ff88',
+            lineColor: '#65d89a',
+            secondaryColor: '#17241c',
+            tertiaryColor: '#111712'
+          }
+        });
+
+        if (diagramBlocks.length > 0) {
+          await mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+        }
+      </script>
+    
+  </body>
+</html>
