@@ -23,11 +23,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#050706">
     <meta name="color-scheme" content="dark">
-    <title>ChatGPT macOS 看不见共享 Project：一次跨端可见性问题复盘 · LATENTX</title>
-    <meta name="description" content="复盘一次共享 ChatGPT Project 在 Web 可访问、却未出现在 macOS App 项目列表与项目搜索结果中的问题，并明确客服升级与修复确认之间的边界。">
+    <title>ChatGPT macOS 看不见共享 Project：跨端可见性复盘与官方支持边界 · LATENTX</title>
+    <meta name="description" content="复盘一次共享 ChatGPT Project 在 Web 可访问、却未出现在 macOS App 中的现象，并根据 OpenAI Support 回复说明当前支持边界、Web 替代方案与最新状态。">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="ChatGPT macOS 看不见共享 Project：一次跨端可见性问题复盘 · LATENTX">
-    <meta property="og:description" content="复盘一次共享 ChatGPT Project 在 Web 可访问、却未出现在 macOS App 项目列表与项目搜索结果中的问题，并明确客服升级与修复确认之间的边界。">
+    <meta property="og:title" content="ChatGPT macOS 看不见共享 Project：跨端可见性复盘与官方支持边界 · LATENTX">
+    <meta property="og:description" content="复盘一次共享 ChatGPT Project 在 Web 可访问、却未出现在 macOS App 中的现象，并根据 OpenAI Support 回复说明当前支持边界、Web 替代方案与最新状态。">
     <meta property="og:locale" content="zh_CN">
     
       <meta name="twitter:card" content="summary">
@@ -41,7 +41,7 @@
   </head>
   <body
     data-page-id="/zh/posts/chatgpt-macos-shared-project-visibility-postmortem/"
-    data-page-title="ChatGPT macOS 看不见共享 Project：一次跨端可见性问题复盘"
+    data-page-title="ChatGPT macOS 看不见共享 Project：跨端可见性复盘与官方支持边界"
     data-page-kind="post"
     data-page-lang="zh"
     data-engagement-endpoint=""
@@ -80,15 +80,15 @@
   <header class="article-header">
     <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
     <div class="eyebrow"><span>~/posts</span>$ cat chatgpt-macos-shared-project-visibility-postmortem.md</div>
-    <h1>ChatGPT macOS 看不见共享 Project：一次跨端可见性问题复盘</h1>
+    <h1>ChatGPT macOS 看不见共享 Project：跨端可见性复盘与官方支持边界</h1>
     <div class="article-meta">
       <time datetime="2026-10-12">发布于 2026.10.12</time>
-      <span>8 分钟阅读</span>
+      <span>9 分钟阅读</span>
       <span><b data-inline-page-views>—</b> 次浏览</span>
       <span>#ChatGPT</span><span>#macOS</span><span>#Shared Projects</span><span>#Cross-Client Consistency</span><span>#Incident Response</span>
     </div>
     <div class="article-actions">
-      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/chatgpt-macos-shared-project-visibility-postmortem/" data-page-title="ChatGPT macOS 看不见共享 Project：一次跨端可见性问题复盘" aria-pressed="false">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/chatgpt-macos-shared-project-visibility-postmortem/" data-page-title="ChatGPT macOS 看不见共享 Project：跨端可见性复盘与官方支持边界" aria-pressed="false">
         <span aria-hidden="true" data-favorite-icon>♡</span>
         <span data-favorite-label>收藏本文</span>
         <span class="action-count" data-page-favorites>0</span>
@@ -127,17 +127,21 @@
 <td>ChatGPT macOS <code>26.930.61225</code>，标识为 <code>Powered by Codex &amp; OWL</code>，发布于 2026-10-06</td>
 </tr>
 <tr>
-<td>官方处理</td>
-<td>支持请求已升级给 support specialist</td>
+<td>客服所述支持边界</td>
+<td>OpenAI Support 表示，新版 ChatGPT 桌面应用目前不支持 Shared Projects</td>
 </tr>
 <tr>
-<td>尚未确认</td>
-<td>OpenAI 尚未确认根因、产品缺陷、修复版本或预计修复时间</td>
+<td>可用替代方案</td>
+<td>在浏览器打开 ChatGPT，并使用相同账号和工作区访问共享 Project</td>
+</tr>
+<tr>
+<td>尚未提供</td>
+<td>不支持的具体产品原因、未来支持计划或时间表</td>
 </tr>
 </tbody></table>
 <p>一句话结论：</p>
 <blockquote>
-<p><strong>这是一个已经完成复现并提交客服的跨端可见性问题，但不是一个已经被官方确认或修复的 Bug。</strong></p>
+<p><strong>这次现象现在有了官方支持边界：新版 ChatGPT 桌面应用目前不支持 Shared Projects，应通过 Web 端访问；这不等于官方确认某个客户端版本存在程序缺陷。</strong></p>
 </blockquote>
 <h2>1. 问题从哪里开始</h2>
 <p>在使用 ChatGPT Projects 组织研究工作时，我发现 Web 与 macOS 客户端展示的项目列表不一致。</p>
@@ -258,16 +262,18 @@
 <li>macOS App 的侧边栏和完整 Projects 页面都缺少该项目；</li>
 <li>账号、工作区与项目成员权限已经核对。</li>
 </ol>
-<h2>4. 哪些解释仍然只是候选假设</h2>
-<p>现有证据支持继续调查以下方向：</p>
+<h2>4. 原排查假设，以及官方回复改变了什么</h2>
+<p>在收到正式回复之前，现有证据支持过以下候选方向：</p>
 <ul>
 <li><strong>共享项目列表刷新异常：</strong> macOS App 可能没有正确刷新当前账号可访问的共享项目集合。</li>
 <li><strong>聊天与 Project 使用不同索引：</strong> 聊天可以被搜索到，不代表 Project 实体也进入了相同的索引或结果类型。</li>
 <li><strong>客户端导航层展示异常：</strong> 项目可能仍然存在且可访问，但没有被加入桌面客户端的项目导航。</li>
 <li><strong>特定版本兼容性问题：</strong> 问题发生在 <code>26.930.61225</code>，但单次复现不足以证明该版本引入了回归。</li>
 </ul>
-<p>这些都不是已经验证的根因。现有证据也不足以判断问题是否影响所有共享项目、所有账号或其他桌面版本。</p>
-<h2>5. 向 OpenAI Support 提交报告</h2>
+<p>这些假设记录的是当时合理的排查路径，而不是已经验证的根因。</p>
+<p>OpenAI Support 的后续回复改变了问题定性：Web 可访问、macOS App 却没有对应共享 Project 导航入口的现象，与客服所述“新版桌面应用不支持 Shared Projects”的当前支持边界一致。因此，不应再把这一现象表述为仍在等待根因确认的同步故障，也不应仅凭一次版本复现把它归因于 <code>26.930.61225</code> 的程序回归；产品内部原因仍然未知。</p>
+<p>这封回复仍然没有说明产品层面的具体原因，例如共享权限模型、客户端架构或分阶段发布策略；也没有确认未来版本何时会支持 Shared Projects。换言之，<strong>当前支持边界已明确，内部原因与未来路线仍未知。</strong></p>
+<h2>5. OpenAI Support 的正式回复</h2>
 <p>完成排查后，我通过 OpenAI Help Center 提交了支持请求。报告包含：</p>
 <ul>
 <li>脱敏后的问题描述与实际影响；</li>
@@ -278,28 +284,39 @@
 <li>两端项目列表与搜索行为的对比；</li>
 <li>已完成的账号与工作区核对。</li>
 </ul>
-<p>客服随后确认请求已升级给 support specialist，后续结果将通过客服渠道继续反馈。</p>
-<p>这里必须保持状态边界：</p>
+<p>客服先确认请求已升级给 support specialist。2026 年 10 月 12 日凌晨（北京时间），OpenAI Support 随后给出正式回复，其要点是：</p>
 <ul>
-<li><strong>已确认：</strong> 支持请求已经升级处理。</li>
-<li><strong>未确认：</strong> OpenAI 尚未给出根因分析。</li>
-<li><strong>未确认：</strong> OpenAI 尚未确认这是产品 Bug。</li>
-<li><strong>未确认：</strong> 尚无修复版本、解决方案或预计时间。</li>
+<li>新版 ChatGPT 桌面应用目前不支持 Shared Projects；</li>
+<li>共享 Project 应在浏览器中打开；</li>
+<li>需要使用相同账号并切换到相同工作区。</li>
 </ul>
-<p>文章发布时的状态仍然是“等待官方调查”，不是“问题已解决”。</p>
-<h2>6. 遇到类似问题时如何排查</h2>
-<p>如果 Web 与 macOS App 的 Projects 列表不一致，可以按以下顺序检查：</p>
+<p>本文不公开工单号、客服身份、收件账号或原始邮件链接。这里也必须保持解释边界：</p>
+<ul>
+<li><strong>已确认：</strong> 客服明确说明了当前功能支持范围，并给出 Web 端访问方案。</li>
+<li><strong>未说明：</strong> 客服没有解释为什么桌面端尚不支持 Shared Projects。</li>
+<li><strong>未确认：</strong> 回复没有把现象定性为某个客户端版本的程序缺陷。</li>
+<li><strong>未提供：</strong> 没有未来支持时间表、修复版本或发布承诺。</li>
+</ul>
+<p>因此，最新状态不是“Bug 已修复”，而是“支持边界已澄清，已有可用的 Web 替代方案，桌面端能力仍未提供”。</p>
+<p>OpenAI 的公开文档会概括介绍桌面应用中的 ChatGPT Projects，但没有在相关页面明确承诺 Shared Projects 的桌面端支持。因此，本文关于“Shared Projects 当前不受支持”的表述只归因于这次客服回复，不把它扩展为对普通 Projects 或所有桌面项目类型的判断。</p>
+<h2>6. Web 替代方案与后续排查</h2>
+<p>在官方支持范围发生变化之前，协作成员可以直接采用以下路径：</p>
+<ol>
+<li>在浏览器打开 <a href="https://chatgpt.com/">ChatGPT</a>；</li>
+<li>登录与桌面端相同的账号；</li>
+<li>切换到共享 Project 所属的同一工作区；</li>
+<li>从 Web 端的 Projects 列表进入目标共享 Project。</li>
+</ol>
+<p>如果 Web 端仍不可见，再按以下顺序检查：</p>
 <ol>
 <li>确认两端使用同一账号。</li>
 <li>确认两端处于同一工作区。</li>
-<li>检查完整 Projects 页面，而不只看侧边栏。</li>
-<li>使用同一关键词比较 Chat 与 Project 两类搜索结果。</li>
-<li>如果是共享项目，在可访问的客户端核对成员资格与权限。</li>
-<li>记录桌面客户端版本和复现日期。</li>
-<li>完全退出并重新打开客户端，并检查是否有可用更新。</li>
-<li>若问题持续，向 OpenAI Support 提交最小复现步骤与脱敏证据。</li>
+<li>在 Web 端核对受邀成员资格与权限。</li>
+<li>重新打开原邀请链接，确认当前账号确实已加入项目。</li>
+<li>记录复现日期、受影响客户端和最小复现步骤。</li>
+<li>若 Web 端也不可访问，再向 OpenAI Support 提交脱敏证据。</li>
 </ol>
-<p>在根因未确认前，不建议为了“刷新状态”直接删除项目、移除成员或重新创建项目。这些操作未必解决问题，反而可能增加协作与数据恢复成本。</p>
+<p>不建议为了“刷新状态”直接删除项目、移除成员或重新创建项目。当前桌面端缺失符合客服说明的支持边界，这些操作未必改变结果，反而可能增加协作与数据恢复成本。</p>
 <h2>7. 产品层面的启示</h2>
 <p>共享项目同时涉及三种状态：</p>
 <ul>
@@ -335,27 +352,40 @@
 <td>已确认有效</td>
 </tr>
 <tr>
-<td>官方支持请求</td>
-<td>已提交</td>
+<td>官方支持回复</td>
+<td>已收到（2026-10-12）</td>
 </tr>
 <tr>
-<td>Support specialist</td>
-<td>已升级</td>
+<td>客服所述支持边界</td>
+<td>新版桌面应用目前不支持 Shared Projects</td>
 </tr>
 <tr>
-<td>根因</td>
-<td>待确认</td>
+<td>推荐访问方式</td>
+<td>Web 端，同一账号与工作区</td>
 </tr>
 <tr>
-<td>修复</td>
-<td>未确认</td>
+<td>桌面端程序缺陷</td>
+<td>未获确认</td>
+</tr>
+<tr>
+<td>不支持的具体原因</td>
+<td>未说明</td>
+</tr>
+<tr>
+<td>未来支持时间表</td>
+<td>未提供</td>
+</tr>
+<tr>
+<td>当前处置</td>
+<td>Web 端可继续协作；桌面端能力未恢复</td>
 </tr>
 </tbody></table>
-<p>后续如收到官方根因、解决方案或版本修复信息，本文会继续更新，并明确区分“客服回复”“Bug 确认”和“修复上线”三个阶段。</p>
+<p>后续如收到产品原因、迁移建议、未来支持计划或版本更新信息，本文会继续更新，并明确区分“客服支持边界”“程序缺陷确认”和“新能力上线”三个阶段。</p>
 <h2>参考资料</h2>
 <ul>
 <li><a href="https://help.openai.com/">OpenAI Help Center</a></li>
 <li><a href="https://help.openai.com/en/articles/10169521-projects-in-chatgpt">OpenAI：Projects in ChatGPT</a></li>
+<li><a href="https://learn.chatgpt.com/docs/projects?surface=app">OpenAI：Projects and chats</a></li>
 <li><a href="https://chatgpt.com/download/">Download ChatGPT</a></li>
 </ul>
 </div>
@@ -407,7 +437,7 @@
 
         <div class="engagement-actions">
           
-            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/chatgpt-macos-shared-project-visibility-postmortem/" data-page-title="ChatGPT macOS 看不见共享 Project：一次跨端可见性问题复盘" aria-pressed="false">
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/chatgpt-macos-shared-project-visibility-postmortem/" data-page-title="ChatGPT macOS 看不见共享 Project：跨端可见性复盘与官方支持边界" aria-pressed="false">
               <span aria-hidden="true" data-favorite-icon>♡</span>
               <span data-favorite-label>收藏本文</span>
               <span class="action-count" data-page-favorites>0</span>

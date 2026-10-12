@@ -15,11 +15,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#050706">
     <meta name="color-scheme" content="dark">
-    <title>When a Shared ChatGPT Project Vanishes on macOS: A Cross-Client Visibility Postmortem · LATENTX</title>
-    <meta name="description" content="A postmortem of a shared ChatGPT Project that remained accessible on the web but disappeared from the macOS project list and Project search results, with a clear boundary between support escalation and a confirmed fix.">
+    <title>When a Shared ChatGPT Project Vanishes on macOS: A Postmortem and the Official Support Boundary · LATENTX</title>
+    <meta name="description" content="A postmortem of a shared ChatGPT Project that remained accessible on the web but absent from the macOS app, updated with OpenAI Support&#39;s stated product boundary, web workaround, and current status.">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="When a Shared ChatGPT Project Vanishes on macOS: A Cross-Client Visibility Postmortem · LATENTX">
-    <meta property="og:description" content="A postmortem of a shared ChatGPT Project that remained accessible on the web but disappeared from the macOS project list and Project search results, with a clear boundary between support escalation and a confirmed fix.">
+    <meta property="og:title" content="When a Shared ChatGPT Project Vanishes on macOS: A Postmortem and the Official Support Boundary · LATENTX">
+    <meta property="og:description" content="A postmortem of a shared ChatGPT Project that remained accessible on the web but absent from the macOS app, updated with OpenAI Support&#39;s stated product boundary, web workaround, and current status.">
     <meta property="og:locale" content="en_US">
     
       <meta name="twitter:card" content="summary">
@@ -33,7 +33,7 @@
   </head>
   <body
     data-page-id="/posts/chatgpt-macos-shared-project-visibility-postmortem/"
-    data-page-title="When a Shared ChatGPT Project Vanishes on macOS: A Cross-Client Visibility Postmortem"
+    data-page-title="When a Shared ChatGPT Project Vanishes on macOS: A Postmortem and the Official Support Boundary"
     data-page-kind="post"
     data-page-lang="en"
     data-engagement-endpoint=""
@@ -69,15 +69,15 @@
   <header class="article-header">
     <a class="back-link" href="/blog/">← cd ~/blog</a>
     <div class="eyebrow"><span>~/posts</span>$ cat chatgpt-macos-shared-project-visibility-postmortem.md</div>
-    <h1>When a Shared ChatGPT Project Vanishes on macOS: A Cross-Client Visibility Postmortem</h1>
+    <h1>When a Shared ChatGPT Project Vanishes on macOS: A Postmortem and the Official Support Boundary</h1>
     <div class="article-meta">
       <time datetime="2026-10-12">PUBLISHED 2026.10.12</time>
-      <span>8 MIN READ</span>
+      <span>9 MIN READ</span>
       <span><b data-inline-page-views>—</b> VIEWS</span>
       <span>#ChatGPT</span><span>#macOS</span><span>#Shared Projects</span><span>#Cross-Client Consistency</span><span>#Incident Response</span>
     </div>
     <div class="article-actions">
-      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/chatgpt-macos-shared-project-visibility-postmortem/" data-page-title="When a Shared ChatGPT Project Vanishes on macOS: A Cross-Client Visibility Postmortem" aria-pressed="false">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/chatgpt-macos-shared-project-visibility-postmortem/" data-page-title="When a Shared ChatGPT Project Vanishes on macOS: A Postmortem and the Official Support Boundary" aria-pressed="false">
         <span aria-hidden="true" data-favorite-icon>♡</span>
         <span data-favorite-label>Save article</span>
         <span class="action-count" data-page-favorites>0</span>
@@ -116,17 +116,21 @@
 <td>ChatGPT for macOS <code>26.930.61225</code>, identified as <code>Powered by Codex &amp; OWL</code>, released 2026-10-06</td>
 </tr>
 <tr>
-<td>Support status</td>
-<td>The request was escalated to a support specialist</td>
+<td>Support-stated product boundary</td>
+<td>OpenAI Support said the new ChatGPT desktop app does not currently support Shared Projects</td>
 </tr>
 <tr>
-<td>Not confirmed</td>
-<td>OpenAI has not confirmed the root cause, a product defect, a fixed release, or an estimated resolution date</td>
+<td>Available workaround</td>
+<td>Open ChatGPT in a browser and use the same account and workspace to access the shared Project</td>
+</tr>
+<tr>
+<td>Not provided</td>
+<td>The product reason for the limitation, a future support plan, or a timeline</td>
 </tr>
 </tbody></table>
 <p>In one sentence:</p>
 <blockquote>
-<p><strong>This is a reproduced cross-client visibility problem that has been escalated to support; it is not yet an officially confirmed or fixed bug.</strong></p>
+<p><strong>The behavior now has an official support boundary: the new ChatGPT desktop app does not currently support Shared Projects, so they should be accessed on the web; this is not an official confirmation of a defect in a particular client release.</strong></p>
 </blockquote>
 <h2>1. How the issue appeared</h2>
 <p>While using ChatGPT Projects for research work, I noticed that the web and macOS clients displayed different project lists.</p>
@@ -247,16 +251,18 @@
 <li>Both the sidebar and the full Projects view omitted the Project.</li>
 <li>Account, workspace, membership, and edit permission had been checked.</li>
 </ol>
-<h2>4. Candidate explanations, not conclusions</h2>
-<p>The evidence supports investigating several possibilities:</p>
+<h2>4. The original hypotheses and what the support reply changed</h2>
+<p>Before the formal response arrived, the evidence supported several candidate explanations:</p>
 <ul>
 <li><strong>Shared-project list refresh:</strong> the macOS app may not have refreshed the complete set of shared Projects available to the account.</li>
 <li><strong>Separate chat and Project indexes:</strong> discoverable chats do not guarantee that the Project entity is indexed or presented in the same result set.</li>
 <li><strong>Navigation-layer rendering:</strong> the Project may still exist and remain accessible while being omitted from desktop navigation.</li>
 <li><strong>Version-specific compatibility:</strong> the issue occurred on <code>26.930.61225</code>, but one reproduction is not enough to show that this release introduced a regression.</li>
 </ul>
-<p>None of these is a verified root cause. The evidence also does not establish whether the behavior affects all shared Projects, all accounts, or other desktop versions.</p>
-<h2>5. Reporting the issue to OpenAI Support</h2>
+<p>These hypotheses document reasonable investigation paths at the time; they are not verified root causes.</p>
+<p>OpenAI Support&#39;s later reply changes the classification. The Project remaining available on the web while lacking a corresponding shared-Project navigation entry in the macOS app is consistent with Support&#39;s stated boundary that the new desktop app does not support Shared Projects. The behavior should therefore no longer be described as a synchronization failure whose root cause is still pending, nor should one reproduction be used to attribute a software regression to version <code>26.930.61225</code>; the product&#39;s internal reason remains unknown.</p>
+<p>The reply does not explain the product rationale, such as the sharing-permission model, client architecture, or staged availability. It also does not say when Shared Projects might become available in a future desktop release. In short, <strong>the current support boundary is clear; the internal reason and future roadmap remain unknown.</strong></p>
+<h2>5. OpenAI Support&#39;s formal response</h2>
 <p>After the investigation, I submitted a support request through the OpenAI Help Center. The report included:</p>
 <ul>
 <li>a sanitized description of the problem and its impact;</li>
@@ -267,28 +273,39 @@
 <li>a comparison of project lists and search behavior;</li>
 <li>confirmation that the account and workspace had already been checked.</li>
 </ul>
-<p>Support subsequently confirmed that the request had been escalated to a support specialist and that follow-up would continue through the support channel.</p>
-<p>The status boundary is important:</p>
+<p>Support first confirmed that the request had been escalated to a support specialist. In the early hours of October 12, 2026, Beijing time, OpenAI Support then provided a formal response with three operational points:</p>
 <ul>
-<li><strong>Confirmed:</strong> the support request has been escalated.</li>
-<li><strong>Not confirmed:</strong> OpenAI has not provided a root-cause analysis.</li>
-<li><strong>Not confirmed:</strong> OpenAI has not confirmed a product bug.</li>
-<li><strong>Not confirmed:</strong> no fixed version, workaround, or timeline has been provided.</li>
+<li>the new ChatGPT desktop app does not currently support Shared Projects;</li>
+<li>a shared Project should be opened in a browser;</li>
+<li>the user should sign in with the same account and select the same workspace.</li>
 </ul>
-<p>At publication time, the correct status is “awaiting investigation,” not “resolved.”</p>
-<h2>6. A practical checklist for similar cases</h2>
-<p>If the Projects list differs between the web and macOS clients:</p>
+<p>This post does not disclose the case number, support representative, recipient account, or private email link. The interpretation boundary is equally important:</p>
+<ul>
+<li><strong>Confirmed:</strong> Support clarified the current product-support boundary and provided a web access path.</li>
+<li><strong>Not explained:</strong> Support did not say why Shared Projects are unavailable in the desktop app.</li>
+<li><strong>Not confirmed:</strong> The response did not classify the behavior as a software defect in a particular client version.</li>
+<li><strong>Not provided:</strong> There is no future support timeline, fixed release, or delivery commitment.</li>
+</ul>
+<p>The latest status is therefore not “bug fixed.” It is “support boundary clarified, web workaround available, desktop capability still unavailable.”</p>
+<p>OpenAI&#39;s public documentation describes ChatGPT Projects in the desktop app at a general level, but the relevant page does not explicitly promise desktop support for Shared Projects. This post therefore attributes the Shared Projects limitation specifically to the support reply; it does not extend that statement to ordinary Projects or every kind of desktop project.</p>
+<h2>6. Web workaround and follow-up checks</h2>
+<p>Until the supported surfaces change, collaborators can use this path directly:</p>
+<ol>
+<li>Open <a href="https://chatgpt.com/">ChatGPT</a> in a browser.</li>
+<li>Sign in with the same account used in the desktop app.</li>
+<li>Select the same workspace that owns the shared Project.</li>
+<li>Open the shared Project from the web Projects list.</li>
+</ol>
+<p>If the Project is still missing on the web, continue with these checks:</p>
 <ol>
 <li>Confirm that both clients use the same account.</li>
 <li>Confirm that both clients are in the same workspace.</li>
-<li>Check the full Projects view, not only the sidebar.</li>
-<li>Use the same keywords and compare Chat results with Project results.</li>
-<li>For a shared Project, verify membership and permission in a client where it is accessible.</li>
-<li>Record the desktop client version and reproduction date.</li>
-<li>Fully quit and reopen the client, then check for an available update.</li>
-<li>If the issue persists, send OpenAI Support a minimal reproduction and sanitized evidence.</li>
+<li>Verify invited membership and permission on the web.</li>
+<li>Reopen the original invitation link and confirm that the current account joined successfully.</li>
+<li>Record the reproduction date, affected client, and minimal reproduction steps.</li>
+<li>If web access also fails, send OpenAI Support sanitized evidence.</li>
 </ol>
-<p>Before the root cause is known, avoid deleting the Project, removing members, or recreating it merely to force a refresh. Those actions may not fix the problem and can increase collaboration and recovery costs.</p>
+<p>Avoid deleting the Project, removing members, or recreating it merely to force a refresh. The missing desktop entry matches the support boundary described by Support, so those actions may not change the result and can increase collaboration and recovery costs.</p>
 <h2>7. Product implications</h2>
 <p>A shared Project has at least three distinct states:</p>
 <ul>
@@ -324,27 +341,40 @@
 <td>Confirmed valid</td>
 </tr>
 <tr>
-<td>Support request</td>
-<td>Submitted</td>
+<td>Official support response</td>
+<td>Received on 2026-10-12</td>
 </tr>
 <tr>
-<td>Support specialist</td>
-<td>Escalated</td>
+<td>Support-stated product boundary</td>
+<td>The new desktop app does not currently support Shared Projects</td>
 </tr>
 <tr>
-<td>Root cause</td>
-<td>Pending</td>
+<td>Recommended access path</td>
+<td>Web, using the same account and workspace</td>
 </tr>
 <tr>
-<td>Fix</td>
+<td>Desktop software defect</td>
 <td>Not confirmed</td>
 </tr>
+<tr>
+<td>Product reason for the limitation</td>
+<td>Not explained</td>
+</tr>
+<tr>
+<td>Future support timeline</td>
+<td>Not provided</td>
+</tr>
+<tr>
+<td>Current handling</td>
+<td>Collaboration can continue on the web; desktop capability remains unavailable</td>
+</tr>
 </tbody></table>
-<p>If OpenAI later provides a root cause, workaround, or fixed release, this post will be updated while keeping “support response,” “bug confirmation,” and “fix deployment” as separate milestones.</p>
+<p>If OpenAI later provides a product rationale, migration guidance, future support plan, or version update, this post will be updated while keeping “support boundary,” “software-defect confirmation,” and “new capability release” as separate milestones.</p>
 <h2>References</h2>
 <ul>
 <li><a href="https://help.openai.com/">OpenAI Help Center</a></li>
 <li><a href="https://help.openai.com/en/articles/10169521-projects-in-chatgpt">OpenAI: Projects in ChatGPT</a></li>
+<li><a href="https://learn.chatgpt.com/docs/projects?surface=app">OpenAI: Projects and chats</a></li>
 <li><a href="https://chatgpt.com/download/">Download ChatGPT</a></li>
 </ul>
 </div>
@@ -396,7 +426,7 @@
 
         <div class="engagement-actions">
           
-            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/chatgpt-macos-shared-project-visibility-postmortem/" data-page-title="When a Shared ChatGPT Project Vanishes on macOS: A Cross-Client Visibility Postmortem" aria-pressed="false">
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/chatgpt-macos-shared-project-visibility-postmortem/" data-page-title="When a Shared ChatGPT Project Vanishes on macOS: A Postmortem and the Official Support Boundary" aria-pressed="false">
               <span aria-hidden="true" data-favorite-icon>♡</span>
               <span data-favorite-label>Save article</span>
               <span class="action-count" data-page-favorites>0</span>
