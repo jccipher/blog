@@ -1,0 +1,506 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>ChatGPT Shared Projects Support Log, Part 2: Timeline, Escalation, and Migration Guidance · LATENTX</title>
+    <meta name="description" content="A sanitized incident timeline covering AI-assisted support, the original case&#39;s migration response, and collaboration paths for local-only and cloud-synced projects.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="ChatGPT Shared Projects Support Log, Part 2: Timeline, Escalation, and Migration Guidance · LATENTX">
+    <meta property="og:description" content="A sanitized incident timeline covering AI-assisted support, the original case&#39;s migration response, and collaboration paths for local-only and cloud-synced projects.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/chatgpt-shared-projects-support-timeline-human-escalation/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/chatgpt-shared-projects-support-timeline-human-escalation/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/chatgpt-shared-projects-support-timeline-human-escalation/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/chatgpt-shared-projects-support-timeline-human-escalation/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/chatgpt-shared-projects-support-timeline-human-escalation/"
+    data-page-title="ChatGPT Shared Projects Support Log, Part 2: Timeline, Escalation, and Migration Guidance"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/chatgpt-shared-projects-support-timeline-human-escalation/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/chatgpt-shared-projects-support-timeline-human-escalation/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat chatgpt-shared-projects-support-timeline-human-escalation.md</div>
+    <h1>ChatGPT Shared Projects Support Log, Part 2: Timeline, Escalation, and Migration Guidance</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-13">PUBLISHED 2026.10.13</time>
+      <span>12 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#ChatGPT</span><span>#Shared Projects</span><span>#OpenAI Support</span><span>#macOS</span><span>#ChatGPT Business</span><span>#Codex</span><span>#ChatGPT Work</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/chatgpt-shared-projects-support-timeline-human-escalation/" data-page-title="ChatGPT Shared Projects Support Log, Part 2: Timeline, Escalation, and Migration Guidance" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>This is Part 2 of the “ChatGPT Shared Projects Support Log.” Previous: <a href="https://jccipher.github.io/blog/posts/chatgpt-macos-shared-project-visibility-postmortem/">When a Shared ChatGPT Project Vanishes on macOS</a>.</p>
+</blockquote>
+<p><strong>Privacy note:</strong> This post does not disclose case numbers, support-agent names, recipient accounts, workspace identifiers, real project names, collaborator identities, email-tracking links, or original screenshots. Times use Beijing time. Only short excerpts directly relevant to product support are retained; everything else is summarized.</p>
+<h2>TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Current finding</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>First response</td>
+<td>A named OpenAI Support email without an AI-generation notice said the new desktop app does not currently support Shared Projects and recommended the web with the same account and workspace</td>
+</tr>
+<tr>
+<td>Second response</td>
+<td>An explicitly labeled <code>AI-assisted support</code> email offered migration and collaboration guidance while warning that it could contain mistakes</td>
+</tr>
+<tr>
+<td>Original-case follow-up</td>
+<td>A human-review request was sent; a named response arrived that evening and distinguished local-only from cloud-synced projects, without explicitly confirming human review</td>
+</tr>
+<tr>
+<td>Message source</td>
+<td>All three inbound messages passed OpenAI-domain authentication; this supports their origin, not proof of human authorship</td>
+</tr>
+<tr>
+<td>Public documentation</td>
+<td>It confirms web/mobile sharing, Chat/Edit roles, moving eligible chats, project-only memory, the Work restriction, and separate Codex history</td>
+</tr>
+<tr>
+<td>Still unanswered</td>
+<td>The product rationale, possible scope exceptions, handling of Work history, and whether the AI answer received item-by-item human review</td>
+</tr>
+<tr>
+<td>Timeline</td>
+<td>Support explicitly said no public roadmap or timeframe was available to share</td>
+</tr>
+</tbody></table>
+<h2>1. Why this timeline is a separate post</h2>
+<p><a href="https://jccipher.github.io/blog/posts/chatgpt-macos-shared-project-visibility-postmortem/">Part 1</a> preserves the complete reproduction and investigation. It also reclassified the incident from a cross-client synchronization failure with an unknown root cause to a currently stated support boundary. That answer raised a second set of questions: why the limitation exists, whether a project can be converted, what happens to Codex and ChatGPT Work history, and how a team should structure its shared context.</p>
+<p>Those questions produced an AI-assisted reply and, after a human-review request in the original case, another named response. This post records all three inbound messages. A name and the absence of an AI notice describe the email; they do not independently establish authorship or the review process.</p>
+<p>Five evidence labels are used:</p>
+<ul>
+<li><strong>Reproduced:</strong> directly observed in the clients;</li>
+<li><strong>Support-stated:</strong> written in an OpenAI Support message, but not automatically a public product specification;</li>
+<li><strong>Publicly documented:</strong> directly supported by a current OpenAI help article;</li>
+<li><strong>Inference or interim practice:</strong> a practical design based on current boundaries, not an official migration commitment;</li>
+<li><strong>Pending human confirmation:</strong> stated by AI-assisted support without complete public documentation.</li>
+</ul>
+<h2>2. Event timeline</h2>
+<table>
+<thead>
+<tr>
+<th>Beijing time</th>
+<th>Event</th>
+<th>Evidence state</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2026-10-11</td>
+<td>Reproduced the same-account, same-workspace behavior: a Shared Project worked on the web but was absent from macOS project navigation</td>
+<td>Reproduced</td>
+</tr>
+<tr>
+<td>2026-10-11</td>
+<td>Submitted a sanitized Help Center request with the version, permission, search difference, and reproduction steps</td>
+<td>Submitted</td>
+</tr>
+<tr>
+<td>2026-10-12 01:37</td>
+<td>Received a named Support response without an AI-generation notice, stating the current desktop boundary and web workaround</td>
+<td>Support-stated</td>
+</tr>
+<tr>
+<td>2026-10-12 09:18</td>
+<td>Merged the bilingual Part 1 postmortem, retaining the investigation and its evidence boundaries</td>
+<td>Repository record</td>
+</tr>
+<tr>
+<td>2026-10-12 15:01</td>
+<td>Sent a new detailed question about rationale, roadmap, local-project conversion, and Work/Codex collaboration practices</td>
+<td>Sent</td>
+</tr>
+<tr>
+<td>2026-10-12 15:02</td>
+<td>Received a separate response explicitly labeled <code>AI-assisted support</code>; the standalone email created another support record</td>
+<td>Received, not human-confirmed</td>
+</tr>
+<tr>
+<td>2026-10-12 15:07</td>
+<td>Merged the Part 1 update stating that the boundary was clarified while rationale and roadmap remained unknown</td>
+<td>Repository record</td>
+</tr>
+<tr>
+<td>2026-10-12 15:15</td>
+<td>Completed public deployment and page-by-page verification for Part 1 in both languages</td>
+<td>Verified</td>
+</tr>
+<tr>
+<td>2026-10-12 15:20</td>
+<td>Completed the human-review email draft</td>
+<td>A draft at that point</td>
+</tr>
+<tr>
+<td>2026-10-12 15:25</td>
+<td>Replied in the original thread, requesting a human answer, review of the AI guidance, and preservation of the original case</td>
+<td>Sent; reply relationship verified</td>
+</tr>
+<tr>
+<td>2026-10-12 21:25</td>
+<td>Received another named Support reply in the original case, explaining the two migration paths and a Business collaboration structure</td>
+<td>Support-stated; no AI-generation notice</td>
+</tr>
+<tr>
+<td>2026-10-13</td>
+<td>Rechecked the messages and public documentation before publication and incorporated the later reply</td>
+<td>This post&#39;s evidence cutoff</td>
+</tr>
+</tbody></table>
+<p>The 15:01 message lacked a reply relationship to the original email and corresponded to a separate case. The 15:25 message carried an <code>In-Reply-To</code> pointing to the original reply, and the 21:25 response returned in that same original thread. Clicking Reply preserved continuity; it does not guarantee assignment to a human.</p>
+<h2>3. First Support response: the operating boundary</h2>
+<p>The first email included this short, sanitized excerpt:</p>
+<blockquote>
+<p>“Shared projects are not supported in the new ChatGPT desktop app.”</p>
+</blockquote>
+<p>It then recommended opening ChatGPT in a browser and using the same account and workspace to access the shared Project.</p>
+<p>That reply answered where the Project should be accessed today. It did not explain why support was absent, provide a desktop roadmap, or classify the behavior as a defect in a particular client version. Part 1 therefore records “support boundary clarified,” not “bug confirmed” or “bug fixed.”</p>
+<h2>4. Second, AI-assisted response: content and limits</h2>
+<p>The second email began with this limitation:</p>
+<blockquote>
+<p>“We don’t have public documentation that explains why Shared Projects aren’t supported...”</p>
+</blockquote>
+<p>It ended with an explicit warning:</p>
+<blockquote>
+<p>“This response was generated with AI support which can make mistakes.”</p>
+</blockquote>
+<p>Within that boundary, its main recommendations can be summarized as follows:</p>
+<ol>
+<li>Create and share the Project on the web or mobile, then assign coworkers Chat or Edit access;</li>
+<li>Use <code>Move to project</code> or drag-and-drop for eligible existing ChatGPT chats;</li>
+<li>Start a new chat inside the shared Project when an existing chat is not eligible;</li>
+<li>Re-add project instructions and sources as needed;</li>
+<li>No public material documents preservation of local-folder associations, Codex projects, or Codex history through a “conversion”;</li>
+<li>Codex and ChatGPT histories are separate; Shared Projects use project-only memory, where ChatGPT Work is unavailable;</li>
+<li>No public rationale, roadmap, or timeframe was available.</li>
+</ol>
+<p>These statements do not all have the same evidence quality. Some map directly to public documentation, some summarize it, and some are conservative inferences from missing migration documentation.</p>
+<h2>5. Public-documentation audit</h2>
+<table>
+<thead>
+<tr>
+<th>AI-assisted statement</th>
+<th>Audit result</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Shared Projects are available on web and mobile</td>
+<td>Confirmed</td>
+<td><a href="https://help.openai.com/en/articles/10169521-projects-in-chatgpt">Projects in ChatGPT</a> explicitly lists those surfaces</td>
+</tr>
+<tr>
+<td>Members can receive Chat or Edit access</td>
+<td>Confirmed</td>
+<td>The same article defines both roles and Business workspace invitations</td>
+</tr>
+<tr>
+<td>Eligible existing ChatGPT chats can move into a Project</td>
+<td>Confirmed</td>
+<td>The article documents <code>Move to project</code>/drag-and-drop and excludes chats created with a custom GPT</td>
+</tr>
+<tr>
+<td>Shared Projects automatically use project-only memory</td>
+<td>Confirmed</td>
+<td>The article says shared projects cannot switch back to default memory</td>
+</tr>
+<tr>
+<td>ChatGPT Work is unavailable with project-only memory</td>
+<td>Confirmed</td>
+<td>The project-only-memory section says so directly</td>
+</tr>
+<tr>
+<td>Codex history remains separate from ChatGPT history</td>
+<td>Confirmed</td>
+<td>Both <a href="https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex">ChatGPT Work and Codex</a> and <a href="https://help.openai.com/en/articles/20001276-moving-to-the-new-chatgpt-desktop-app">Moving to the new desktop app</a> state this</td>
+</tr>
+<tr>
+<td>macOS projects must first be created on the web</td>
+<td>No direct support found</td>
+<td>The current <a href="https://help.openai.com/en/articles/9703738-chatgpt-macos-app-release-notes">macOS release notes</a> cited by the AI email contain no matching statement; human confirmation is needed</td>
+</tr>
+<tr>
+<td>No documentation says a conversion preserves local folders, Codex projects, or history</td>
+<td>No formal migration specification found</td>
+<td>The docs confirm separation, but do not provide a complete local-to-shared migration matrix; that is not proof that conversion is categorically impossible</td>
+</tr>
+<tr>
+<td>Why desktop support is absent and when it will arrive</td>
+<td>Still unknown</td>
+<td>The current public articles provide no rationale or timeline</td>
+</tr>
+</tbody></table>
+<p>The second message is therefore an authentic OpenAI AI-assisted support email, but not every sentence should be promoted to human-confirmed product policy.</p>
+<h2>6. The response in the original case</h2>
+<p>The 21:25 reply on October 12 supplied the missing distinction between project types. Its key short excerpt was:</p>
+<blockquote>
+<p>“A desktop-created local-only project cannot be directly converted or automatically migrated into a Shared Project through ChatGPT web.”</p>
+</blockquote>
+<p>The remaining guidance can be summarized without publishing identifying information:</p>
+<ul>
+<li><strong>Local-only projects:</strong> create a web-accessible ChatGPT Project, manually transfer relevant content, and then share it;</li>
+<li><strong>Already cloud-synced ChatGPT Projects:</strong> open the existing Project on the web and use <code>Share</code>; “create a new web Project first” therefore does not apply to every desktop-created project;</li>
+<li><strong>Content that can be added manually:</strong> move eligible chats when the action is available, and add instructions, files, and sources to the destination;</li>
+<li><strong>State that does not transfer automatically:</strong> local-folder associations, local Codex state, and other desktop-only project state; Codex history remains separate from ChatGPT history;</li>
+<li><strong>Business collaboration:</strong> use a web-accessible Shared Project as the common workspace, assign Chat/Edit permissions, and organize separate chats by task or workstream;</li>
+<li><strong>External sources:</strong> GitHub or Google Drive access depends on connected-app permissions and workspace configuration; the email does not promise that every source can be attached directly or synced automatically;</li>
+<li><strong>Future availability:</strong> no public roadmap or timeframe was available to share, so Support could not confirm when desktop support would arrive.</li>
+</ul>
+<p>The reply still did not explain the product rationale or individually confirm that projects must originate on the web or how Work history should migrate. It responded to a human-review request without explicitly stating human authorship or completion of that review. It is therefore labeled a <strong>named Support follow-up in the original case</strong>.</p>
+<h2>7. A practical collaboration architecture</h2>
+<p>The original case&#39;s follow-up supports choosing a path according to the existing project object.</p>
+<h3>Case A: the existing object is already a ChatGPT Project</h3>
+<p>If it opens on the web and its sharing pane offers <code>Share</code>, prefer sharing that existing Project from the web. This preserves the Project&#39;s existing chats, files, and instructions. Do not delete or recreate it merely because macOS navigation omits it.</p>
+<p>Use a stable team member as owner and apply least privilege: Chat access for members who only need to use the shared context, and Edit access for those who must manage instructions, files, or invitations. A Business workspace should also confirm that admins have not disabled project creation or sharing.</p>
+<h3>Case B: the existing object is a local folder, Codex project, or local Work context</h3>
+<p>Support says local-only projects cannot be directly converted or automatically migrated. A new web Shared Project can serve as a <strong>collaboration context hub</strong>, with shared content transferred item by item:</p>
+<ol>
+<li>Create or select a Shared Project on the web;</li>
+<li>Invite members from the same Business workspace and assign explicit Chat/Edit roles;</li>
+<li>Move only ChatGPT chats that actually expose <code>Move to project</code>;</li>
+<li>Re-add necessary instructions, summaries, and sources after permission and privacy review;</li>
+<li>Keep the GitHub repository, branches, and pull requests as the source of truth for code; use the Shared Project for goals, decisions, links, and handoff summaries;</li>
+<li>Keep local-folder and Codex execution history in their original environments and do not call them migrated;</li>
+<li>Run Work tasks in a separate Work context while the current project-only-memory restriction applies, then return shareable artifacts and decision summaries to the collaboration hub.</li>
+</ol>
+<p>Steps 5–7 are an interim architecture inferred from current boundaries, not an OpenAI-released migration feature.</p>
+<p>Use separate chats for separate tasks in the same Shared Project. The public article describes branching rather than synchronous collaboration in one chat, so research, implementation, review, and handoff can each have a focused conversation while sources and decision summaries carry the common context.</p>
+<h3>Data and permission cautions</h3>
+<ul>
+<li>Shared Project members can see project chats, files, and the member list; review access and sanitize material before adding it;</li>
+<li>The owner retains critical controls such as deleting the Project and removing members; avoid assigning sole ownership to a temporary collaborator;</li>
+<li>Keep important source code and formal documents in systems with version history and permission auditing;</li>
+<li>Do not confuse “authenticated OpenAI email” with “AI-generated content approved by a human.”</li>
+</ul>
+<h2>8. How the human-review request was made</h2>
+<p>The actual action was to click Reply on the first named Support email. The message sent at 15:25 did four things:</p>
+<ol>
+<li>State <code>Please escalate this case to a human support specialist</code>;</li>
+<li>Explain that a separate AI-assisted response arrived later;</li>
+<li>Ask a human to confirm each material claim in that response;</li>
+<li>Request that the original support record remain open or be reopened rather than closed based only on automation.</li>
+</ol>
+<p>The original case received migration and collaboration guidance that evening. This shows continuity of the reply chain, but does not establish completion of a human handoff. A future post will cite this one and record new confirmations, unanswered questions, and actual migration results when further evidence is available.</p>
+<h2>Current status</h2>
+<p>As of 2026-10-13 Beijing time; the client reproduction was not rerun that day:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Client observation</td>
+<td>Last reproduced on October 11; the latest Support message still says desktop sharing is unsupported and recommends web or supported mobile apps</td>
+</tr>
+<tr>
+<td>First named Support response</td>
+<td>Received</td>
+</tr>
+<tr>
+<td>Second AI-assisted response</td>
+<td>Received; some claims are supported by docs or the later reply, without a statement of item-by-item human review</td>
+</tr>
+<tr>
+<td>Original-case follow-up</td>
+<td>Received at 21:25 on October 12 with project classification, migration, and collaboration guidance</td>
+</tr>
+<tr>
+<td>Public-documentation audit</td>
+<td>Complete; some claims confirmed, others lack direct support</td>
+</tr>
+<tr>
+<td>Human-review request</td>
+<td>Sent in the original thread at 15:25 on October 12</td>
+</tr>
+<tr>
+<td>Product rationale</td>
+<td>Not explained</td>
+</tr>
+<tr>
+<td>Desktop roadmap</td>
+<td>Not provided</td>
+</tr>
+<tr>
+<td>Migration path</td>
+<td>Support distinguishes local-only from cloud-synced projects; a full data-preservation matrix and handling of Work history remain unspecified</td>
+</tr>
+</tbody></table>
+<h2>References</h2>
+<ul>
+<li><a href="https://jccipher.github.io/blog/posts/chatgpt-macos-shared-project-visibility-postmortem/">Series Part 1: When a Shared ChatGPT Project Vanishes on macOS</a></li>
+<li><a href="https://help.openai.com/en/articles/10169521-projects-in-chatgpt">OpenAI: Projects in ChatGPT</a></li>
+<li><a href="https://help.openai.com/en/articles/20001276-moving-to-the-new-chatgpt-desktop-app">OpenAI: Moving to the new ChatGPT desktop app</a></li>
+<li><a href="https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex">OpenAI: ChatGPT Work and Codex</a></li>
+<li><a href="https://help.openai.com/en/articles/9703738-chatgpt-macos-app-release-notes">OpenAI: ChatGPT macOS app release notes</a></li>
+</ul>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/chatgpt-shared-projects-support-timeline-human-escalation/" data-page-title="ChatGPT Shared Projects Support Log, Part 2: Timeline, Escalation, and Migration Guidance" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

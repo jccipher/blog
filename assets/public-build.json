@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "build_id": "20261012T151051+0800-00d534ed",
-  "built_at": "2026-10-12T15:10:51+08:00",
+  "build_id": "20261013T095314+0800-0782cfa4",
+  "built_at": "2026-10-13T09:53:14+08:00",
   "files": [
     {
       "path": ".github/workflows/pages.yml",
@@ -25,8 +25,8 @@
     },
     {
       "path": "archives/index.html",
-      "bytes": 20375,
-      "sha256": "23bbf0f338c78d469f937bd6c2f0989909a0d7290183a6f39586811e3f18a975"
+      "bytes": 20660,
+      "sha256": "0c4635d622523a45554325b0f8d616b7b9a6b7d92a4407f016efc63957ab4987"
     },
     {
       "path": "assets/audio-manifest.json",
@@ -425,13 +425,13 @@
     },
     {
       "path": "favorites/index.html",
-      "bytes": 55943,
-      "sha256": "fd0b018d850f816577285aba15423236769f71fae35f18e1ea38fbcecc955583"
+      "bytes": 56930,
+      "sha256": "8d0e274ec7091195a9090e93714f3c9e785d0cb99ff1dfe8ec93345438313e8e"
     },
     {
       "path": "index.html",
-      "bytes": 15385,
-      "sha256": "bbd19d0e1f443aff35dc4d306dcbaddab94f919df86e87f370f62ed1cca720ae"
+      "bytes": 15591,
+      "sha256": "82b24f562619d714b9776956af308327ec5f32b8ec17e0bd9f61a39403aab1ca"
     },
     {
       "path": "posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -680,8 +680,13 @@
     },
     {
       "path": "posts/chatgpt-macos-shared-project-visibility-postmortem/index.html",
-      "bytes": 24088,
-      "sha256": "75cd9f7e5df64ebc97056b41d175f48f47e2bba079c556ea594d475fe75cda4b"
+      "bytes": 24387,
+      "sha256": "fcf715baadda22fba0bb208e5a0f82729388652372a85392a42a1c4e9751f79d"
+    },
+    {
+      "path": "posts/chatgpt-shared-projects-support-timeline-human-escalation/index.html",
+      "bytes": 28041,
+      "sha256": "f221be03e32b136ca0a78f2981cd62995a5990fb5fea66de96a34b0b7eaafb65"
     },
     {
       "path": "posts/codex-local-projects-mobile-projects-remote-cloud/index.html",
@@ -720,18 +725,18 @@
     },
     {
       "path": "zh/archives/index.html",
-      "bytes": 20335,
-      "sha256": "cc760f6491f72cd2655ebc3626feb35c873671f621e863fab2933dda38c83804"
+      "bytes": 20624,
+      "sha256": "856a0303cdb0e538359e31b7b67cb60990d9ad048cad855569487b131c7aeebc"
     },
     {
       "path": "zh/favorites/index.html",
-      "bytes": 60771,
-      "sha256": "bca315c7ce09ba399b6258cd9a2ac3af39b864c627291d571c1ba68d81ee5fe6"
+      "bytes": 61801,
+      "sha256": "56f4a7d59747122f6348479e10de5c65628ca7e3bafcc26f12cf27c1313c23bb"
     },
     {
       "path": "zh/index.html",
-      "bytes": 15844,
-      "sha256": "f37278fd15cdacbb4e61079db6030a4307f2326642e1d1720f259823239f85d4"
+      "bytes": 16025,
+      "sha256": "159e8b33707b296fe1ddd5b22695c71d077dd05a820207189f4adfea2006a065"
     },
     {
       "path": "zh/posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -980,8 +985,13 @@
     },
     {
       "path": "zh/posts/chatgpt-macos-shared-project-visibility-postmortem/index.html",
-      "bytes": 22450,
-      "sha256": "90caa501f77eb1f4ba6b4fad4d0497d31d0d8194729053fd5ea7ec0db02e22d0"
+      "bytes": 22740,
+      "sha256": "45bcb56dfdd670cfe3e2f6a7349004fe01257251b7db2a568ec6a0e6abe81671"
+    },
+    {
+      "path": "zh/posts/chatgpt-shared-projects-support-timeline-human-escalation/index.html",
+      "bytes": 26898,
+      "sha256": "3a0fc41883281740ac702a9e2ee201ce93f6a05d39794a3fd628e04df03f251e"
     },
     {
       "path": "zh/posts/codex-local-projects-mobile-projects-remote-cloud/index.html",

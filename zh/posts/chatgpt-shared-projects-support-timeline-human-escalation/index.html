@@ -1,0 +1,518 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>ChatGPT Shared Projects 支持记录（二）：客服时间线、转人工与迁移答复 · LATENTX</title>
+    <meta name="description" content="记录 Shared Project 事件的脱敏时间线、AI-assisted 回复、原工单后续迁移答复，以及本地专属项目与云端同步项目的协作路径。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="ChatGPT Shared Projects 支持记录（二）：客服时间线、转人工与迁移答复 · LATENTX">
+    <meta property="og:description" content="记录 Shared Project 事件的脱敏时间线、AI-assisted 回复、原工单后续迁移答复，以及本地专属项目与云端同步项目的协作路径。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/chatgpt-shared-projects-support-timeline-human-escalation/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/chatgpt-shared-projects-support-timeline-human-escalation/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/chatgpt-shared-projects-support-timeline-human-escalation/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/chatgpt-shared-projects-support-timeline-human-escalation/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/chatgpt-shared-projects-support-timeline-human-escalation/"
+    data-page-title="ChatGPT Shared Projects 支持记录（二）：客服时间线、转人工与迁移答复"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/chatgpt-shared-projects-support-timeline-human-escalation/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/chatgpt-shared-projects-support-timeline-human-escalation/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat chatgpt-shared-projects-support-timeline-human-escalation.md</div>
+    <h1>ChatGPT Shared Projects 支持记录（二）：客服时间线、转人工与迁移答复</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-13">发布于 2026.10.13</time>
+      <span>12 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#ChatGPT</span><span>#Shared Projects</span><span>#OpenAI Support</span><span>#macOS</span><span>#ChatGPT Business</span><span>#Codex</span><span>#ChatGPT Work</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/chatgpt-shared-projects-support-timeline-human-escalation/" data-page-title="ChatGPT Shared Projects 支持记录（二）：客服时间线、转人工与迁移答复" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>这是“ChatGPT Shared Projects 支持记录”第 2 篇。上一篇：<a href="https://jccipher.github.io/blog/zh/posts/chatgpt-macos-shared-project-visibility-postmortem/">ChatGPT macOS 看不见共享 Project：跨端可见性复盘与官方支持边界</a>。</p>
+</blockquote>
+<p><strong>脱敏说明：</strong> 本文不公开工单号、客服姓名、收件账号、工作区标识、项目真实名称、协作者身份、邮件跟踪链接或原始截图。时间统一为北京时间。邮件只保留与产品支持范围直接相关的短引文，其余内容均为摘要。</p>
+<h2>TL;DR</h2>
+<table>
+<thead>
+<tr>
+<th>事项</th>
+<th>当前结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一轮回复</td>
+<td>一封具名、未标注 AI 生成的 OpenAI Support 邮件说明：新版桌面应用目前不支持 Shared Projects，建议使用相同账号和工作区从 Web 访问</td>
+</tr>
+<tr>
+<td>第二轮回复</td>
+<td>一封明确标注 <code>AI-assisted support</code> 的邮件给出迁移与协作建议，同时声明内容可能出错</td>
+</tr>
+<tr>
+<td>原工单后续回复</td>
+<td>转人工请求已发送；当晚收到具名回复，区分本地专属项目与云端同步项目的迁移路径，但未明确声明人工审阅完成</td>
+</tr>
+<tr>
+<td>邮件来源</td>
+<td>三封入站邮件的 OpenAI 域名认证均通过；邮件认证只能支持来源判断，不能证明内容由人工撰写</td>
+</tr>
+<tr>
+<td>公开文档</td>
+<td>可确认 Web/移动端共享、Chat/Edit 权限、移动合格聊天、project-only memory、Work 限制与 Codex 历史分离</td>
+</tr>
+<tr>
+<td>仍未回答</td>
+<td>不支持的产品原因、范围是否有例外、Work 历史的具体迁移方式，以及 AI 回复是否逐项经过人工复核</td>
+</tr>
+<tr>
+<td>时间表</td>
+<td>客服明确表示当前没有可分享的公开路线图或时间表</td>
+</tr>
+</tbody></table>
+<h2>1. 为什么单独记录这条时间线</h2>
+<p><a href="https://jccipher.github.io/blog/zh/posts/chatgpt-macos-shared-project-visibility-postmortem/">第 1 篇</a>已经保留了完整复现与排查过程，并把问题定性从“待查明根因的跨端同步故障”修正为“客服所述的当前支持边界”。但随后产生了新的问题：为什么不支持、能否转换项目、Codex 与 ChatGPT Work 的历史如何处理、多人协作应该以什么作为共享上下文。</p>
+<p>这些问题触发了第二轮 AI-assisted 答复，以及回到原工单请求人工处理后的具名回复。本文按实际收发件记录呈现三封回复；“具名、没有 AI 声明”只描述邮件外观，不单独证明作者身份或人工审阅流程。</p>
+<p>本文采用五级证据标签：</p>
+<ul>
+<li><strong>已复现：</strong> 可以由实际客户端行为直接验证；</li>
+<li><strong>客服所述：</strong> 来自 OpenAI Support 邮件，但不自动等同于公开产品规范；</li>
+<li><strong>公开文档确认：</strong> 可以在 OpenAI 当前帮助文档中找到直接对应；</li>
+<li><strong>推断或临时建议：</strong> 基于现有边界形成的操作方案，不代表官方迁移承诺；</li>
+<li><strong>等待人工确认：</strong> AI-assisted 邮件提出、但公开文档没有完整覆盖的内容。</li>
+</ul>
+<h2>2. 完整事件时间线</h2>
+<table>
+<thead>
+<tr>
+<th>北京时间</th>
+<th>事件</th>
+<th>证据状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2026-10-11</td>
+<td>在同一账号、同一工作区复现：Shared Project 在 Web 可访问，但不出现在 macOS App 的项目导航中</td>
+<td>已复现</td>
+</tr>
+<tr>
+<td>2026-10-11</td>
+<td>通过 OpenAI Help Center 提交脱敏支持请求，包含版本、权限、搜索差异和复现步骤</td>
+<td>已提交</td>
+</tr>
+<tr>
+<td>2026-10-12 01:37</td>
+<td>收到一封具名、未标注 AI 生成的 Support 回复，说明当前桌面端支持边界和 Web 替代方案</td>
+<td>客服所述</td>
+</tr>
+<tr>
+<td>2026-10-12 09:18</td>
+<td>第 1 篇双语复盘合并，保留原排查过程和当时证据边界</td>
+<td>仓库记录</td>
+</tr>
+<tr>
+<td>2026-10-12 15:01</td>
+<td>发送新的详细追问：询问原因、路线图、本地项目转换，以及 Work/Codex 团队协作最佳实践</td>
+<td>已发送</td>
+</tr>
+<tr>
+<td>2026-10-12 15:02</td>
+<td>收到另一封明确标注 <code>AI-assisted support</code> 的自动回复；系统为独立邮件创建了新的支持记录</td>
+<td>已收到，未经人工确认</td>
+</tr>
+<tr>
+<td>2026-10-12 15:07</td>
+<td>第 1 篇更新合并：正式反映“支持边界已澄清、Web 可用、根因与路线图未知”</td>
+<td>仓库记录</td>
+</tr>
+<tr>
+<td>2026-10-12 15:15</td>
+<td>第 1 篇中英文页面完成公开部署与逐页校验</td>
+<td>已验证</td>
+</tr>
+<tr>
+<td>2026-10-12 15:20</td>
+<td>完成转人工回信草稿</td>
+<td>当时为草稿</td>
+</tr>
+<tr>
+<td>2026-10-12 15:25</td>
+<td>在原始邮件线程直接回复，请求人工答复、复核 AI 建议，并保留原工单</td>
+<td>已发送，邮件回复关系已核对</td>
+</tr>
+<tr>
+<td>2026-10-12 21:25</td>
+<td>原工单收到新的具名 Support 回复，说明两类项目的迁移方式和 Business 协作结构</td>
+<td>客服所述，未标注 AI 生成</td>
+</tr>
+<tr>
+<td>2026-10-13</td>
+<td>发布前重新核对邮件与公开文档，补齐后续回复</td>
+<td>本篇记录截止日</td>
+</tr>
+</tbody></table>
+<p>15:01 的追问没有原邮件的回复关系，并对应另一条支持记录；15:25 的邮件则带有指向原回复的 <code>In-Reply-To</code>，21:25 的新回复也回到同一原始线程。这说明直接点击原邮件的“回复”保留了处理链路，但不能保证系统必然转交人工。</p>
+<h2>3. 第一轮 Support 回复：支持边界</h2>
+<p>第一轮邮件的脱敏短引文如下：</p>
+<blockquote>
+<p>“Shared projects are not supported in the new ChatGPT desktop app.”</p>
+</blockquote>
+<p>邮件随后建议从浏览器打开 ChatGPT，并使用相同账号和工作区访问共享 Project。</p>
+<p>这封回复解决的是“现在应从哪里访问”，没有解释“不支持的原因”，也没有提供桌面端路线图。它还没有把现象认定为某个客户端版本的程序缺陷。因此，第 1 篇将最新状态写成“支持边界已澄清”，而不是“Bug 已确认”或“Bug 已修复”。</p>
+<h2>4. 第二轮 AI-assisted 回复：主要内容与限制</h2>
+<p>第二轮邮件在开头明确表示：</p>
+<blockquote>
+<p>“We don’t have public documentation that explains why Shared Projects aren’t supported...”</p>
+</blockquote>
+<p>邮件末尾同时声明：</p>
+<blockquote>
+<p>“This response was generated with AI support which can make mistakes.”</p>
+</blockquote>
+<p>在这一限制下，邮件给出的主要建议可以脱敏归纳为：</p>
+<ol>
+<li>在 Web 或移动端创建并共享 Project，再给同一 Business 工作区的成员分配 Chat 或 Edit 权限；</li>
+<li>使用 <code>Move to project</code> 或拖放，把符合条件的现有 ChatGPT 聊天移入项目；</li>
+<li>无法移动的聊天应在共享 Project 中重新开始；</li>
+<li>根据需要重新添加项目指令和来源；</li>
+<li>没有公开资料说明本地文件夹关联、Codex 项目或 Codex 历史能够通过“转换”保留；</li>
+<li>Codex 与 ChatGPT 历史分开；Shared Projects 自动使用 project-only memory，而该内存模式下 ChatGPT Work 不可用；</li>
+<li>没有可提供的公开产品原因、路线图或时间表。</li>
+</ol>
+<p>这些内容不是同一种证据。有些可以由公开文档直接确认，有些只是 AI 对文档的总结，还有些是它根据“没有文档”作出的保守推断。</p>
+<h2>5. 逐项核对公开文档</h2>
+<table>
+<thead>
+<tr>
+<th>AI-assisted 回复中的说法</th>
+<th>核对结果</th>
+<th>证据边界</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Shared Projects 可在 Web 和移动端使用</td>
+<td>已确认</td>
+<td><a href="https://help.openai.com/en/articles/10169521-projects-in-chatgpt">Projects in ChatGPT</a>明确列出 Web 与移动端</td>
+</tr>
+<tr>
+<td>可以邀请成员并分配 Chat/Edit 权限</td>
+<td>已确认</td>
+<td>同一文档说明了两种权限及 Business 工作区邀请方式</td>
+</tr>
+<tr>
+<td>合格的现有 ChatGPT 聊天可以移动到 Project</td>
+<td>已确认</td>
+<td>文档说明 <code>Move to project</code>/拖放；使用自定义 GPT 创建的聊天不能移动</td>
+</tr>
+<tr>
+<td>Shared Projects 自动使用 project-only memory</td>
+<td>已确认</td>
+<td>文档明确说明共享项目不能切回 default memory</td>
+</tr>
+<tr>
+<td>project-only memory 下 ChatGPT Work 不可用</td>
+<td>已确认</td>
+<td>同一文档在 project-only memory 条目中明确说明</td>
+</tr>
+<tr>
+<td>Codex 历史与 ChatGPT 历史分开</td>
+<td>已确认</td>
+<td><a href="https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex">ChatGPT Work and Codex</a>和<a href="https://help.openai.com/en/articles/20001276-moving-to-the-new-chatgpt-desktop-app">迁移到新版桌面应用</a>均有直接说明</td>
+</tr>
+<tr>
+<td>macOS 中的项目必须先在 Web 创建</td>
+<td>未找到直接依据</td>
+<td>AI 邮件引用的当前 <a href="https://help.openai.com/en/articles/9703738-chatgpt-macos-app-release-notes">macOS release notes</a>没有对应文字；需人工确认</td>
+</tr>
+<tr>
+<td>没有文档说明转换时可保留本地文件夹、Codex 项目和历史</td>
+<td>没有正式迁移规范</td>
+<td>文档确认产品与历史分离，但没有给出完整的“本地项目转 Shared Project”迁移矩阵；这不等于已证实“绝对不能转换”</td>
+</tr>
+<tr>
+<td>为什么桌面端不支持、何时支持</td>
+<td>仍未知</td>
+<td>当前公开文档没有给出产品原因或时间表</td>
+</tr>
+</tbody></table>
+<p>因此，第二轮邮件是真实的 OpenAI AI-assisted 支持邮件，但不能把其中每个句子都提升为人工确认的产品政策。</p>
+<h2>6. 回到原工单后的 Support 答复</h2>
+<p>10 月 12 日 21:25 的新回复给出了此前缺失的项目分类。邮件中最关键的一句是：</p>
+<blockquote>
+<p>“A desktop-created local-only project cannot be directly converted or automatically migrated into a Shared Project through ChatGPT web.”</p>
+</blockquote>
+<p>中文意译：桌面端创建的本地专属项目，不能通过 ChatGPT Web 直接转换或自动迁移为 Shared Project。</p>
+<p>其余主要内容脱敏归纳如下：</p>
+<ul>
+<li><strong>本地专属项目：</strong> 创建一个 Web 可访问的 ChatGPT Project，手工转移必要内容，再进行共享；</li>
+<li><strong>已经云端同步的 ChatGPT Project：</strong> 在 Web 打开原项目，直接使用 <code>Share</code>；因此不能把“必须新建 Web 项目”泛化到所有桌面创建的项目；</li>
+<li><strong>可手工带入的内容：</strong> 在界面提供该选项时移动合格聊天，并向目标项目添加指令、文件与来源；</li>
+<li><strong>不会自动带入的状态：</strong> 本地文件夹关联、本地 Codex 状态或其他桌面专属项目状态；Codex 历史继续独立于 ChatGPT 历史；</li>
+<li><strong>Business 协作：</strong> 将 Web 可访问的 Shared Project 作为共同协作空间，分配 Chat/Edit 权限，并按任务或工作流组织独立聊天；</li>
+<li><strong>外部来源：</strong> GitHub、Google Drive 等来源能否访问，取决于连接应用权限与工作区配置；邮件没有承诺所有来源都可直接添加或自动同步；</li>
+<li><strong>未来支持：</strong> 当前没有可分享的公开路线图或时间表，不能确认桌面能力何时可用。</li>
+</ul>
+<p>这封回复没有说明桌面端不支持的具体原因，也没有逐项确认“项目必须先在 Web 创建”或 Work 历史如何迁移。它回应了转人工请求，但没有明确声明答复由人工撰写或 AI 回复已完成人工复核。因此，本文将其标注为<strong>原工单具名 Support 后续答复</strong>。</p>
+<h2>7. 当前可执行的协作方案</h2>
+<p>根据原工单的后续答复，可以按以下两种对象选择路径。</p>
+<h3>情形 A：现有对象本来就是 ChatGPT Project</h3>
+<p>如果它能在 Web 打开，并且共享面板提供 <code>Share</code>，优先直接从 Web 共享现有 Project。这样可以保留该 Project 已有的聊天、文件和项目指令；不要仅因为 macOS App 看不见就先删除或重建。</p>
+<p>建议由稳定的团队成员担任 owner，按最小权限分配：只需要使用上下文的成员给 Chat 权限，需要维护指令、文件或成员的人员再给 Edit 权限。Business 工作区还应先确认管理员没有禁用项目创建或共享。</p>
+<h3>情形 B：现有对象是本地文件夹、Codex 项目或本地 Work 上下文</h3>
+<p>客服已说明本地专属项目不能直接转换或自动迁移。可把新的 Web Shared Project 作为<strong>协作上下文中心</strong>，逐项手工带入共享内容：</p>
+<ol>
+<li>在 Web 创建或选定一个 Shared Project；</li>
+<li>邀请同一 Business 工作区成员，并明确 Chat/Edit 权限；</li>
+<li>只移动明确显示 <code>Move to project</code> 的 ChatGPT 聊天；</li>
+<li>经过脱敏与权限检查后，重新添加必要的项目指令、摘要和来源；</li>
+<li>GitHub 仓库、分支与 PR 继续作为代码事实来源；共享 Project 保存目标、决策、链接和交接摘要；</li>
+<li>本地文件夹与 Codex 执行历史仍保留在各自环境，不把它们当作已迁移；</li>
+<li>需要 Work 的任务继续在独立的 Work 上下文中运行，因为 Shared Project 的 project-only memory 与 Work 存在当前限制；完成后把可共享产物和决策摘要带回协作中心。</li>
+</ol>
+<p>第 5 至 7 步是基于当前产品边界形成的临时架构，不是 OpenAI 已发布的迁移功能。</p>
+<p>同一 Shared Project 中的聊天宜按任务拆分。公开文档说明成员可以分支聊天，而不是在同一聊天中同步协作；因此可分别安排研究、实施、审阅与交接聊天，用来源与决策摘要维持共同上下文。</p>
+<h3>数据与权限注意事项</h3>
+<ul>
+<li>共享 Project 成员可以看到项目中的聊天、文件和成员列表；添加前先做访问范围与脱敏检查；</li>
+<li>项目 owner 保留删除项目、移除成员等关键能力；不要把唯一所有权交给临时成员；</li>
+<li>重要源码与正式文档应继续保留在有版本控制和权限审计的系统中；</li>
+<li>不要把“邮件来自 OpenAI 域名”误解为“AI 生成内容已由人工核准”。</li>
+</ul>
+<h2>8. 这次如何请求转人工</h2>
+<p>这次采取的是在第一轮具名回复的原始邮件中直接点击“回复”。15:25 发出的回信包含四个动作：</p>
+<ol>
+<li>明确写出 <code>Please escalate this case to a human support specialist</code>；</li>
+<li>说明后来收到一封单独记录下的 AI-assisted 回复；</li>
+<li>要求人工逐项确认 AI 回复中的关键说法；</li>
+<li>明确请求保留或重新打开原始处理记录，不要仅凭自动回复关闭问题。</li>
+</ol>
+<p>结果是原工单当晚收到迁移与协作答复。这个过程证明回复关系得到保留，尚不足以证明后台已完成转人工。下一篇如有新证据，会引用本文并记录新增确认、仍未回答的问题与实际迁移结果。</p>
+<h2>当前状态</h2>
+<p>截至 2026-10-13（北京时间）；本文没有在当日重新执行客户端复现：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>客户端现象</td>
+<td>最近一次复现为 10 月 11 日；最新客服仍说明桌面端不支持，建议 Web 或受支持的移动端</td>
+</tr>
+<tr>
+<td>第一轮具名 Support 回复</td>
+<td>已收到</td>
+</tr>
+<tr>
+<td>第二轮 AI-assisted 回复</td>
+<td>已收到；部分内容得到文档或后续 Support 答复支持，未获逐项人工复核声明</td>
+</tr>
+<tr>
+<td>原工单后续回复</td>
+<td>10 月 12 日 21:25 已收到，包含项目分类、迁移及协作建议</td>
+</tr>
+<tr>
+<td>公开文档核对</td>
+<td>已完成；部分说法可确认，部分缺少直接依据</td>
+</tr>
+<tr>
+<td>转人工请求</td>
+<td>10 月 12 日 15:25 已在原线程发送</td>
+</tr>
+<tr>
+<td>产品原因</td>
+<td>未说明</td>
+</tr>
+<tr>
+<td>桌面支持路线图</td>
+<td>未提供</td>
+</tr>
+<tr>
+<td>项目迁移路径</td>
+<td>客服已区分本地专属与云端同步项目；完整的数据保留矩阵和 Work 历史处理方式仍未提供</td>
+</tr>
+</tbody></table>
+<h2>参考资料</h2>
+<ul>
+<li><a href="https://jccipher.github.io/blog/zh/posts/chatgpt-macos-shared-project-visibility-postmortem/">系列第 1 篇：ChatGPT macOS 看不见共享 Project</a></li>
+<li><a href="https://help.openai.com/en/articles/10169521-projects-in-chatgpt">OpenAI：Projects in ChatGPT</a></li>
+<li><a href="https://help.openai.com/en/articles/20001276-moving-to-the-new-chatgpt-desktop-app">OpenAI：Moving to the new ChatGPT desktop app</a></li>
+<li><a href="https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex">OpenAI：ChatGPT Work and Codex</a></li>
+<li><a href="https://help.openai.com/en/articles/9703738-chatgpt-macos-app-release-notes">OpenAI：ChatGPT macOS app release notes</a></li>
+</ul>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/chatgpt-shared-projects-support-timeline-human-escalation/" data-page-title="ChatGPT Shared Projects 支持记录（二）：客服时间线、转人工与迁移答复" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
