@@ -1,0 +1,277 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>从 Linus 的 Claude Code 内核补丁看 AI 编程的审查责任 · LATENTX</title>
+    <meta name="description" content="从 Linus 与 Claude Code 的页面缓存优化出发，理解 23 倍微基准收益、RCU 竞态，以及 AI 编程中实现与验证的责任。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="从 Linus 的 Claude Code 内核补丁看 AI 编程的审查责任 · LATENTX">
+    <meta property="og:description" content="从 Linus 与 Claude Code 的页面缓存优化出发，理解 23 倍微基准收益、RCU 竞态，以及 AI 编程中实现与验证的责任。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/linus-claude-code-kernel-review/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/linus-claude-code-kernel-review/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/linus-claude-code-kernel-review/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/linus-claude-code-kernel-review/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/linus-claude-code-kernel-review/"
+    data-page-title="从 Linus 的 Claude Code 内核补丁看 AI 编程的审查责任"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/linus-claude-code-kernel-review/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/linus-claude-code-kernel-review/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat linus-claude-code-kernel-review.md</div>
+    <h1>从 Linus 的 Claude Code 内核补丁看 AI 编程的审查责任</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-15">发布于 2026.10.15</time>
+      <span>8 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#Claude Code</span><span>#Linux</span><span>#Code Review</span><span>#Concurrency</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/linus-claude-code-kernel-review/" data-page-title="从 Linus 的 Claude Code 内核补丁看 AI 编程的审查责任" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p>读完 InfoQ 关于 Linus Torvalds 使用 Claude Code 优化 Linux 页面缓存的报道，我最关注的是这段完整的开发过程：AI 参与实现和测试，Linus 报告本机性能数据，维护者在公开审查中指出竞态，补丁继续修订。</p>
+<p>这个过程同时展示了 AI 编程的价值和验证工作的难度。工具已经能够深入参与复杂系统的开发；一段跑得很快、经过测试和初步审查的代码，仍可能违反并发条件下的正确性要求。</p>
+<p>我的判断是：<strong>采用 AI 编程之后，团队需要更明确地说明每项正确性主张由什么证据支持、由谁负责验收。</strong></p>
+<h2>先看补丁做了什么</h2>
+<p>这次优化针对一个具体瓶颈：多个线程反复读取同一文件中的少量数据时，folio 的引用计数操作会形成争用。folio 可以先理解为内核管理文件缓存数据的内存单元。即使应用只读数据，取得和释放引用也要修改共享计数，让多个 CPU 争用同一条缓存行。<a href="https://mirrors.hust.edu.cn/git/linux.git/commit/?id=4c0f3697118eb3a708ea79175f7f07c43339bfab">Linus 的补丁说明：无 folio 引用的页面缓存读取</a></p>
+<p>Linus 在说明中披露，Claude Code 在他的指导下参与了代码、测试程序、问题审查和说明初稿，测量在他的机器上完成。早期说明列出 8 个补丁；10 月 13 日公开讨论的 <code>rcu-free-v3</code> 则包含 10 个补丁。阅读这些结果时，需要保留版本区别。<a href="https://mirrors.hust.edu.cn/git/linux.git/commit/?id=4c0f3697118eb3a708ea79175f7f07c43339bfab">Linus 的补丁说明</a>、<a href="https://lkml.iu.edu/2610.1/13146.html">Linus：Improve page refcount scalability</a></p>
+<p>在后者的 Threadripper 微基准里，64 线程吞吐量从每秒 1330 万次读取升至 3.04 亿次，约为原来的 23 倍。Linus 同时明确指出：测试让所有 CPU 反复读取同一页的一小段区域，真实负载的收益会小得多。<a href="https://lkml.iu.edu/2610.1/13146.html">Linus：性能结果与测试条件</a></p>
+<p>这个结果很好地暴露了共享计数对扩展性的限制。把它用于评估数据库、构建任务或线上服务时，还需要测量各自的工作负载。</p>
+<h2>RCU 保护了内存生命期 仍需检查文件状态</h2>
+<p>优化希望让常见读取路径省去 folio 引用计数操作，为此使用 RCU 延迟回收内存。RCU 的基本思路是把“从数据结构中移除对象”和“回收对象占用的内存”分开，等待已有读者离开相应临界区后，再进行回收。<a href="https://docs.kernel.org/RCU/whatisRCU.html">Linux 内核文档：What is RCU</a></p>
+<p>这减少了读者的同步开销，也带来一个需要单独回答的问题：内存仍可访问时，它是否仍对应读取路径正在处理的文件状态？</p>
+<p>Kiryl Shutsemau 在 <code>filemap_read_rcu_batch()</code> 中指出的竞态，正落在这里。下面按其邮件中的交错顺序简化展示：</p>
+<table>
+<thead>
+<tr>
+<th>顺序</th>
+<th>读取线程</th>
+<th>另一个线程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>找到旧 folio A，并确认它仍在缓存槽位中</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td>驱逐 A；RCU 暂缓回收其内存</td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td>写入数据，重新填充页面缓存并扩展文件长度</td>
+</tr>
+<tr>
+<td>4</td>
+<td>读取新的 <code>i_size</code>，却仍从旧 A 复制数据</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>读取线程把旧数据对象和更新后的文件长度组合使用，可能返回用户没有在相应位置写入的数据。这是文件读取语义的错误；“旧内存尚未回收”这一保证本身不足以排除它。<a href="https://lkml.iu.edu/2610.1/13573.html">Kiryl：竞态分析与双线程执行顺序</a></p>
+<p>Linus 随后建议把 <code>i_size</code> 的读取提前，再统一检查缓存槽位是否仍指向该 folio。Kiryl 的修订进一步解释了标志位、内存屏障与检查顺序，并保留数据就绪状态检查。<a href="https://lkml.iu.edu/2610.1/13698.html">Linus：调整检查顺序</a>、<a href="https://lkml.iu.edu/2610.1/15032.html">Kiryl：修订补丁与内存顺序说明</a></p>
+<p>这段讨论体现了并发审查的价值：逐一说明对象在什么时候有效，以及几个分别有效的观察能否安全地组合使用。相同的问题也会出现在业务系统里，例如用旧权限判断批准新请求，或用旧库存快照执行新的扣减。</p>
+<h2>我怎样评价原文的结论</h2>
+<p>原文提醒读者保留人工代码审查，这一点我认同。维护者在公开审查中给出了具体反例，也推动了修订。</p>
+<p>但“大神也没兜住”容易让注意力停留在个人失误上。复杂并发代码需要多人审查，恰恰因为作者的经验、测试结果和其他人的推理能够互相补充。在这次讨论中，Linus 提出调整方向，Kiryl 继续解释和修改；审查过程本身也是共同完成设计的过程。</p>
+<p>同样，这个案例无法单独测出 AI 相对于人类的缺陷率。要比较两种开发方式，需要相近任务、相近测试投入、可比较的审查条件和足够多的样本。一次漏检能够说明当前证据没有覆盖某种交错，不能据此判断所有 AI 生成代码的可靠性。</p>
+<p>我更愿意从中提出一个工作要求：<strong>作者、测试者和审查者都应主动寻找实现所依赖的假设，并尝试构造推翻它的执行过程。</strong> 无论其中哪一步使用了 AI，这个要求都成立。</p>
+<h2>把 AI 的实现能力转化为可验收的改进</h2>
+<p>如果把这件事带回自己的开发流程，我会围绕四个问题组织工作。</p>
+<p><strong>第一，优化必须保住哪些行为。</strong> 对这个读取路径来说，除了性能，还要说明并发替换、文件长度变化和回收期间允许返回什么数据。业务代码也需要这样的具体约束，例如支付重试是否会重复扣款、权限变化后旧授权能否继续使用。</p>
+<p><strong>第二，测试是否覆盖了会破坏这些行为的操作。</strong> 微基准回答吞吐量问题；正确性测试还需要安排读取与驱逐、写入、长度变化等操作交错，并检查返回的每个字节。二者应各自支持明确的结论。</p>
+<p><strong>第三，测试能否识别已知错误。</strong> 可以在隔离测试中故意移除一项保护，检查测试是否会失败。这样的反例有助于判断测试到底覆盖了什么，尤其适合那些正常运行很久也未必暴露问题的并发路径。</p>
+<p><strong>第四，审查是否带来了新的证据。</strong> AI 自查可以帮助解释代码、列出遗漏和生成反例；另一名审查者也可以继续使用 AI。关键在于有没有提出不同的执行顺序、检查不同的假设，或增加能区分对错的测试。重复得到“看起来正确”的评价，支持力度有限。</p>
+<p>这些是我从案例中提炼的实践建议。它们也会消耗时间，因此应该把实现、测试、审查和回归处理一起计入 AI 编程的成本，再判断一次优化是否值得交付。</p>
+<h2>交付责任需要随工具能力一起明确</h2>
+<p>我愿意在开发中更多使用 AI，让它参与实现、解释和寻找反例，也愿意把它帮助找到的性能机会认真测量出来。</p>
+<p>接受改动时，我仍希望看到一条能追问下去的证据链：优化消除了什么瓶颈，哪些行为必须保持，测试覆盖了哪些交错，审查解决了哪些疑问，还有哪些条件影响部署。</p>
+<p>Linus 的这组补丁提供了一个具体例子。23 倍的微基准结果值得研究，维护者给出的竞态反例同样值得研究。把这两种证据放在一起，才有条件判断代码下一步该怎么改、何时可以交付。</p>
+<h2>参考资料</h2>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s/TPkPgStWRYyAkNC78IBUAQ">InfoQ：Linus 用 Claude Code 改 Linux 内核，大神也没兜住代码里的 Bug</a>。阅读线索，正文由读者提供。</li>
+<li><a href="https://mirrors.hust.edu.cn/git/linux.git/commit/?id=4c0f3697118eb3a708ea79175f7f07c43339bfab">Linus：mm: read from the page cache without folio references</a>。2026 年 10 月 10 日提交说明，链接为 Linux Git 仓库的华中科技大学镜像。</li>
+<li><a href="https://lkml.iu.edu/2610.1/13146.html">Linus：Improve page refcount scalability</a>。2026 年 10 月 13 日邮件。</li>
+<li><a href="https://lkml.iu.edu/2610.1/13573.html">Kiryl：Re: Improve page refcount scalability</a>。2026 年 10 月 13 日竞态分析。</li>
+<li><a href="https://lkml.iu.edu/2610.1/13698.html">Linus：Re: Improve page refcount scalability</a>。2026 年 10 月 13 日修订建议。</li>
+<li><a href="https://lkml.iu.edu/2610.1/15032.html">Kiryl：Re: Improve page refcount scalability</a>。2026 年 10 月 14 日修订与接手说明。</li>
+<li><a href="https://docs.kernel.org/RCU/whatisRCU.html">Linux 内核文档：What is RCU</a>。</li>
+</ol>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/linus-claude-code-kernel-review/" data-page-title="从 Linus 的 Claude Code 内核补丁看 AI 编程的审查责任" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

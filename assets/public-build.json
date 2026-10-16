@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "build_id": "20261013T110443+0800-43e7b143",
-  "built_at": "2026-10-13T11:04:43+08:00",
+  "build_id": "20261016T092938+0800-e7ec30c6",
+  "built_at": "2026-10-16T09:29:38+08:00",
   "files": [
     {
       "path": ".github/workflows/pages.yml",
@@ -25,8 +25,8 @@
     },
     {
       "path": "archives/index.html",
-      "bytes": 20948,
-      "sha256": "d74c25e3d1ac19ced743ff49c2c013a6d5ad35d4c579e9ecaf2f27fd615db466"
+      "bytes": 21185,
+      "sha256": "2d4e965293118b4b6e806bed51841ff34e733eda85bedb16a6c82dc837b4990d"
     },
     {
       "path": "assets/audio-manifest.json",
@@ -425,13 +425,13 @@
     },
     {
       "path": "favorites/index.html",
-      "bytes": 57924,
-      "sha256": "3c64e55ddb284c79441705df2b370eac7634c30578ccf9a8163bc0a74b1fc643"
+      "bytes": 58779,
+      "sha256": "d70aa6be4750a673244c3b880ff0e70c0deb7901ea7ad0124eea87a72a1fa000"
     },
     {
       "path": "index.html",
-      "bytes": 15710,
-      "sha256": "6e2b0400ad4055a49b3d86841ae65b53ad429affe8f4b48e5635aa30d7271d9d"
+      "bytes": 15595,
+      "sha256": "a4cd0a28199a96e3a171beadf5619b7ab6bfa568059807d68b770dd42373842d"
     },
     {
       "path": "posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -699,6 +699,11 @@
       "sha256": "8ecb517646f8bc8d1e0e30cd019c49e1fd866dd23e67157f0cf4d8bd4652e175"
     },
     {
+      "path": "posts/linus-claude-code-kernel-review/index.html",
+      "bytes": 18360,
+      "sha256": "8ad606627f9f038e3ab239a2bf3ce356a61bed32d6f4c24ea1d0f9eac2081e55"
+    },
+    {
       "path": "posts/mysql-alter-table-lock-wait-timeout-postmortem/index.html",
       "bytes": 41997,
       "sha256": "200b57b9f42c356412096d59cf111a635140f39938d9a8828981688d42987c77"
@@ -730,18 +735,18 @@
     },
     {
       "path": "zh/archives/index.html",
-      "bytes": 20917,
-      "sha256": "dd47966ac8b52548c283ebd43ac7e245f710dc584826915fa2fc1c773d16e400"
+      "bytes": 21156,
+      "sha256": "5c3a74d5289a06de2522a0efd0dacf4c83fd3e6dbeaf68b5cab5a6125aa4bfba"
     },
     {
       "path": "zh/favorites/index.html",
-      "bytes": 62788,
-      "sha256": "ae3aa639db82feff5bebbbd0b742650daf21948a8650cb7b55215245c7b793d0"
+      "bytes": 63773,
+      "sha256": "f2e7bf9a4fb3f4463975b3f9efdc819911e4f7f77d42229992a1752b5be68c64"
     },
     {
       "path": "zh/index.html",
-      "bytes": 16019,
-      "sha256": "72fef834d865ee450dfbfb0a316903051f8fa9dc02e24aa2069ba728b3b8d170"
+      "bytes": 15784,
+      "sha256": "c3d71095e7c1356287a2bfc8df93cc8d1d0afc469878d31a3f314729f1d5774e"
     },
     {
       "path": "zh/posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -1007,6 +1012,11 @@
       "path": "zh/posts/codex-local-projects-mobile-projects-remote-cloud/index.html",
       "bytes": 37557,
       "sha256": "1c9f44bef66070ca34515249ede4f4f9cd8a4b8cd01f1b538da31e97fc1328d8"
+    },
+    {
+      "path": "zh/posts/linus-claude-code-kernel-review/index.html",
+      "bytes": 18050,
+      "sha256": "1b5fb9ecebceda1811b6b08c2e4a46715be125d7b8cefb7fbc1ad81d39b52003"
     },
     {
       "path": "zh/posts/mysql-alter-table-lock-wait-timeout-postmortem/index.html",
