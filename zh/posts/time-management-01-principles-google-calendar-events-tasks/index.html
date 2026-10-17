@@ -1,0 +1,659 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>时间管理系列 01：黄金法则与 Google Calendar 实践 · LATENTX</title>
+    <meta name="description" content="时间管理系列第 1 篇：结合四象限、GTD、时间分块与每周回顾，建立 Google Calendar 使用原则，并详细说明 Event 与 Task 在工作、学习、出行和家庭生活中的选择。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="时间管理系列 01：黄金法则与 Google Calendar 实践 · LATENTX">
+    <meta property="og:description" content="时间管理系列第 1 篇：结合四象限、GTD、时间分块与每周回顾，建立 Google Calendar 使用原则，并详细说明 Event 与 Task 在工作、学习、出行和家庭生活中的选择。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/time-management-01-principles-google-calendar-events-tasks/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/time-management-01-principles-google-calendar-events-tasks/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/time-management-01-principles-google-calendar-events-tasks/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/time-management-01-principles-google-calendar-events-tasks/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/time-management-01-principles-google-calendar-events-tasks/"
+    data-page-title="时间管理系列 01：黄金法则与 Google Calendar 实践"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/time-management-01-principles-google-calendar-events-tasks/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/time-management-01-principles-google-calendar-events-tasks/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat time-management-01-principles-google-calendar-events-tasks.md</div>
+    <h1>时间管理系列 01：黄金法则与 Google Calendar 实践</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-18">发布于 2026.10.18</time>
+      <span>15 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#Time Management</span><span>#Google Calendar</span><span>#Google Tasks</span><span>#GTD</span><span>#Time Blocking</span><span>#Personal Workflow</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/time-management-01-principles-google-calendar-events-tasks/" data-page-title="时间管理系列 01：黄金法则与 Google Calendar 实践" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><blockquote>
+<p>时间管理系列第 1 篇。本篇建立方法和工具的基础：如何确定优先级、安排执行时间，以及选择 Google Calendar 的 Event 与 Task。功能说明核对日期为 2026 年 10 月 18 日。</p>
+</blockquote>
+<p>日历排得很满，关键工作却没有进展；待办记录了很多，到了截止日期才开始处理。这两种情况往往发生在同一个人身上：计划里有活动，却缺少明确成果；清单里有目标，却没有可执行的时间。</p>
+<p>对于需要兼顾设计、协作、学习与家庭生活的知识工作者，可以从一套轻量组合开始：<strong>用重要性选择工作，用 Task 跟踪交付，用 Calendar 安排时间，再通过回顾修正计划。</strong></p>
+<h2>1. 先选能解决问题的方法</h2>
+<p>时间管理方法分别处理优先级、收集、执行与回顾。无需同时建立多套系统，先找到自己的主要困难。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>核心做法</th>
+<th>适用场景</th>
+<th>常见误区</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>四象限法</td>
+<td>同时判断重要性与紧急程度</td>
+<td>需求太多，不知道先做什么</td>
+<td>把所有催办都当成重要事项</td>
+</tr>
+<tr>
+<td>GTD</td>
+<td>收集、澄清、整理、回顾、执行</td>
+<td>待办分散在脑子、邮件和聊天里</td>
+<td>只收集，不明确下一步行动</td>
+</tr>
+<tr>
+<td>时间分块 Time Blocking</td>
+<td>为一项工作或一类活动保留连续时间</td>
+<td>写作、设计和学习经常被打断</td>
+<td>把每分钟都排满</td>
+</tr>
+<tr>
+<td>时间盒 Timeboxing</td>
+<td>限定投入时间，到点评估结果</td>
+<td>调研无止境、反复打磨</td>
+<td>到点就把未完成工作标成完成</td>
+</tr>
+<tr>
+<td>每日最重要任务 MIT</td>
+<td>每天选 1～3 个关键成果</td>
+<td>一天很忙，却没有关键进展</td>
+<td>选“处理项目”这类模糊目标</td>
+</tr>
+<tr>
+<td>番茄工作法</td>
+<td>短时专注与休息交替，常见起点是 25＋5 分钟</td>
+<td>难启动、容易分心</td>
+<td>已进入深度状态仍机械打断</td>
+</tr>
+<tr>
+<td>批量处理</td>
+<td>集中处理相似的小事</td>
+<td>邮件、审批、报销、普通消息</td>
+<td>把真正紧急的事项也延后</td>
+</tr>
+<tr>
+<td>每周回顾</td>
+<td>检查承诺、进展和下周容量</td>
+<td>未完成事项持续积压</td>
+<td>只改日期，不调整承诺</td>
+</tr>
+</tbody></table>
+<p>GTD 的五步工作流可参考 <a href="https://gettingthingsdone.com/what-is-gtd/">David Allen 官方说明</a>。上表中的适用场景和误区是本文的应用建议，不代表这些方法对所有人都有同样效果。</p>
+<h3>1.1 四象限如何落地</h3>
+<table>
+<thead>
+<tr>
+<th>分类</th>
+<th>示例</th>
+<th>推荐处理方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>重要且紧急</td>
+<td>生产故障、即将截止的关键交付</td>
+<td>优先处理，明确哪些原计划需要调整</td>
+</tr>
+<tr>
+<td>重要但不紧急</td>
+<td>架构治理、能力建设、健康、陪伴家人</td>
+<td>提前预留时间，防止长期被挤掉</td>
+</tr>
+<tr>
+<td>紧急但重要性较低</td>
+<td>一部分临时咨询、重复催办</td>
+<td>协商响应时间、委派或批量处理</td>
+</tr>
+<tr>
+<td>重要性和紧急性都低</td>
+<td>无目的刷资讯、反复整理工具</td>
+<td>限制或取消</td>
+</tr>
+</tbody></table>
+<p>重要性应根据职责、目标与后果判断。有意识的休闲和休息有其价值，不应仅因没有工作产出就被归为“浪费时间”。</p>
+<h3>1.2 时间分块与时间盒的区别</h3>
+<p><strong>时间分块决定什么时候投入，时间盒约束投入多少。</strong></p>
+<ul>
+<li>时间分块：周二 09:00–10:30 安排架构设计，给它保留连续时间。</li>
+<li>时间盒：用 60 分钟比较三种技术路线，到点形成初步结论和待验证清单。</li>
+</ul>
+<p>两者可以组合。若一个时间块结束后仍未完成，应根据结果拆分、继续排期或收缩范围。实际进度比原来的时间估计更值得参考。</p>
+<h2>2. 值得坚持的时间管理黄金法则</h2>
+<p>这里的“黄金法则”是一组可调整的工作原则，具体数量和时间比例是实践起点。</p>
+<ol>
+<li><strong>建立统一收集入口。</strong> 想到要做的事先记下来，再集中整理。记录一个想法，并不意味着必须今天完成。</li>
+<li><strong>任务写成“动词＋交付物”。</strong> 把“研究 MCP”改成“比较三种 MCP 鉴权方案，输出一页对比表”。任务应让未来的自己知道从哪里开始、何时算完成。</li>
+<li><strong>区分截止时间与执行时间。</strong> 周五交方案，需要提前安排资料整理、初稿和修改。截止日期提供约束，执行时段提供容量。</li>
+<li><strong>把高精力时段给关键工作。</strong> 观察自己什么时候最清醒，将设计、推理和写作安排在那里；例行事务放到较低精力时段。</li>
+<li><strong>为变化留出余量。</strong> 可以先只安排可支配时间的约 60%～70%，再根据中断频率调整。这是容量规划建议，没有通用最优比例。</li>
+<li><strong>限制同时进行的工作。</strong> 每天优先推进少数成果。插入紧急任务时，明确哪件原计划后移，避免只增加承诺。</li>
+<li><strong>从实际耗时中学习。</strong> 记录估计与实际的明显差异，下次调整拆分和安排。不要用更密的日程掩盖容量不足。</li>
+<li><strong>每周允许删除和降级。</strong> 一件事持续延期，可能需要拆小，也可能已经不值得做。回顾应包含取消、委派和重新协商。</li>
+</ol>
+<p>两个常见规则也可以辅助判断：<strong>80/20 思路</strong>提醒我们寻找高价值工作，不保证投入产出必然符合精确比例；<strong>两分钟规则</strong>适合在整理待办时处理很小的行动，不适合在专注工作中看到任何小事就立即切换。</p>
+<h2>3. Google Calendar 应承担什么职责</h2>
+<p>建议采用以下分工，避免把所有信息都放进日历标题或描述中。</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>管理内容</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tasks 清单</td>
+<td>可完成的行动、未排期的待办</td>
+<td>完成方案初稿、预约体检</td>
+</tr>
+<tr>
+<td>Calendar 时间安排</td>
+<td>会议、行程、个人活动和执行时段</td>
+<td>周三评审、周六出游、周二撰写方案</td>
+</tr>
+<tr>
+<td>文档或项目工具</td>
+<td>背景资料、复杂计划、依赖与决策</td>
+<td>架构文档、项目里程碑、调研笔记</td>
+</tr>
+</tbody></table>
+<p>日历主要帮助回答：<strong>我已经承诺了什么时间，还有多少容量？</strong> 待办清单主要帮助回答：<strong>有哪些行动需要完成，下一步做什么？</strong></p>
+<h3>3.1 Event 与 Task 的当前功能边界</h3>
+<p>Calendar 中的 Task 与 Google Tasks 相连。Task 可以不设日期；设置日期后才能出现在日历中。当前电脑端官方说明还支持为任务安排起止时间和忙碌状态，但重复 Task 不能设置结束时间。因此，“Task 没有时长、不能占时间”已不是准确的区分方式。见 <a href="https://support.google.com/calendar/answer/9901136">Google 任务说明</a>。</p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>Task 任务</th>
+<th>Event 日程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主要目的</td>
+<td>跟踪一个行动是否完成</td>
+<td>记录一段约定或活动</td>
+</tr>
+<tr>
+<td>完成状态</td>
+<td>可以勾选完成</td>
+<td>没有待办式完成勾选</td>
+</tr>
+<tr>
+<td>时间表达</td>
+<td>可留在清单中，也可排期</td>
+<td>起止时间或全天安排</td>
+</tr>
+<tr>
+<td>典型用途</td>
+<td>写初稿、买票、提交申请</td>
+<td>评审、乘车、课程、聚餐</td>
+</tr>
+<tr>
+<td>多人参加</td>
+<td>个人待办不应当作会议邀请</td>
+<td>可邀请他人并接收参加回复</td>
+</tr>
+</tbody></table>
+<p>Event 支持邀请与接受、拒绝、待定回复，也可设置提前通知。Google Calendar 受邀者通常按自己的设置接收提醒，组织者的提醒不会替所有人统一配置。见 <a href="https://support.google.com/calendar/answer/37161">Google 邀请与通知说明</a>。</p>
+<h3>3.2 日历组织和配置原则</h3>
+<table>
+<thead>
+<tr>
+<th>原则</th>
+<th>建议做法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>按共享边界划分日历</td>
+<td>工作、个人、家庭共享按需要分开；避免每个小项目一个日历</td>
+</tr>
+<tr>
+<td>少量颜色，固定含义</td>
+<td>例如工作蓝色、家庭绿色、个人安排紫色，以便快速浏览</td>
+</tr>
+<tr>
+<td>周视图规划，日视图执行</td>
+<td>每周检查容量，每天确认当前安排和优先事项</td>
+</tr>
+<tr>
+<td>先固定安排，再关键工作</td>
+<td>放入会议和出行后，给重要成果安排实际执行时间</td>
+</tr>
+<tr>
+<td>包含准备、交通和收尾</td>
+<td>线下会议占用的时间通常超过会议本身</td>
+</tr>
+<tr>
+<td>全天区域保持简洁</td>
+<td>放假期、纪念日或截止日期；不要把所有普通待办堆在顶部</td>
+</tr>
+<tr>
+<td>提醒与行动匹配</td>
+<td>会议提醒考虑准备时间；出行提醒考虑离家时间</td>
+</tr>
+<tr>
+<td>重复用于稳定规律</td>
+<td>固定课程、周回顾适合重复；临时目标不宜无限重复</td>
+</tr>
+<tr>
+<td>共享前检查详情可见性</td>
+<td>按需要只共享忙闲，避免暴露个人行程或敏感工作标题</td>
+</tr>
+</tbody></table>
+<p>以北京时间工作和生活时，可将主时区设为 <code>Asia/Shanghai</code>；跨国会议应明确会议时区，出行后检查当地显示。具体设置参考 <a href="https://support.google.com/calendar/answer/37064">Google 时区说明</a>。</p>
+<h3>3.3 专注时间怎样安排</h3>
+<p>“完成方案对比表”有明确成果，可直接排成带时长的 Task；“每周固定两小时学习”是一项规律活动，用重复 Event 更容易表达。已经安排时段的 Task，通常无需再建立同名、同时间的 Event。</p>
+<p>符合条件的 Workspace 账号还可以使用 Focus time，支持静音 Chat 通知和自动拒绝会议。可用资格有账号和版本限制；普通 Event 也能用来预留专注时间。见 <a href="https://support.google.com/calendar/answer/11190973">Google Focus time 说明</a>。</p>
+<h2>4. Event 与 Task 的详细选择场景</h2>
+<p>判断时问两个问题：需要确认一个行动完成吗？需要记录一段活动或与他人协调时间吗？同一项目可能同时包含这两类对象，但应各自表达不同事实。</p>
+<h3>4.1 工作与学习</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议对象</th>
+<th>创建示例与理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>架构评审</td>
+<td>Event</td>
+<td>周三 14:00–15:00“平台架构评审”，填写议题、文档与参会人</td>
+</tr>
+<tr>
+<td>准备评审材料</td>
+<td>Task</td>
+<td>“完成架构评审初稿”，提前排出 90 分钟，追踪成果</td>
+</tr>
+<tr>
+<td>技术调研</td>
+<td>Task</td>
+<td>“比较三种鉴权方案并输出对比表”，为探索设置时间盒</td>
+</tr>
+<tr>
+<td>固定学习活动</td>
+<td>重复 Event</td>
+<td>每周六 09:00–10:00“技术学习”，保护稳定投入</td>
+</tr>
+<tr>
+<td>具体学习目标</td>
+<td>Task</td>
+<td>“读完一章并整理五条笔记”，完成后勾选</td>
+</tr>
+<tr>
+<td>跟进同事反馈</td>
+<td>Task</td>
+<td>“周四跟进方案意见”，记录自己的跟进行动</td>
+</tr>
+<tr>
+<td>固定项目例会</td>
+<td>重复 Event</td>
+<td>每周一 10:00–10:30，协调共同参加</td>
+</tr>
+<tr>
+<td>每周检查备份</td>
+<td>重复 Task</td>
+<td>“检查备份结果并记录异常”，每次都需确认完成</td>
+</tr>
+<tr>
+<td>提交最终方案</td>
+<td>带截止日期的 Task</td>
+<td>以真实提交为完成标准，提前安排撰写与修改</td>
+</tr>
+<tr>
+<td>团队交付里程碑</td>
+<td>全天 Event，按需使用</td>
+<td>供团队查看节点；个人执行仍放在具体 Task 中</td>
+</tr>
+</tbody></table>
+<p>“等待反馈”本身并不是一个可执行动作。更好的记录方式是明确什么时候、向谁、跟进什么；若组织已有项目系统，那里继续承担团队协作和依赖管理。</p>
+<h3>4.2 出行与生活</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议对象</th>
+<th>创建示例与理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>高铁或航班</td>
+<td>Event</td>
+<td>按实际出发、到达时间记录行程，填写站点或机场</td>
+</tr>
+<tr>
+<td>买票、值机</td>
+<td>Task</td>
+<td>分别跟踪购票或值机是否完成</td>
+</tr>
+<tr>
+<td>前往车站</td>
+<td>Event，按需使用</td>
+<td>单独预留交通时间，避免被其他安排占用</td>
+</tr>
+<tr>
+<td>结婚纪念日</td>
+<td>每年重复的全天 Event</td>
+<td>记录一个重要日期</td>
+</tr>
+<tr>
+<td>买礼物、预订餐厅</td>
+<td>Task</td>
+<td>提前完成准备，明确是否办妥</td>
+</tr>
+<tr>
+<td>已约好的晚餐</td>
+<td>Event</td>
+<td>填写时间和地点，记录共同活动</td>
+</tr>
+<tr>
+<td>教师节</td>
+<td>每年重复的全天 Event，可选</td>
+<td>标记日期，方便提前规划</td>
+</tr>
+<tr>
+<td>给老师发送祝福</td>
+<td>每年重复 Task</td>
+<td>发送后勾选，区分“知道节日”和“采取行动”</td>
+</tr>
+<tr>
+<td>预约体检</td>
+<td>Task</td>
+<td>联系机构，确认日期和准备要求</td>
+</tr>
+<tr>
+<td>已确认的体检</td>
+<td>Event</td>
+<td>记录实际时间、地点和必要准备</td>
+</tr>
+<tr>
+<td>每月缴费确认</td>
+<td>重复 Task</td>
+<td>检查账单是否处理，不把提醒视作已经付款</td>
+</tr>
+<tr>
+<td>预约健身课程</td>
+<td>Event</td>
+<td>到约定时间参加</td>
+</tr>
+<tr>
+<td>本周完成一次训练</td>
+<td>Task</td>
+<td>跟踪一次行动目标，按需要再排执行时间</td>
+</tr>
+</tbody></table>
+<h3>4.3 一个完整的方案评审示例</h3>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>对象</th>
+<th>内容</th>
+<th>完成或参加标准</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>周一 09:00–10:30</td>
+<td>Task</td>
+<td>整理需求与约束</td>
+<td>输出需求和约束清单</td>
+</tr>
+<tr>
+<td>周二 09:00–11:00</td>
+<td>Task</td>
+<td>完成方案对比与初稿</td>
+<td>形成可供评审的文档</td>
+</tr>
+<tr>
+<td>周二下午</td>
+<td>Task</td>
+<td>发送评审材料</td>
+<td>将正确版本发给参会人</td>
+</tr>
+<tr>
+<td>周三 14:00–15:00</td>
+<td>Event</td>
+<td>架构评审会议</td>
+<td>按时参加并记录结论</td>
+</tr>
+<tr>
+<td>周四 09:00–10:00</td>
+<td>Task</td>
+<td>根据意见修改方案</td>
+<td>更新决策与待办项</td>
+</tr>
+<tr>
+<td>周五截止</td>
+<td>Task</td>
+<td>提交最终方案</td>
+<td>完成约定的交付流程</td>
+</tr>
+</tbody></table>
+<p>“修改方案”和“提交方案”是两个不同动作，可以分开记录；如果只需要一个任务，也可把修改安排在执行时段，将周五设为同一任务的截止日期。以能够维护清楚为准。</p>
+<h2>5. 用一个小节奏保持系统可信</h2>
+<table>
+<thead>
+<tr>
+<th>频率</th>
+<th>建议投入</th>
+<th>要做的事</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>每周</td>
+<td>20～30 分钟</td>
+<td>看未来两周固定安排和截止日期，选下周关键成果，检查容量</td>
+</tr>
+<tr>
+<td>每天开始前</td>
+<td>约 5 分钟</td>
+<td>选 1～3 件重要工作，确认执行时段和准备条件</td>
+</tr>
+<tr>
+<td>每天结束前</td>
+<td>约 5 分钟</td>
+<td>勾选真实完成项，为未完成项决定下一步</td>
+</tr>
+</tbody></table>
+<p>当任务延期时，依次判断：是否仍值得做、是否需要拆小、是否缺少前置条件、是否必须重新协商承诺。不要默认把所有事情都移到明天。</p>
+<p>可以先运行两周，再检查三件事：关键成果是否更稳定，漏掉的承诺是否减少，维护这套系统是否足够轻。调整日程密度和分类数量，让工具适应真实工作。</p>
+<h2>参考资料</h2>
+<ul>
+<li><a href="https://gettingthingsdone.com/what-is-gtd/">David Allen：What is GTD</a></li>
+<li><a href="https://support.google.com/calendar/answer/9901136">Google：在 Calendar 中创建和管理任务</a></li>
+<li><a href="https://support.google.com/calendar/answer/37161">Google：邀请他人参加日程及通知机制</a></li>
+<li><a href="https://support.google.com/calendar/answer/11190973">Google：使用专注时间</a></li>
+<li><a href="https://support.google.com/calendar/answer/37064">Google：在不同时区使用 Calendar</a></li>
+</ul>
+<p>文中的时间、项目和生活场景均为示例，不包含实际参会人、联系方式、订单或个人行程。系列后续篇目将依据具体主题另行撰写。</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/time-management-01-principles-google-calendar-events-tasks/" data-page-title="时间管理系列 01：黄金法则与 Google Calendar 实践" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
