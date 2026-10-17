@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "build_id": "20261018T073551+0800-6693bfff",
-  "built_at": "2026-10-18T07:35:51+08:00",
+  "build_id": "20261018T075406+0800-92b25f46",
+  "built_at": "2026-10-18T07:54:06+08:00",
   "files": [
     {
       "path": ".github/workflows/pages.yml",
@@ -740,18 +740,18 @@
     },
     {
       "path": "zh/archives/index.html",
-      "bytes": 21418,
-      "sha256": "240218fb960a347daa4e088519889e91e3580ab8a903e5dfc624ce07fa299923"
+      "bytes": 21696,
+      "sha256": "ac1d11e5a306633155ea08e1dafc867847835b77dcdc980b4f3e9e5c84a9ac6b"
     },
     {
       "path": "zh/favorites/index.html",
-      "bytes": 64782,
-      "sha256": "c4d22ac19ab7cc9de22cc2f0a75b5c5d0ee1891ff0d8f6d28bc6fd5fe8a3683a"
+      "bytes": 65857,
+      "sha256": "45534ee5b7c902ad0b9c641c17a4b2b5c5949b7c0754b11b6af367902d077df9"
     },
     {
       "path": "zh/index.html",
-      "bytes": 15765,
-      "sha256": "7683f5e0ffb1e9a77751210360c8d2fc53779c8c24d7add8dc8f5d242bc63d9f"
+      "bytes": 15786,
+      "sha256": "5a3e1320da107bf079efd41390b17b282b63f4142bbdf09d015c8921166c8421"
     },
     {
       "path": "zh/posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -1037,6 +1037,11 @@
       "path": "zh/posts/time-management-01-principles-google-calendar-events-tasks/index.html",
       "bytes": 26338,
       "sha256": "18a29ff788b3e5c33ef34f1db532f9f9d23b408b635b7a337aba0b650d1c1aa1"
+    },
+    {
+      "path": "zh/posts/time-management-02-event-framework-task-time-blocking-gtd/index.html",
+      "bytes": 26355,
+      "sha256": "89e75348b7e0af38a514fb802eff552cc8e9f68050503173aa0ee73745fe8c63"
     },
     {
       "path": "zh/posts/title/index.html",
