@@ -1,0 +1,571 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Windows 系列 01：睡眠与休眠深度解析——机制、场景与排查 · LATENTX</title>
+    <meta name="description" content="深入比较 Windows 的 S3 睡眠、Modern Standby 与 S4 休眠，解释混合睡眠、快速启动、耗电与 SSD 写入，并提供场景建议、powercfg 排查和专业中英术语表。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Windows 系列 01：睡眠与休眠深度解析——机制、场景与排查 · LATENTX">
+    <meta property="og:description" content="深入比较 Windows 的 S3 睡眠、Modern Standby 与 S4 休眠，解释混合睡眠、快速启动、耗电与 SSD 写入，并提供场景建议、powercfg 排查和专业中英术语表。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/windows-01-sleep-vs-hibernate/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/windows-01-sleep-vs-hibernate/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/windows-01-sleep-vs-hibernate/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/windows-01-sleep-vs-hibernate/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/windows-01-sleep-vs-hibernate/"
+    data-page-title="Windows 系列 01：睡眠与休眠深度解析——机制、场景与排查"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/windows-01-sleep-vs-hibernate/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/windows-01-sleep-vs-hibernate/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat windows-01-sleep-vs-hibernate.md</div>
+    <h1>Windows 系列 01：睡眠与休眠深度解析——机制、场景与排查</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-19">发布于 2026.10.19</time>
+      <span>18 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#Windows</span><span>#Sleep</span><span>#Hibernate</span><span>#Modern Standby</span><span>#Power Management</span><span>#Troubleshooting</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/windows-01-sleep-vs-hibernate/" data-page-title="Windows 系列 01：睡眠与休眠深度解析——机制、场景与排查" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p>💻 合上笔记本，第二天却掉了不少电；明明选择了“关机”，系统问题却要“重启”才消失；菜单里有“睡眠”，却找不到“休眠”。这些现象都与 Windows 的电源状态有关。</p>
+<p><strong>短暂离开、希望迅速继续工作，优先考虑睡眠；长时间离开、希望保留工作现场并减少耗电，优先考虑休眠。</strong> 真正做选择前，还要确认你的电脑使用哪一种睡眠模型。</p>
+<p>这是 <strong>Windows 系列的第 01 篇</strong>。本系列围绕 Windows 常识与实用技巧展开。本篇以 Windows 11 为主要使用语境，涉及 Windows 10 共有机制；文档核对日期为 <strong>2026 年 10 月 19 日</strong>。菜单、可用状态与唤醒能力以本机硬件、固件、系统版本和管理策略为准。</p>
+<h2>1. 先分清三个名字：Sleep、Hibernate、Modern Standby</h2>
+<p>Windows 界面的 <strong>Sleep 对应“睡眠”</strong>，<strong>Hibernate 对应“休眠”</strong>。技术文章里的 <strong>Hibernation</strong> 是“休眠”这一机制或状态的名词形式。</p>
+<p>“睡眠就是把数据留在内存，休眠就是把数据写进硬盘”适合入门，但不足以解释现代电脑：<strong>菜单中的 Sleep 可以由传统 S3 睡眠实现，也可以由 Modern Standby 实现。</strong> Modern Standby 的系统状态是 <strong>S0 low-power idle（S0 低功耗空闲）</strong>，不能写成“S3 的另一个名字”。[1][2]</p>
+<table>
+<thead>
+<tr>
+<th>比较维度</th>
+<th>传统睡眠：S3</th>
+<th>现代待机：Modern Standby</th>
+<th>休眠：S4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统如何保留工作状态</td>
+<td>依靠仍供电的内存</td>
+<td>依靠仍供电的内存，系统保持在 S0 电源模型内</td>
+<td>将恢复所需状态保存到非易失性存储</td>
+</tr>
+<tr>
+<td>离开期间的执行行为</td>
+<td>S3 期间不执行普通计算任务</td>
+<td>可短暂执行系统允许的后台活动</td>
+<td>S4 期间不执行普通计算任务</td>
+</tr>
+<tr>
+<td>持续耗电</td>
+<td>低，但需维持内存等电路</td>
+<td>目标是很低；实际取决于低功耗驻留与后台活动</td>
+<td>通常更低，接近关机水平</td>
+</tr>
+<tr>
+<td>恢复体验</td>
+<td>通常很快</td>
+<td>为快速恢复而设计</td>
+<td>通常慢于睡眠，要恢复磁盘上的状态</td>
+</tr>
+<tr>
+<td>突然彻底失电</td>
+<td>纯 S3 的内存状态会丢失</td>
+<td>未先保存到休眠文件的内存状态会丢失</td>
+<td>成功完成休眠后，状态不依赖持续供电</td>
+</tr>
+<tr>
+<td>常见用途</td>
+<td>短暂离开；支持 S3 的电脑</td>
+<td>现代设备上的日常快速暂停</td>
+<td>通勤、长时间离开、无法及时充电</td>
+</tr>
+</tbody></table>
+<p>表中比较的是工作状态保存机制，不是对每台机器耗电与恢复时间的保证。<strong>混合睡眠启用后的 S3 另有磁盘副本保护</strong>，后文会单独说明。[1][3][4]</p>
+<h2>2. 从“停下来”到“回到桌面”，到底发生了什么？</h2>
+<h3>S3：以内存供电换取较快恢复</h3>
+<p>传统 S3 会停止处理器执行，保留系统内存中的状态。DRAM 需要刷新来维持内容；“电脑看起来关了”不代表内存可以断电。唤醒后，系统恢复必要的硬件状态，继续原来的会话。[3]</p>
+<p>这里的 <strong>Suspend to RAM，STR（挂起到内存）</strong> 是常见技术叫法。不要把 Windows 菜单里的“睡眠”不加区分地全部翻译成 STR，因为 Modern Standby 采用的是另一种电源模型。[2][14]</p>
+<h3>S4：先写入休眠文件，再停止依赖内存供电</h3>
+<p>进入休眠时，Windows 将恢复所需的用户与系统状态压缩写入 <strong>hiberfil.sys</strong>。恢复时，需要读取、解压这些数据并恢复设备状态。因此，存储性能、需要保存的数据量、固件与驱动都可能影响恢复体验。[1][10]</p>
+<p><strong>Suspend to Disk，STD（挂起到磁盘）</strong> 是常见对应术语。“磁盘”在这里泛指持久存储，包括 SSD，并不特指机械硬盘。[14]</p>
+<p>休眠保留的是会话状态。文档仍应正常保存：断电发生在写入完成之前、恢复失败或应用异常，都可能使工作现场无法完整恢复。休眠也不是文档备份；恢复窗口不意味着已断开的远程连接、过期登录或服务器任务会自动复原。这是使用该机制时需要区分的两层状态。</p>
+<h3>S0 低功耗空闲：让设备尽可能空闲，按需短暂活动</h3>
+<p>Modern Standby 会逐步收敛软件活动，让硬件进入低功耗状态。<strong>处在 S0，不代表 CPU 始终忙碌。</strong> 在最低功耗阶段，处理器可以停止运行；系统也可以短暂活动后再次回到低功耗状态。[4]</p>
+<p>微软将一次现代待机会话区分为 <strong>Screen Off（屏幕关闭）</strong> 和 <strong>Sleep（睡眠）</strong> 等阶段。屏幕黑了，可能还在处理阻止进入深度低功耗的工作。真正要观察的是低功耗驻留时间，而不只是屏幕是否点亮。[5]</p>
+<h2>3. 为什么合盖后还可能耗电、联网，甚至发热？</h2>
+<p>合盖首先是一个输入事件，其结果由 <strong>Lid close action（合盖操作）</strong> 决定，可以配置为睡眠、休眠或其他操作；电池供电与接通电源时也可能采用不同设置。[6]</p>
+<p>即使已经触发 Modern Standby，网络也不是“一律在线”或“一律断开”。Windows 会根据电源条件、应用需求与策略管理连接；允许某些网络活动，不代表所有桌面程序都能持续运行。[7]</p>
+<p>例如，现代待机的准备过程会暂停桌面应用、处理电源请求和维护工作。若某一阶段持续活动，就可能延迟进入更低功耗状态。[8]</p>
+<p>由此可以得到三个实用判断：</p>
+<ul>
+<li><strong>需要继续编译、渲染、大文件下载或运行虚拟机：</strong> 让电脑保持唤醒，单独关闭显示器，并确保供电与散热；不要把 Modern Standby 当作后台任务执行承诺。</li>
+<li><strong>合盖装包后频繁发热、掉电：</strong> 先用休眠完成这类携带场景，再用报告定位原因；关掉 Wi-Fi 不是对所有原因都有效的修复。</li>
+<li><strong>从会议室换到工位，很快又要打开：</strong> 若本机睡眠表现稳定，睡眠更方便。</li>
+</ul>
+<p>这些是根据电源机制给出的使用建议，不是对某个型号做过的实测结论。</p>
+<h2>4. 混合睡眠、快速启动、关机，分别解决什么问题？</h2>
+<h3>混合睡眠：Hybrid Sleep</h3>
+<p>在支持该功能的电脑上，混合睡眠先生成休眠文件，再进入传统睡眠。供电正常时从内存恢复；睡眠期间突然失电时，可从磁盘副本恢复。它尤其适合希望兼顾恢复速度与断电保护的台式机。[1]</p>
+<p>它不等于“先睡几小时，再自动休眠”，也不是 Modern Standby 的通用别名。前者是随时间或电量发生的状态转换；混合睡眠是在进入睡眠前准备恢复副本。</p>
+<h3>快速启动：Fast Startup</h3>
+<p>快速启动会结束用户会话，再保存 Windows 内核映像及相关内核模式驱动状态，以缩短后续启动过程。它利用休眠技术，却<strong>不会像完整休眠那样保留整个用户工作会话</strong>。[9]</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>保留重点</th>
+<th>适合解决的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hibernate／休眠</td>
+<td>当前用户与系统工作状态</td>
+<td>下次继续当前工作</td>
+</tr>
+<tr>
+<td>启用 Fast Startup 的 Shut down／关机</td>
+<td>用户已注销，保留用于启动的内核状态</td>
+<td>加快下次开机</td>
+</tr>
+<tr>
+<td>Full shutdown／完整关机（S5）</td>
+<td>下次重新建立系统会话</td>
+<td>无须保留当前工作现场</td>
+</tr>
+<tr>
+<td>Restart／重启</td>
+<td>重新启动系统，不使用快速启动恢复内核的路径</td>
+<td>更新要求重启，或排查持续异常</td>
+</tr>
+</tbody></table>
+<p>因此，遇到系统要求“重启”，就执行 <strong>Restart</strong>。不要把“关机后再开机”默认视为同一过程。关机后应用重新打开，也可能是应用或系统的会话恢复功能，不能据此判断做过完整休眠。[9][10][15]</p>
+<h2>5. 按场景选择，比规定“超过几分钟必须休眠”更有用</h2>
+<table>
+<thead>
+<tr>
+<th>使用场景</th>
+<th>建议起点</th>
+<th>判断理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>离开工位喝咖啡，稍后继续</td>
+<td>睡眠</td>
+<td>降低恢复等待</td>
+</tr>
+<tr>
+<td>一天内频繁参加短会</td>
+<td>睡眠，观察本机耗电</td>
+<td>频繁切换时便利性更重要</td>
+</tr>
+<tr>
+<td>通勤、乘机、放入背包</td>
+<td>休眠，并等待转换完成</td>
+<td>减少携带期间的活动与耗电</td>
+</tr>
+<tr>
+<td>下班后明早继续，保留多个工作窗口</td>
+<td>休眠</td>
+<td>兼顾保留现场与长时间省电</td>
+</tr>
+<tr>
+<td>台式机担心意外停电</td>
+<td>支持时考虑混合睡眠；重要任务另配 UPS</td>
+<td>内存恢复速度与磁盘副本结合</td>
+</tr>
+<tr>
+<td>夜间继续下载、训练或编译</td>
+<td>保持唤醒、关闭显示器</td>
+<td>任务需要执行资源</td>
+</tr>
+<tr>
+<td>系统更新提示重启、驱动状态异常</td>
+<td>保存工作后重启</td>
+<td>重新初始化系统</td>
+</tr>
+<tr>
+<td>数天不用且无须保留会话</td>
+<td>保存工作并关机</td>
+<td>减少恢复旧会话的依赖</td>
+</tr>
+</tbody></table>
+<p><strong>先正常保存，再暂停电脑。</strong> 不必为了追求“永远不重开窗口”而长期推迟必要的更新与重启。</p>
+<h3>耗电差异可以怎样估算？</h3>
+<p>用一个纯计算示例：假设某台电脑可用电量为 60 Wh，某次睡眠的平均功率为 0.5 W，那么 8 小时消耗约为：</p>
+<p><code>0.5 W × 8 h = 4 Wh</code>，约占 <code>4 ÷ 60 ≈ 6.7%</code>。</p>
+<p><strong>0.5 W 是假设值，不是 Windows 睡眠的统一指标。</strong> 实际平均功率、可用容量和后台活动都要测量。比较两台电脑时，也不能只看“掉了几个百分点”：电池容量不同，百分比就不可直接等同于耗电量。</p>
+<h2>6. hiberfil.sys 会占多少空间，会伤 SSD 吗？</h2>
+<p><strong>hiberfil.sys 是休眠文件，pagefile.sys 是分页文件，两者职责不同。</strong> 前者用于保存休眠恢复数据，通常位于系统盘根目录；不要靠手工删除系统文件来调整功能。[11]</p>
+<p>休眠文件有 <strong>Full（完整型）</strong> 与 <strong>Reduced（精简型）</strong> 两种类型。完整型支持完整休眠；精简型只支持快速启动。因此，机器存在 hiberfil.sys，并不自动意味着菜单里就能使用完整休眠。[1][12]</p>
+<p>文件的预留空间、一次实际写入量与安装内存容量不是同一个量。不要把“16 GB 内存，每次一定写满 16 GB”当作固定规则，也不必套用一个百分比解释所有版本的文件大小。先看本机配置与实际文件。</p>
+<p>休眠确实增加存储写入。SSD 的写入耐久度常用 <strong>TBW（Terabytes Written，累计写入量，以 TB 计）</strong> 表示，应结合型号规格和实际工作负载判断，不能直接说“休眠不产生磨损”或“休眠一定很伤 SSD”。[13]</p>
+<p>假设每次实际写入 8 GB、每天休眠 2 次，则一年约写入 <code>8 × 2 × 365 = 5,840 GB</code>，即十进制单位下约 <strong>5.84 TB</strong>。这只是估算休眠带来额外写入的方法，<strong>不是测得的数据，也不是 SSD 寿命预测</strong>；实际还有其他写入，主机写入与 NAND 内部写入也不完全相同。</p>
+<h2>7. 先识别本机，再启用或排查</h2>
+<p>以下命令供读者在自己的 Windows 电脑执行。诊断命令用于查看状态或生成报告；修改命令另列，避免混在一起运行。</p>
+<h3>第一步：查看实际支持的电源状态</h3>
+<p>打开终端，执行：</p>
+<pre><code class="language-powershell">powercfg /a
+</code></pre>
+<p>观察是否列出 <strong>Standby (S3)</strong>、<strong>Standby (S0 Low Power Idle)</strong> 和 <strong>Hibernate</strong>，以及不可用原因。不同语言的 Windows 会翻译输出，括号中的状态标识更容易对照。[12]</p>
+<p>若本机使用 Modern Standby，就不要套用“打开注册表强行恢复 S3”的通用教程。电源模型依赖平台设计；微软并不支持在现有 Windows 安装上靠简单开关完成模型切换。[2]</p>
+<h3>第二步：需要完整休眠时，检查配置与菜单</h3>
+<p>在<strong>管理员终端</strong>中运行：</p>
+<pre><code class="language-powershell">powercfg /hibernate on
+powercfg /hibernate /type full
+powercfg /a
+</code></pre>
+<p>前两条会修改配置并占用系统盘空间，第三条用于重新确认。然后打开 <strong>控制面板 → 系统和安全 → 电源选项 → 选择电源按钮的功能 → 更改当前不可用的设置</strong>，在可用的关机设置中勾选“休眠”并保存。[6][11][12]</p>
+<p>仍然没有选项时，按 <code>powercfg /a</code> 的原因继续检查硬件、固件或组织策略。上述命令不能创造硬件本来不支持的能力。</p>
+<p>若以后主动停用休眠，可执行 <code>powercfg /hibernate off</code>。这也会使依赖休眠文件的快速启动和混合睡眠不可用，不能当作无副作用的“清理空间”命令。[1][11]</p>
+<h3>第三步：区分“睡不着”“被唤醒”和“待机耗电高”</h3>
+<p>在管理员终端中，按问题选择命令：[12]</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>回答的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>powercfg /requests</code></td>
+<td>当前有哪些应用或驱动提出阻止自动睡眠等行为的电源请求？</td>
+</tr>
+<tr>
+<td><code>powercfg /lastwake</code></td>
+<td>系统记录的上一次睡眠唤醒原因是什么？</td>
+</tr>
+<tr>
+<td><code>powercfg /waketimers</code></td>
+<td>当前有哪些活动的唤醒定时器？</td>
+</tr>
+<tr>
+<td><code>powercfg /devicequery wake_armed</code></td>
+<td>哪些设备当前获准唤醒电脑？</td>
+</tr>
+</tbody></table>
+<p>这些输出是线索，不是完整事故报告。<code>/requests</code> 的当前结果不能证明昨夜发生了什么，<code>/lastwake</code> 也不能解释现代待机期间每一段后台活动。不要刚看到一个设备名，就关闭全部唤醒功能或强制覆盖所有电源请求。</p>
+<p>对于 <strong>Modern Standby 电脑</strong>，在有写权限的目录中生成报告：</p>
+<pre><code class="language-powershell">powercfg /sleepstudy /output sleepstudy-report.html
+</code></pre>
+<p>SleepStudy 默认覆盖最近三天。先看问题时间段的电源来源、耗电、Screen Off 与 Sleep 阶段，再看 <strong>Top Offenders（主要活动组件）</strong> 和低功耗驻留比例。<strong>DRIPS（Deepest Runtime Idle Platform State）</strong> 指平台最深运行时空闲状态；其驻留比例有助于判断系统是否多数时间处在低功耗中。[16]</p>
+<p>复现时一次只改变一个条件：例如先拔掉扩展坞，再比较同样时长的待机。记录系统版本、固件、网络和电源状态。发现特定驱动或外设相关性后，再查该设备厂商的更新与说明；这样的证据比反复修改一整套电源选项更有用。</p>
+<h2>8. 专业术语中英对照</h2>
+<p>以下对应 Windows 界面用语、微软技术文档和通用计算机术语。<strong>“挂起”“待机”“睡眠”在不同操作系统中并不总是一一对应</strong>，技术沟通时最好同时写明 S3、S4 或 S0 low-power idle。[1][3][5][9][12][14][16]</p>
+<table>
+<thead>
+<tr>
+<th>中文</th>
+<th>专业英文</th>
+<th>使用说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>睡眠</td>
+<td>Sleep</td>
+<td>Windows 菜单动作；须进一步确认电源模型</td>
+</tr>
+<tr>
+<td>休眠</td>
+<td>Hibernate / Hibernation</td>
+<td>前者常用于菜单或动词，后者用于机制或状态</td>
+</tr>
+<tr>
+<td>传统睡眠</td>
+<td>Traditional Sleep (S3)</td>
+<td>指 S3 模型</td>
+</tr>
+<tr>
+<td>现代待机</td>
+<td>Modern Standby</td>
+<td>Windows 的现代低功耗空闲模型</td>
+</tr>
+<tr>
+<td>S0 低功耗空闲</td>
+<td>S0 low-power idle</td>
+<td>不要简写成“S0 等于正常满速运行”</td>
+</tr>
+<tr>
+<td>挂起到内存</td>
+<td>Suspend to RAM (STR)</td>
+<td>常用于描述 S3</td>
+</tr>
+<tr>
+<td>挂起到磁盘</td>
+<td>Suspend to Disk (STD)</td>
+<td>常用于描述 S4；磁盘包括 SSD</td>
+</tr>
+<tr>
+<td>混合睡眠</td>
+<td>Hybrid Sleep</td>
+<td>传统睡眠加休眠文件保护</td>
+</tr>
+<tr>
+<td>快速启动</td>
+<td>Fast Startup</td>
+<td>结束用户会话后保存内核启动状态</td>
+</tr>
+<tr>
+<td>完整关机／软关机</td>
+<td>Full shutdown / Soft off (S5)</td>
+<td>不是所有 Shut down 操作都走此路径</td>
+</tr>
+<tr>
+<td>休眠文件</td>
+<td>Hibernation file / Hiberfile</td>
+<td>Windows 中通常为 hiberfil.sys</td>
+</tr>
+<tr>
+<td>易失性内存</td>
+<td>Volatile memory</td>
+<td>断电后不能维持内容，如 DRAM</td>
+</tr>
+<tr>
+<td>非易失性存储</td>
+<td>Non-volatile storage</td>
+<td>断电后仍能保留数据，如 SSD</td>
+</tr>
+<tr>
+<td>内核会话／用户会话</td>
+<td>Kernel session / User session</td>
+<td>理解快速启动和完整休眠的重要区别</td>
+</tr>
+<tr>
+<td>唤醒事件／恢复</td>
+<td>Wake event / Resume</td>
+<td>前者触发，后者描述恢复过程</td>
+</tr>
+<tr>
+<td>恢复延迟</td>
+<td>Resume latency</td>
+<td>应明确测到亮屏、登录还是可用状态</td>
+</tr>
+<tr>
+<td>唤醒定时器</td>
+<td>Wake timer</td>
+<td>可用于触发从低功耗状态恢复</td>
+</tr>
+<tr>
+<td>电源请求</td>
+<td>Power request</td>
+<td>应用或驱动提出的电源管理请求</td>
+</tr>
+<tr>
+<td>合盖操作</td>
+<td>Lid close action</td>
+<td>合盖触发的配置动作</td>
+</tr>
+<tr>
+<td>最深运行时空闲平台状态</td>
+<td>Deepest Runtime Idle Platform State (DRIPS)</td>
+<td>现代待机分析术语</td>
+</tr>
+<tr>
+<td>高级配置与电源接口</td>
+<td>Advanced Configuration and Power Interface (ACPI)</td>
+<td>系统电源管理的重要规范</td>
+</tr>
+<tr>
+<td>写入耐久度</td>
+<td>Write endurance</td>
+<td>结合 TBW 等指标评估 SSD 写入承受能力</td>
+</tr>
+</tbody></table>
+<p>英文描述建议写 <strong>resume from sleep / resume from hibernation</strong>，而不是把所有恢复都叫 <strong>reboot</strong>。比较性能时，要明确“屏幕点亮”“桌面可操作”“应用与网络恢复可用”的终点；微软的性能评估也区分恢复阶段，亮屏快不等于所有工作已就绪。[10][17]</p>
+<p>今天就可以做一个小检查：运行 <code>powercfg /a</code>，确认本机睡眠模型；检查合盖时的电池与接电设置；再为“短暂离开”和“长时间携带”分别选好动作。这样，电源菜单就能真正服务于你的工作习惯。🔋</p>
+<h2>参考资料</h2>
+<ol>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/power/system-power-states">Microsoft Learn — System power states</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby">Microsoft Learn — What is Modern Standby</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/system-sleeping-states">Microsoft Learn — System Sleeping States</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-vs-s3">Microsoft Learn — Modern Standby vs S3</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-states">Microsoft Learn — Modern Standby states</a></li>
+<li><a href="https://support.microsoft.com/en-us/windows/experience/power-battery/shut-down-sleep-or-hibernate-your-pc">Microsoft Support — Shut down, sleep, or hibernate your PC</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-network-connectivity">Microsoft Learn — Network connectivity</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/prepare-software-for-modern-standby">Microsoft Learn — Prepare software for modern standby</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/distinguishing-fast-startup-from-wake-from-hibernation">Microsoft Learn — Distinguishing Fast Startup from Wake-from-Hibernation</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/test/assessments/onoff-transition-performance">Microsoft Learn — On/Off Transition Performance</a></li>
+<li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-client/setup-upgrade-and-drivers/disable-and-re-enable-hibernation">Microsoft Learn — How to disable and re-enable hibernation</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options">Microsoft Learn — Powercfg command-line options</a></li>
+<li><a href="https://www.kingston.com/en/blog/servers-and-data-centers/understanding-ssd-endurance-tbw-dwpd">Kingston — Understanding SSD endurance: TBW and DWPD</a></li>
+<li><a href="https://uefi.org/confignamespace">UEFI Forum — Configuration Namespace Registry</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/system-shutdown-state-s5">Microsoft Learn — System Shutdown State S5</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-sleepstudy">Microsoft Learn — Modern standby SleepStudy</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-resume-performance">Microsoft Learn — Modern standby resume performance</a></li>
+</ol>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/windows-01-sleep-vs-hibernate/" data-page-title="Windows 系列 01：睡眠与休眠深度解析——机制、场景与排查" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

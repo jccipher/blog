@@ -1,0 +1,560 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Windows Series 01: Sleep vs. Hibernate—Mechanisms, Use Cases, and Troubleshooting · LATENTX</title>
+    <meta name="description" content="An in-depth comparison of S3 sleep, Modern Standby, and S4 hibernation, with Hybrid Sleep, Fast Startup, SSD writes, practical powercfg diagnostics, and a precise English–Chinese glossary.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Windows Series 01: Sleep vs. Hibernate—Mechanisms, Use Cases, and Troubleshooting · LATENTX">
+    <meta property="og:description" content="An in-depth comparison of S3 sleep, Modern Standby, and S4 hibernation, with Hybrid Sleep, Fast Startup, SSD writes, practical powercfg diagnostics, and a precise English–Chinese glossary.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/windows-01-sleep-vs-hibernate/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/windows-01-sleep-vs-hibernate/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/windows-01-sleep-vs-hibernate/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/windows-01-sleep-vs-hibernate/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/windows-01-sleep-vs-hibernate/"
+    data-page-title="Windows Series 01: Sleep vs. Hibernate—Mechanisms, Use Cases, and Troubleshooting"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/windows-01-sleep-vs-hibernate/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/windows-01-sleep-vs-hibernate/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat windows-01-sleep-vs-hibernate.md</div>
+    <h1>Windows Series 01: Sleep vs. Hibernate—Mechanisms, Use Cases, and Troubleshooting</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-19">PUBLISHED 2026.10.19</time>
+      <span>18 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#Windows</span><span>#Sleep</span><span>#Hibernate</span><span>#Modern Standby</span><span>#Power Management</span><span>#Troubleshooting</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/windows-01-sleep-vs-hibernate/" data-page-title="Windows Series 01: Sleep vs. Hibernate—Mechanisms, Use Cases, and Troubleshooting" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p>💻 A laptop loses charge overnight with its lid closed. A persistent problem survives a shutdown but disappears after a restart. Sleep appears in the power menu, while Hibernate is missing. Windows power states help explain all three.</p>
+<p><strong>For a short break and a quick return, start with Sleep. For a longer absence while preserving your workspace and reducing power consumption, consider Hibernate.</strong> Before choosing, identify the sleep model your computer actually uses.</p>
+<p>This is <strong>part 01 of the Windows series</strong>, covering Windows fundamentals and practical techniques. Windows 11 is the main user context; many mechanisms also apply to Windows 10. Documentation was checked on <strong>October 19, 2026</strong>. Available states, menu options, and wake capabilities depend on hardware, firmware, Windows version, and management policies.</p>
+<h2>1. Sleep, Hibernate, and Modern Standby are distinct terms</h2>
+<p>In the Windows interface, <strong>Sleep means 睡眠</strong>, and <strong>Hibernate means 休眠</strong>. <strong>Hibernation</strong> is the noun used for the mechanism or state.</p>
+<p>“Sleep keeps data in memory; hibernation saves it to disk” is a useful introduction, but misses an essential distinction: <strong>the Sleep menu action can use traditional S3 sleep or Modern Standby.</strong> Modern Standby uses <strong>S0 low-power idle</strong>. It is not another name for S3.[1][2]</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Traditional sleep: S3</th>
+<th>Modern Standby</th>
+<th>Hibernation: S4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>State retention</td>
+<td>Powered RAM</td>
+<td>Powered RAM within the S0 power model</td>
+<td>Resume state saved to non-volatile storage</td>
+</tr>
+<tr>
+<td>Execution while away</td>
+<td>No ordinary computation while in S3</td>
+<td>Brief, explicitly permitted background activity is possible</td>
+<td>No ordinary computation while in S4</td>
+</tr>
+<tr>
+<td>Ongoing power use</td>
+<td>Low; memory and some circuitry need power</td>
+<td>Designed to be low; depends on idle residency and activity</td>
+<td>Usually lower, close to shutdown levels</td>
+</tr>
+<tr>
+<td>Resume experience</td>
+<td>Usually quick</td>
+<td>Designed for rapid resume</td>
+<td>Usually slower; saved state must be restored</td>
+</tr>
+<tr>
+<td>Unexpected total power loss</td>
+<td>Unprotected S3 loses RAM state</td>
+<td>Unsaved RAM state is lost unless hibernation completed first</td>
+<td>A completed hibernation image survives loss of power</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Short breaks on S3-capable PCs</td>
+<td>Everyday pauses on modern devices</td>
+<td>Travel, longer absences, limited charging access</td>
+</tr>
+</tbody></table>
+<p>These are mechanism-level comparisons, not power or timing guarantees for every PC. <strong>S3 with Hybrid Sleep has additional protection from a disk image</strong>, discussed below.[1][3][4]</p>
+<h2>2. What happens between pausing and returning to work?</h2>
+<h3>S3 retains memory to support quick resumption</h3>
+<p>In S3, the processor stops executing while system memory retains state. DRAM needs refresh to preserve its contents. A computer that looks off can therefore still depend on power. On wake, the system restores the necessary hardware context and resumes the existing session.[3]</p>
+<p><strong>Suspend to RAM (STR)</strong> is a common technical description of S3. It should not be used indiscriminately for every Windows Sleep action: Modern Standby follows a different power model.[2][14]</p>
+<h3>S4 saves a hibernation image before removing the dependency on powered RAM</h3>
+<p>Windows compresses and saves the user and system state needed for resumption in <strong>hiberfil.sys</strong>. Resume involves reading and decompressing saved data and restoring device state. Storage performance, the amount of saved data, firmware, and drivers can therefore affect the experience.[1][10]</p>
+<p><strong>Suspend to Disk (STD)</strong> is a common description of S4. “Disk” refers to persistent storage here, including an SSD; it does not imply a mechanical hard drive.[14]</p>
+<p>Hibernation preserves session state. Save documents normally: a power failure before the image is written, a failed resume, or an application problem can still prevent recovery. It is also not a document backup. Restoring a window does not automatically restore an expired sign-in, disconnected remote session, or server-side job. Local session state and external service state are different things.</p>
+<h3>S0 low-power idle combines deep idle with permitted bursts of activity</h3>
+<p>Modern Standby progressively quiets software and powers down idle components. <strong>Remaining in S0 does not mean the CPU stays continuously busy.</strong> Processors can stop running in the lowest-power periods, and the system can briefly become active before returning to idle.[4]</p>
+<p>Microsoft distinguishes <strong>Screen Off</strong> and <strong>Sleep</strong> segments within a Modern Standby session. A dark display can coexist with work that delays entry into a deeper low-power phase. Low-power residency matters more than the display alone.[5]</p>
+<h2>3. Why can a closed laptop still use power or network resources?</h2>
+<p>Closing the lid is an input event. The configured <strong>lid close action</strong> determines its effect: sleep, hibernate, or another action. Battery and plugged-in settings can differ.[6]</p>
+<p>Modern Standby networking is neither universally connected nor universally disconnected. Windows manages connectivity according to power conditions, application needs, and policy. Permitting certain network activity does not promise continuous execution for every desktop program.[7]</p>
+<p>Preparation for modern sleep includes pausing desktop applications, handling power requests, and processing maintenance work. Activity in these phases can delay entry into lower power.[8]</p>
+<p>That leads to three practical recommendations:</p>
+<ul>
+<li><strong>For compilation, rendering, large downloads, or virtual-machine work:</strong> keep the computer awake, turn off the display separately, and provide power and ventilation. Modern Standby is not a general-purpose background-execution guarantee.</li>
+<li><strong>For a laptop that repeatedly becomes warm or loses charge in a bag:</strong> use Hibernate for transport while investigating the cause. Disabling Wi-Fi cannot address every possible source of activity.</li>
+<li><strong>For a quick move between meeting rooms and your desk:</strong> Sleep is convenient when it behaves reliably on your device.</li>
+</ul>
+<p>These recommendations follow from the mechanisms; they are not benchmark results for a particular laptop.</p>
+<h2>4. Hybrid Sleep, Fast Startup, and shutdown solve different problems</h2>
+<h3>Hybrid Sleep</h3>
+<p>On supported systems, Hybrid Sleep writes a hibernation image and then enters traditional sleep. With uninterrupted power, the system resumes from memory. After unexpected power loss, it can recover from the disk image. This is particularly useful for desktops that benefit from both fast resume and power-loss protection.[1]</p>
+<p>It is not the same as “sleep for a few hours, then hibernate,” nor is it a generic synonym for Modern Standby. A later transition to hibernation is a policy-driven change of state; Hybrid Sleep prepares its recovery image before entering sleep.</p>
+<h3>Fast Startup</h3>
+<p>Fast Startup ends user sessions and saves the Windows kernel image, including relevant kernel-mode driver state, to accelerate the next startup. It uses hibernation technology but <strong>does not preserve the full user workspace as ordinary hibernation does</strong>.[9]</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>What matters for the next session</th>
+<th>Useful for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hibernate</td>
+<td>Preserves current user and system state</td>
+<td>Continuing the current workspace</td>
+</tr>
+<tr>
+<td>Shut down with Fast Startup enabled</td>
+<td>Users are signed out; kernel startup state is retained</td>
+<td>Starting the PC more quickly</td>
+</tr>
+<tr>
+<td>Full shutdown, S5</td>
+<td>System sessions are recreated at the next boot</td>
+<td>Finishing without preserving the current session</td>
+</tr>
+<tr>
+<td>Restart</td>
+<td>Reinitializes Windows without the Fast Startup kernel-resume path</td>
+<td>Required updates and persistent system problems</td>
+</tr>
+</tbody></table>
+<p>When Windows requests a <strong>Restart</strong>, use Restart. Do not assume shutting down and powering on follows the same path. Applications reopening after shutdown can also result from application or operating-system session restoration; that alone does not prove full hibernation occurred.[9][10][15]</p>
+<h2>5. Choose by workload and context, not a universal time cutoff</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Suggested starting point</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Coffee break</td>
+<td>Sleep</td>
+<td>Minimize interruption on return</td>
+</tr>
+<tr>
+<td>Frequent short meetings</td>
+<td>Sleep; observe local battery behavior</td>
+<td>Convenience matters during repeated transitions</td>
+</tr>
+<tr>
+<td>Commuting, flying, or carrying a laptop in a bag</td>
+<td>Hibernate; wait for the transition to finish</td>
+<td>Reduce activity and power use during transport</td>
+</tr>
+<tr>
+<td>Resume several work windows tomorrow</td>
+<td>Hibernate</td>
+<td>Preserve the workspace across a longer absence</td>
+</tr>
+<tr>
+<td>Desktop exposed to unexpected power loss</td>
+<td>Consider Hybrid Sleep where supported; use a UPS for important work</td>
+<td>Combine memory-based resume with a recovery image</td>
+</tr>
+<tr>
+<td>Overnight downloads, training, or builds</td>
+<td>Stay awake with the display off</td>
+<td>The workload must keep executing</td>
+</tr>
+<tr>
+<td>Update requires a restart, or device state is faulty</td>
+<td>Save work and restart</td>
+<td>Reinitialize the system</td>
+</tr>
+<tr>
+<td>Several days away without needing the session</td>
+<td>Save work and shut down</td>
+<td>Avoid depending on an old session</td>
+</tr>
+</tbody></table>
+<p><strong>Save first, then pause.</strong> Preserving open windows should not become a reason to postpone necessary updates and restarts indefinitely.</p>
+<h3>Estimate energy use with explicit assumptions</h3>
+<p>Suppose a laptop has 60 Wh of usable battery capacity and averages 0.5 W during a particular sleep interval. Over eight hours:</p>
+<p><code>0.5 W × 8 h = 4 Wh</code>, or approximately <code>4 ÷ 60 = 6.7%</code> of that capacity.</p>
+<p><strong>The 0.5 W figure is hypothetical, not a Windows sleep specification.</strong> Measure actual average power, available capacity, and background activity. Battery percentages alone also make poor cross-device comparisons: the same percentage can represent different amounts of energy.</p>
+<h2>6. Hibernation-file space and SSD write endurance</h2>
+<p><strong>hiberfil.sys is a hibernation file; pagefile.sys is a paging file.</strong> They serve different purposes. The hibernation file normally resides in the system-drive root. Manage the feature through Windows rather than manually deleting system files.[11]</p>
+<p>Hibernation files have <strong>Full</strong> and <strong>Reduced</strong> types. A full file supports ordinary hibernation; a reduced file supports Fast Startup only. Finding hiberfil.sys therefore does not by itself establish that full hibernation is available.[1][12]</p>
+<p>Reserved file space, bytes written during one transition, and installed RAM capacity are different quantities. “16 GB of RAM means exactly 16 GB written on every hibernation” is not a sound rule. Nor should one fixed percentage be assumed to describe the file on every Windows version and configuration.</p>
+<p>Hibernation adds storage writes. SSD write endurance is commonly specified using <strong>TBW—Terabytes Written</strong>. Judge its significance against the drive&#39;s specification and workload, rather than assuming either no wear or inevitable damage.[13]</p>
+<p>For illustration, an actual write of 8 GB per hibernation, twice daily, would add <code>8 × 2 × 365 = 5,840 GB</code>, or <strong>5.84 TB per year</strong> in decimal units. This is a method for estimating incremental writes, <strong>not measured data or a drive-lifetime prediction</strong>. Other workloads also write data, and host writes do not equal internal NAND writes in every case.</p>
+<h2>7. Identify the platform before changing settings</h2>
+<p>The following commands are for readers to run on their own Windows PCs. Diagnostic commands inspect state or generate reports; configuration changes are separated below.</p>
+<h3>Step 1: Enumerate available power states</h3>
+<p>Open a terminal and run:</p>
+<pre><code class="language-powershell">powercfg /a
+</code></pre>
+<p>Look for <strong>Standby (S3)</strong>, <strong>Standby (S0 Low Power Idle)</strong>, and <strong>Hibernate</strong>, plus the reasons unavailable states cannot be used. Output is localized, but the state identifiers provide a useful reference.[12]</p>
+<p>Do not apply a generic “force S3 through the registry” tutorial to a Modern Standby platform. The power model depends on platform design. Microsoft does not support switching models through a simple setting on an existing Windows installation.[2]</p>
+<h3>Step 2: Enable full hibernation if needed</h3>
+<p>In an <strong>administrator terminal</strong>, run:</p>
+<pre><code class="language-powershell">powercfg /hibernate on
+powercfg /hibernate /type full
+powercfg /a
+</code></pre>
+<p>The first two commands change configuration and consume system-drive space; the third checks the result. Then open <strong>Control Panel → System and Security → Power Options → Choose what the power buttons do → Change settings that are currently unavailable</strong>. Select <strong>Hibernate</strong> under the available shutdown settings and save.[6][11][12]</p>
+<p>If the option remains unavailable, follow the explanation from <code>powercfg /a</code> and check platform support or organizational policy. Commands cannot create a capability the hardware does not support.</p>
+<p>To deliberately disable hibernation later, use <code>powercfg /hibernate off</code>. Fast Startup and Hybrid Sleep also depend on the hibernation file and become unavailable; this is not a storage-cleanup command without functional consequences.[1][11]</p>
+<h3>Step 3: Separate failure to sleep, unexpected wake, and excessive standby drain</h3>
+<p>Choose the relevant command in an administrator terminal:[12]</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Question it helps answer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>powercfg /requests</code></td>
+<td>Which current application or driver power requests can prevent automatic sleep or display power-down?</td>
+</tr>
+<tr>
+<td><code>powercfg /lastwake</code></td>
+<td>What reason was recorded for the last wake from sleep?</td>
+</tr>
+<tr>
+<td><code>powercfg /waketimers</code></td>
+<td>Which wake timers are currently active?</td>
+</tr>
+<tr>
+<td><code>powercfg /devicequery wake_armed</code></td>
+<td>Which devices are currently enabled to wake the computer?</td>
+</tr>
+</tbody></table>
+<p>These outputs are clues, not a complete incident history. Current <code>/requests</code> output cannot prove what happened last night; <code>/lastwake</code> does not explain every burst of Modern Standby activity. Avoid disabling every wake source or overriding all power requests just because one device or process appears.</p>
+<p>On a <strong>Modern Standby PC</strong>, generate a report from a writable directory:</p>
+<pre><code class="language-powershell">powercfg /sleepstudy /output sleepstudy-report.html
+</code></pre>
+<p>SleepStudy covers the last three days by default. Examine the affected interval&#39;s power source, energy use, Screen Off and Sleep segments, <strong>Top Offenders</strong>, and low-power residency. <strong>DRIPS—Deepest Runtime Idle Platform State</strong>—describes the platform&#39;s deepest runtime idle state; its residency helps show whether the system spent most of the interval in low power.[16]</p>
+<p>For reproduction, change one condition at a time: disconnect a dock, for example, and compare intervals of the same duration. Record Windows version, firmware, networking, and power source. Investigate relevant manufacturer updates once a driver or peripheral correlation emerges. This produces better evidence than changing an entire set of power options at once.</p>
+<h2>8. Professional English–Chinese terminology</h2>
+<p>The glossary combines Windows interface terms, Microsoft technical terminology, and established computing vocabulary. <strong>Suspend, standby, and sleep are not interchangeable across operating systems.</strong> Include S3, S4, or S0 low-power idle when precision matters.[1][3][5][9][12][14][16]</p>
+<table>
+<thead>
+<tr>
+<th>English term</th>
+<th>Chinese equivalent</th>
+<th>Technical usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sleep</td>
+<td>睡眠</td>
+<td>Windows menu action; identify the underlying model</td>
+</tr>
+<tr>
+<td>Hibernate / Hibernation</td>
+<td>休眠</td>
+<td>Menu action or verb / noun describing the mechanism or state</td>
+</tr>
+<tr>
+<td>Traditional Sleep (S3)</td>
+<td>传统睡眠</td>
+<td>Specifically the S3 model</td>
+</tr>
+<tr>
+<td>Modern Standby</td>
+<td>现代待机</td>
+<td>Windows&#39; modern low-power idle model</td>
+</tr>
+<tr>
+<td>S0 low-power idle</td>
+<td>S0 低功耗空闲</td>
+<td>S0 does not imply continuous full-speed execution</td>
+</tr>
+<tr>
+<td>Suspend to RAM (STR)</td>
+<td>挂起到内存</td>
+<td>Common description of S3</td>
+</tr>
+<tr>
+<td>Suspend to Disk (STD)</td>
+<td>挂起到磁盘</td>
+<td>Common description of S4; storage may be an SSD</td>
+</tr>
+<tr>
+<td>Hybrid Sleep</td>
+<td>混合睡眠</td>
+<td>Traditional sleep protected by a hibernation image</td>
+</tr>
+<tr>
+<td>Fast Startup</td>
+<td>快速启动</td>
+<td>User sessions end; kernel startup state is retained</td>
+</tr>
+<tr>
+<td>Full shutdown / Soft off (S5)</td>
+<td>完整关机／软关机</td>
+<td>Not every Shut down action follows this path</td>
+</tr>
+<tr>
+<td>Hibernation file / Hiberfile</td>
+<td>休眠文件</td>
+<td>Typically hiberfil.sys on Windows</td>
+</tr>
+<tr>
+<td>Volatile memory</td>
+<td>易失性内存</td>
+<td>Requires power to retain contents, as DRAM does</td>
+</tr>
+<tr>
+<td>Non-volatile storage</td>
+<td>非易失性存储</td>
+<td>Retains data without power, as SSDs do</td>
+</tr>
+<tr>
+<td>Kernel session / User session</td>
+<td>内核会话／用户会话</td>
+<td>Central to distinguishing Fast Startup from full hibernation</td>
+</tr>
+<tr>
+<td>Wake event / Resume</td>
+<td>唤醒事件／恢复</td>
+<td>Trigger / subsequent restoration process</td>
+</tr>
+<tr>
+<td>Resume latency</td>
+<td>恢复延迟</td>
+<td>Specify whether the endpoint is display-on, sign-in, or usability</td>
+</tr>
+<tr>
+<td>Wake timer</td>
+<td>唤醒定时器</td>
+<td>Can trigger a return from a low-power state</td>
+</tr>
+<tr>
+<td>Power request</td>
+<td>电源请求</td>
+<td>An application or driver power-management request</td>
+</tr>
+<tr>
+<td>Lid close action</td>
+<td>合盖操作</td>
+<td>Configured response to closing a laptop lid</td>
+</tr>
+<tr>
+<td>Deepest Runtime Idle Platform State (DRIPS)</td>
+<td>最深运行时空闲平台状态</td>
+<td>A Modern Standby analysis term</td>
+</tr>
+<tr>
+<td>Advanced Configuration and Power Interface (ACPI)</td>
+<td>高级配置与电源接口</td>
+<td>A foundational system power-management specification</td>
+</tr>
+<tr>
+<td>Write endurance</td>
+<td>写入耐久度</td>
+<td>SSD write tolerance, assessed using measures such as TBW</td>
+</tr>
+</tbody></table>
+<p>Use <strong>resume from sleep</strong> or <strong>resume from hibernation</strong>, rather than calling every return a <strong>reboot</strong>. For performance comparisons, distinguish display-on, an interactive desktop, and restored application/network readiness. Microsoft performance assessments also separate transition phases; a quickly illuminated screen does not mean every workload is ready.[10][17]</p>
+<p>A useful first check is straightforward: run <code>powercfg /a</code>, inspect both battery and plugged-in lid settings, and choose separate actions for short breaks and extended transport. Those choices make the power menu fit the way you actually work.🔋</p>
+<h2>References</h2>
+<ol>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/power/system-power-states">Microsoft Learn — System power states</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby">Microsoft Learn — What is Modern Standby</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/system-sleeping-states">Microsoft Learn — System Sleeping States</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-vs-s3">Microsoft Learn — Modern Standby vs S3</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-states">Microsoft Learn — Modern Standby states</a></li>
+<li><a href="https://support.microsoft.com/en-us/windows/experience/power-battery/shut-down-sleep-or-hibernate-your-pc">Microsoft Support — Shut down, sleep, or hibernate your PC</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-network-connectivity">Microsoft Learn — Network connectivity</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/prepare-software-for-modern-standby">Microsoft Learn — Prepare software for modern standby</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/distinguishing-fast-startup-from-wake-from-hibernation">Microsoft Learn — Distinguishing Fast Startup from Wake-from-Hibernation</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/test/assessments/onoff-transition-performance">Microsoft Learn — On/Off Transition Performance</a></li>
+<li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-client/setup-upgrade-and-drivers/disable-and-re-enable-hibernation">Microsoft Learn — How to disable and re-enable hibernation</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/powercfg-command-line-options">Microsoft Learn — Powercfg command-line options</a></li>
+<li><a href="https://www.kingston.com/en/blog/servers-and-data-centers/understanding-ssd-endurance-tbw-dwpd">Kingston — Understanding SSD endurance: TBW and DWPD</a></li>
+<li><a href="https://uefi.org/confignamespace">UEFI Forum — Configuration Namespace Registry</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/system-shutdown-state-s5">Microsoft Learn — System Shutdown State S5</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-sleepstudy">Microsoft Learn — Modern standby SleepStudy</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-resume-performance">Microsoft Learn — Modern standby resume performance</a></li>
+</ol>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/windows-01-sleep-vs-hibernate/" data-page-title="Windows Series 01: Sleep vs. Hibernate—Mechanisms, Use Cases, and Troubleshooting" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
