@@ -1,0 +1,730 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>MacBook Best Practices 01: Mobile Work, Closed-Display Setup, and Battery Care · LATENTX</title>
+    <meta name="description" content="Practical settings for sleep, mobile work, external displays, background tasks, and battery care on Apple silicon MacBooks with macOS 27, with Monterey guidance for older Intel models and brief Windows reference points.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="MacBook Best Practices 01: Mobile Work, Closed-Display Setup, and Battery Care · LATENTX">
+    <meta property="og:description" content="Practical settings for sleep, mobile work, external displays, background tasks, and battery care on Apple silicon MacBooks with macOS 27, with Monterey guidance for older Intel models and brief Windows reference points.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/macbook-01-mobile-work-display-battery/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/macbook-01-mobile-work-display-battery/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/macbook-01-mobile-work-display-battery/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/macbook-01-mobile-work-display-battery/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/macbook-01-mobile-work-display-battery/"
+    data-page-title="MacBook Best Practices 01: Mobile Work, Closed-Display Setup, and Battery Care"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/macbook-01-mobile-work-display-battery/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/macbook-01-mobile-work-display-battery/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat macbook-01-mobile-work-display-battery.md</div>
+    <h1>MacBook Best Practices 01: Mobile Work, Closed-Display Setup, and Battery Care</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-19">PUBLISHED 2026.10.19</time>
+      <span>18 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#MacBook</span><span>#Apple Silicon</span><span>#Sleep</span><span>#Battery</span><span>#External Display</span><span>#Productivity</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/macbook-01-mobile-work-display-battery/" data-page-title="MacBook Best Practices 01: Mobile Work, Closed-Display Setup, and Battery Care" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p>💻 A few everyday MacBook questions are deceptively easy to get wrong:</p>
+<ul>
+<li>Can you simply close the lid when you finish working?</li>
+<li>Will downloads and development tasks keep running after the screen goes dark?</li>
+<li>How should you set up a MacBook with an external display?</li>
+<li>Does leaving it plugged in accelerate battery aging?</li>
+<li>Which settings matter when an older MacBook runs background tasks for extended periods?</li>
+</ul>
+<p>Understanding these details helps prevent interruptions and makes the computer fit the way you actually work.</p>
+<p>This is <strong>Part 01 of the MacBook Best Practices series</strong>. It focuses on <strong>M1 and later Apple silicon MacBooks, with settings based on macOS 27</strong>, and includes <strong>macOS 12 Monterey</strong> guidance for older Intel MacBooks. Available options vary by model and operating system version. Documentation was checked on <strong>October 19, 2026</strong>.[1]</p>
+<hr>
+<h2>🧠 1. Start with the distinction: locking, display sleep, system sleep, and shutdown</h2>
+<p><strong>A dark screen does not prove that the computer is asleep.</strong></p>
+<p>For everyday use, pay attention to two separate questions: is the display off, and is the system still executing tasks?</p>
+<table>
+<thead>
+<tr>
+<th>MacBook state or feature</th>
+<th>What it means</th>
+<th>Typical use</th>
+<th>Windows reference point</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Lock Screen</strong></td>
+<td>Requires authentication to resume interactive access; locking alone does not require background tasks to stop</td>
+<td>Stepping away from a desk or working in a public place</td>
+<td>Lock</td>
+</tr>
+<tr>
+<td><strong>Display Sleep</strong></td>
+<td>Turns off the display; continued system activity depends on sleep settings and application activity</td>
+<td>Keeping a download, build, or computation running with the screen off</td>
+<td>Turn off the display</td>
+</tr>
+<tr>
+<td><strong>System Sleep</strong></td>
+<td>Enters a low-power state; ordinary applications should not be assumed to execute continuously</td>
+<td>A lunch break, a short absence, or moving between locations</td>
+<td>Sleep; the underlying implementation is not necessarily equivalent</td>
+</tr>
+<tr>
+<td><strong>Safe Sleep</strong></td>
+<td>Apple&#39;s documented mechanism for preserving and restoring work state</td>
+<td>Understanding protection against loss of power while asleep</td>
+<td>Some protection goals resemble Hibernate or Hybrid Sleep</td>
+</tr>
+<tr>
+<td><strong>Closed-display Mode</strong></td>
+<td>Allows work on an external display with the built-in display closed, when the required conditions are met</td>
+<td>A desk setup</td>
+<td>External-display use combined with lid-close power settings</td>
+</tr>
+<tr>
+<td><strong>Shut Down</strong></td>
+<td>Ends system operation; using the computer again requires startup</td>
+<td>Extended non-use, transport, or maintenance</td>
+<td>Shut down</td>
+</tr>
+</tbody></table>
+<p>Apple describes Safe Sleep as preserving work state for recovery after a power interruption. That does not establish identical internals across every MacBook, nor does it justify assuming that Apple silicon uses the same hibernation parameters as older Intel models.[2][3]</p>
+<p>For readers familiar with Windows, <strong>Hibernate</strong> provides a reference for saving system state to nonvolatile storage before entering a low-power state. <strong>Hybrid Sleep</strong> combines traditional sleep with hibernation protection. The everyday macOS interface generally does not offer a separate Hibernate command equivalent to the Windows option.</p>
+<p>Likewise, <strong>Modern Standby is a specific Windows power model</strong>, not the formal name for sleep on an Apple silicon MacBook. User experience can be compared without equating the implementations. Reopening application windows after startup also does not restore the entire previous memory state.[4][16]</p>
+<p>💡 <strong>A practical way to choose:</strong></p>
+<ul>
+<li>Need work to continue while you are away? Keep the system awake while allowing the display to turn off.</li>
+<li>Want to save energy and resume shortly? Use sleep.</li>
+<li>Expect an extended period of non-use? Save your work and shut down.</li>
+</ul>
+<p><strong>Preserving state during sleep does not replace saving files or backing up data.</strong></p>
+<hr>
+<h2>⚙️ 2. Establish an everyday office configuration</h2>
+<p>You do not need to begin by changing low-level power parameters. Display, locking, sleep, and charging settings cover most office needs.</p>
+<h3>1. Apple silicon MacBooks: three places to check</h3>
+<p>In macOS 27, focus on:</p>
+<ul>
+<li><strong>System Settings → Lock Screen:</strong> display-off timers for battery and power-adapter use.</li>
+<li><strong>System Settings → Battery → Options:</strong> settings such as preventing automatic sleep on power adapter and waking for network access.</li>
+<li><strong>System Settings → Battery → charging settings:</strong> Optimized Battery Charging and Charge Limit.</li>
+</ul>
+<p>The important distinction is that <strong>the display-off timer and permission for the system to sleep after the display turns off are separate controls</strong>.[2][7]</p>
+<h3>2. A practical starting configuration</h3>
+<p>These are <strong>editorial recommendations, not Apple&#39;s factory defaults</strong>. Adjust them to your reading, meeting, and presentation habits.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Suggested starting point</th>
+<th>How to adapt it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Turn display off on battery when inactive</td>
+<td><strong>3–5 minutes</strong></td>
+<td>Allow longer if you often read static content without input</td>
+</tr>
+<tr>
+<td>Turn display off on power adapter when inactive</td>
+<td><strong>About 10 minutes</strong></td>
+<td>Background work usually does not need a lit screen</td>
+</tr>
+<tr>
+<td>Require authentication after sleep or the screen saver</td>
+<td><strong>Immediately</strong></td>
+<td>Appropriate for office and mobile use</td>
+</tr>
+<tr>
+<td>Prevent automatic sleeping on power adapter</td>
+<td><strong>Enable when the task requires it</strong></td>
+<td>Allow normal sleep when no continuing work is needed</td>
+</tr>
+<tr>
+<td>Wake for network access</td>
+<td>Choose Never if unnecessary, or restrict to power-adapter use as appropriate</td>
+<td>Avoid enabling it indefinitely without a reason</td>
+</tr>
+<tr>
+<td>Optimized Battery Charging</td>
+<td><strong>Keep enabled</strong></td>
+<td>Let the system manage charging around your routine</td>
+</tr>
+<tr>
+<td>Low Power Mode</td>
+<td>Use as needed for reading, documents, and travel</td>
+<td>Consider the performance trade-off for compilation and rendering</td>
+</tr>
+</tbody></table>
+<h3>3. Older Intel MacBooks: a different settings layout</h3>
+<p>In macOS Monterey, the main controls are under:</p>
+<p><strong>System Preferences → Battery → Battery / Power Adapter</strong></p>
+<p>For tasks that must continue running, look for the Power Adapter option:</p>
+<p><strong>“Prevent your Mac from automatically sleeping when the display is off.”</strong></p>
+<p>Some controls depend on hardware. Do not expect every older model to reproduce the settings interface of a newer MacBook.[5]</p>
+<hr>
+<h2>🎒 3. Scenario one: frequent mobile work</h2>
+<p>When moving between an office, meeting room, and café, the priorities are <strong>easy resumption, dependable battery life, and protection when you step away</strong>.</p>
+<h3>Recommended habits</h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Recommended action</th>
+<th>Detail to remember</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Leaving your desk briefly</td>
+<td>Lock the screen</td>
+<td>Use <code>Control + Command + Q</code></td>
+</tr>
+<tr>
+<td>Moving to another meeting room</td>
+<td>Save your work, then close the lid</td>
+<td>Sleep may suspend a local long-running task</td>
+</tr>
+<tr>
+<td>Reading or writing documents</td>
+<td>Enable Low Power Mode when useful</td>
+<td>Use comfortable brightness and quit heavy tools you do not need</td>
+</tr>
+<tr>
+<td>Working away from power all day</td>
+<td>Prepare enough charge beforehand</td>
+<td>Do not sacrifice useful runtime to maintain an arbitrary percentage</td>
+</tr>
+<tr>
+<td>Commuting or putting the laptop in a bag</td>
+<td>Deal with active tasks and disconnect unnecessary accessories</td>
+<td>Do not leave it running a heavy workload inside a bag</td>
+</tr>
+<tr>
+<td>Not using it for several days</td>
+<td>Save, sync, and shut down as appropriate</td>
+<td>For extended storage, also consider charge level and temperature</td>
+</tr>
+</tbody></table>
+<p>Low Power Mode prioritizes lower energy use. Availability and performance effects vary by model, so choose according to the task&#39;s actual duration and available power.[13]</p>
+<h3>A short check before closing the lid</h3>
+<ol>
+<li><strong>Save files you are editing.</strong></li>
+<li><strong>Confirm that important synchronization has finished where needed.</strong></li>
+<li><strong>Deal with active downloads, builds, and computations.</strong></li>
+<li><strong>Safely eject external storage and disconnect unnecessary docks.</strong></li>
+<li><strong>End temporary sleep-prevention sessions you no longer need.</strong></li>
+</ol>
+<p>Sleep helps you resume the working environment quickly, but autosave behavior, sync progress, and task recovery vary between applications.</p>
+<h3>💡 Plan long tasks before you leave</h3>
+<p>Suppose a data-processing job takes two hours, but you need to leave with the laptop in ten minutes.</p>
+<p>Depending on the task, you can:</p>
+<ul>
+<li>Leave the computer on a ventilated desk, connected to power, until the job finishes.</li>
+<li>Use a workflow that supports pausing and checkpoint recovery.</li>
+<li>Run the task in a remote computing environment that operates independently.</li>
+</ul>
+<p><strong>A remote task also needs a way to survive a disconnected session.</strong> Merely opening a remote terminal does not provide that guarantee.</p>
+<hr>
+<h2>🖥️ 4. Scenario two: working with the lid closed and an external display</h2>
+<p>At a fixed desk, an external display, keyboard, and mouse can make a MacBook more comfortable to use for extended work.</p>
+<p>This arrangement is commonly called <strong>Closed-display Mode</strong>, also known as <strong>Clamshell Mode</strong>.</p>
+<h3>1. Meet the basic conditions first</h3>
+<p>Make the connections and test them with the lid open:</p>
+<ol>
+<li>Connect the external display.</li>
+<li>Connect an external keyboard and mouse or trackpad.</li>
+<li>Connect suitable power.</li>
+<li>Check resolution, scaling, and refresh rate.</li>
+<li>Close the lid and confirm that the external display works normally.</li>
+</ol>
+<p>Apple&#39;s display troubleshooting guidance specifies power and an external keyboard and mouse when using a Mac laptop with the lid closed. A display that supplies suitable power can also serve as the power source.[6][17]</p>
+<h3>2. Recommended desk settings</h3>
+<table>
+<thead>
+<tr>
+<th>Setting or equipment</th>
+<th>Recommendation</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Power</td>
+<td>Use an adequately rated adapter or display power supply</td>
+<td>Avoid insufficient power during demanding work</td>
+</tr>
+<tr>
+<td>External displays</td>
+<td>Check supported display count, resolution, and refresh rate for the exact model</td>
+<td>M-series models do not all have the same display capabilities</td>
+</tr>
+<tr>
+<td>Display-off timer</td>
+<td>Start with around 10 minutes of inactivity</td>
+<td>The display need not stay lit while you are away</td>
+</tr>
+<tr>
+<td>Automatic system sleep</td>
+<td>Allow it for ordinary office use; prevent it when a continuing task requires it</td>
+<td>Match the task being performed</td>
+</tr>
+<tr>
+<td>Charging</td>
+<td>Use the charging-management features the system supports</td>
+<td>Reduce unnecessary time at a high state of charge</td>
+</tr>
+<tr>
+<td>Placement</td>
+<td>Use a firm, ventilated surface and keep cooling paths clear</td>
+<td>Closing the lid does not remove the need for ventilation</td>
+</tr>
+</tbody></table>
+<p><strong>Closing the lid does not universally increase native external-display support.</strong> Check your exact model&#39;s specifications before buying a display or dock. Video connections and charging on older Intel MacBooks also do not necessarily support the single-cable arrangement used by newer models.[14]</p>
+<h3>3. Closed-display use does not require staying awake forever</h3>
+<p>The computer can keep running with an external display and the lid closed, but it does not have to remain awake continuously.</p>
+<p>For example:</p>
+<ul>
+<li>Writing documents and attending meetings during the day: allow normal sleep when you leave.</li>
+<li>Exporting a video in the evening: temporarily prevent automatic sleep until the task finishes.</li>
+<li>Once a download completes: return to normal energy-saving settings.</li>
+</ul>
+<p>💡 <strong>Tying sleep prevention to the duration of a task is easier to manage than leaving every device awake indefinitely.</strong></p>
+<hr>
+<h2>🔄 5. Scenario three: long-running background tasks on an older Intel MacBook</h2>
+<p>For lightweight scripts, scheduled processing, and other background work, focus on this requirement:</p>
+<p><strong>The display can turn off, the task needs to keep running, and interruptions need a recovery path.</strong></p>
+<h3>1. Core settings to address first</h3>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Recommended approach</th>
+<th>What it addresses</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Power</td>
+<td>Maintain reliable external power</td>
+<td>Avoid continuously draining the battery</td>
+</tr>
+<tr>
+<td>System sleep</td>
+<td>Prevent automatic sleep on power adapter while continuing tasks require it</td>
+<td>Avoid tasks pausing after inactivity</td>
+</tr>
+<tr>
+<td>Display</td>
+<td>Allow automatic display sleep</td>
+<td>Avoid keeping the screen lit unnecessarily</td>
+</tr>
+<tr>
+<td>Lid position</td>
+<td>Prefer an open lid with the display off</td>
+<td>Reduce dependence on closed-display conditions</td>
+</tr>
+<tr>
+<td>Task startup</td>
+<td>Distinguish startup-time execution from execution after user login</td>
+<td>Avoid missing tasks after a restart</td>
+</tr>
+<tr>
+<td>Recovery</td>
+<td>Add suitable retries, logs, and checkpoints</td>
+<td>Reduce the cost of a failed run</td>
+</tr>
+<tr>
+<td>Maintenance</td>
+<td>Schedule maintenance and verify task status after restarting</td>
+<td>Confirm more than just successful boot</td>
+</tr>
+<tr>
+<td>Data protection</td>
+<td>Keep independent backups and test restoration</td>
+<td>Prepare for storage or device failure</td>
+</tr>
+</tbody></table>
+<p>On Monterey, begin with <strong>System Preferences → Battery → Power Adapter</strong>. The graphical settings are generally easier to understand and maintain than low-level power changes.</p>
+<h3>2. Temporary tasks: prevent idle sleep for a limited time</h3>
+<p>For a one-off download or computation, macOS includes <code>caffeinate</code>.</p>
+<p>For example, prevent idle system sleep for one hour:</p>
+<pre><code class="language-bash">caffeinate -i -t 3600
+</code></pre>
+<p>Here:</p>
+<ul>
+<li><code>-i</code> prevents idle system sleep.</li>
+<li><code>-t 3600</code> sets the duration to 3,600 seconds.</li>
+</ul>
+<p>To end it early, press <code>Control + C</code> in the terminal running the command.</p>
+<p><strong>This is not permission to keep running with the lid closed, and it does not protect against power loss, restarts, or hardware failure.</strong> It solves a temporary idle-sleep problem, not overall task reliability. Check the installed manual with <code>man caffeinate</code> for parameter details.[12]</p>
+<h3>3. Continuing tasks: distinguish LaunchAgents from LaunchDaemons</h3>
+<p>macOS uses <code>launchd</code> to manage various background jobs:</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Scope</th>
+<th>Typical purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>LaunchAgent</strong></td>
+<td>A user session, normally loaded when the user logs in</td>
+<td>Automation tied to the user&#39;s environment</td>
+</tr>
+<tr>
+<td><strong>LaunchDaemon</strong></td>
+<td>System scope, with jobs that can load before user login</td>
+<td>Background services independent of a graphical login session</td>
+</tr>
+</tbody></table>
+<p>Their execution environments, permissions, and accessible resources differ. An application that depends on a desktop session should not simply be converted into a LaunchDaemon because you want it to start automatically.[10]</p>
+<p>Test the full recovery sequence: <strong>after a restart, is the disk unlocked, is the required data accessible, and has the task actually started?</strong> On older Intel Macs using FileVault, include startup unlocking in maintenance planning.[15]</p>
+<h3>4. Software compatibility is part of reliability</h3>
+<p>Being able to install an old version does not establish that it remains maintained or supported.</p>
+<p>For example, Docker Desktop supports the current and two previous major macOS releases. Monterey is outside that current support window. If containers are essential to continuing work, check supported platforms and versions before deciding which tasks the device should handle.[11]</p>
+<p>Also check battery condition, unusual heat, and unexpected shutdowns. Leaving an older device plugged in does not remove existing hardware problems.</p>
+<hr>
+<h2>🔋 6. Scenario four: extending battery lifespan</h2>
+<p>Start with two terms that are often confused:</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+<th>Question it answers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Battery Life</strong></td>
+<td>Runtime on a charge</td>
+<td>How long can I work before recharging?</td>
+</tr>
+<tr>
+<td><strong>Battery Lifespan</strong></td>
+<td>Useful service life before replacement is needed</td>
+<td>How long will the battery remain useful?</td>
+</tr>
+</tbody></table>
+<p>Lower brightness mainly helps runtime on the current charge. Managing temperature and charging habits is more concerned with long-term lifespan. The goals are related, but different.[8]</p>
+<h3>1. Use the built-in charging features</h3>
+<p><strong>Optimized Battery Charging</strong> learns your charging routine and delays a full charge in suitable circumstances.</p>
+<p><strong>Charge Limit</strong> lets you set an upper charging target. Apple silicon Macs running macOS 26.4 or later support a native limit between <strong>80% and 100%</strong>.</p>
+<p>These are different controls: one adapts charging timing to your routine, while the other specifies a limit. Use <strong>Charge to Full Now</strong> when you need more runtime. An occasional charge to 100% to maintain accurate state-of-charge estimates is normal behavior.[7]</p>
+<h3>2. Match charging to your work pattern</h3>
+<table>
+<thead>
+<tr>
+<th>Work pattern</th>
+<th>Suggested strategy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Frequent mobile work with substantial daily battery use</td>
+<td>Keep optimized charging enabled and charge fully before leaving when needed</td>
+</tr>
+<tr>
+<td>Mostly working at a desk on external power</td>
+<td>Where supported, start with an 80% charge limit and adjust to actual needs</td>
+</tr>
+<tr>
+<td>A mixture of desk and mobile work</td>
+<td>Use a suitable everyday limit and prepare enough charge before travel</td>
+</tr>
+<tr>
+<td>Extended storage</td>
+<td>Shut down at roughly half charge, store somewhere cool and dry, and check periodically</td>
+</tr>
+<tr>
+<td>An older Intel MacBook</td>
+<td>Use the features the model actually supports and prioritize temperature, condition, and maintenance</td>
+</tr>
+</tbody></table>
+<p><strong>80% is an optional operating choice, not a number everyone must maintain every day.</strong></p>
+<p>If a charge limit leaves you worrying about runtime daily, increase it. The configuration should support your work.</p>
+<h3>3. Give temperature management priority</h3>
+<p>Good everyday habits include:</p>
+<ul>
+<li>Work on a firm, ventilated surface.</li>
+<li>Avoid extended use on bedding or soft cushions that obstruct cooling.</li>
+<li>Do not put the computer in a bag while it continues running tasks.</li>
+<li>Avoid prolonged charging and heavy workloads in hot surroundings.</li>
+<li>Maintain an appropriate charge level during storage and check it periodically.</li>
+</ul>
+<p>Apple warns that high temperatures can permanently reduce battery capacity. For long-term storage, it recommends approximately 50% charge rather than a full or completely depleted battery.[8]</p>
+<h3>4. You do not need to repeatedly unplug it for battery care</h3>
+<p>For ordinary desk work, it is reasonable to stay connected to power and use the system&#39;s charging controls.</p>
+<p>There is no need to deliberately drain the battery before recharging, or add charge cycles to “exercise” it. Watch practical runtime, unexpected shutdowns, charging problems, and battery service messages instead.[18]</p>
+<p>Check older Intel models individually. Apple&#39;s Intel <strong>Battery Health Management</strong> feature has hardware requirements; installing Monterey alone does not establish support. It should also not be confused with Optimized Battery Charging.[9]</p>
+<hr>
+<h2>🛠️ 7. When something seems wrong, identify what is happening</h2>
+<p>Sleep problems can involve the display, applications, power management, accessories, or the network. Identify the symptom before changing settings.</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>First thing to check</th>
+<th>Direction to take</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The screen is dark but a task continues</td>
+<td>Whether only the display has turned off</td>
+<td>This may be the intended behavior</td>
+</tr>
+<tr>
+<td>A download stops after closing the lid</td>
+<td>Whether the system entered sleep</td>
+<td>Keep the lid open, or meet supported closed-display conditions</td>
+</tr>
+<tr>
+<td>Charge keeps falling while connected to power</td>
+<td>Power capacity, cable, dock, and workload</td>
+<td>Check the full power connection</td>
+</tr>
+<tr>
+<td>The computer stays awake long after you leave</td>
+<td>Application activity, temporary sleep prevention, and accessories</td>
+<td>Identify the specific cause</td>
+</tr>
+<tr>
+<td>The laptop feels unusually hot in a bag</td>
+<td>Continuing tasks or repeated wake events</td>
+<td>Take it out to cool, stop the workload, and investigate</td>
+</tr>
+<tr>
+<td>A background task fails to resume after restart</td>
+<td>Disk unlocking, login requirements, startup configuration, and logs</td>
+<td>Test the full recovery sequence</td>
+</tr>
+</tbody></table>
+<p>For more detail, these commands inspect settings without changing them:</p>
+<pre><code class="language-bash"># Show power-management settings for different power sources
+pmset -g custom
+
+# Show current power-management assertions, including sleep-prevention activity
+pmset -g assertions
+</code></pre>
+<p>A <strong>Power Management Assertion</strong> is a request concerning a power state—for example, an application&#39;s request to defer idle sleep until work is complete.</p>
+<p>An assertion does not necessarily indicate a faulty application. Determine what the application is doing before ending it.[12]</p>
+<p>Avoid copying <code>hibernatemode</code> or <code>standby</code> adjustments without checking the model. In particular, do not treat settings advice for older Intel Macs as a universal recipe for Apple silicon MacBooks.</p>
+<hr>
+<h2>📚 8. Intensive study and office work: make the workflow easy to resume, too</h2>
+<p>Power and battery settings determine how the device runs. For sustained learning, research, and development, the work itself also needs to be easy to resume.</p>
+<h3>🧩 1. Create stable workspaces for different tasks</h3>
+<p>Organize desktops and windows around reading, writing, development, and communication.</p>
+<p>The aim is to spend less time finding material, switching context, and rebuilding concentration. There is no need to maintain an elaborate layout merely for tidiness.</p>
+<h3>🎯 2. Protect uninterrupted time with Focus</h3>
+<p>Set suitable notification rules for study, writing, and development while allowing genuinely necessary contacts and alerts.</p>
+<p>Before starting a focused session, define the output: a page of notes, an experiment result, or a working piece of code.</p>
+<h3>📝 3. Turn reading into reusable work</h3>
+<p>Use a simple sequence:</p>
+<p><strong>Collect material → Read with a question → Record your understanding → Test it → Publish notes or an article</strong></p>
+<p>End each session with a sentence describing the next step. It makes restarting easier when you open the laptop again.</p>
+<h3>⚡ 4. Run demanding tools when they are needed</h3>
+<p>Stop containers, virtual machines, and local models when the current task does not require them.</p>
+<p>When diagnosing slow performance or excess power use, consider CPU, memory pressure, and energy information in <strong>Activity Monitor</strong> together. A large amount of used memory alone is not enough to establish a problem.</p>
+<h3>🔄 5. Give long tasks a recovery path</h3>
+<p>For lengthy experiments and processing jobs, progressively add:</p>
+<ul>
+<li>Clearly defined input and output locations.</li>
+<li>Reproducible environments and dependency versions.</li>
+<li>Useful execution logs.</li>
+<li>Checkpoints and failure retries.</li>
+<li>Necessary backups and tested restoration.</li>
+</ul>
+<p>Changing devices, losing a connection, or restarting then becomes less likely to force the work to start from scratch.</p>
+<h3>🌙 6. End the day with a short closing routine</h3>
+<p>Spend a few minutes to:</p>
+<ul>
+<li>Save files and confirm important synchronization.</li>
+<li>Commit code as appropriate for the project.</li>
+<li>Stop computations you do not currently need.</li>
+<li>Write down tomorrow&#39;s first step.</li>
+<li>Choose sleep or continued operation according to remaining background work.</li>
+</ul>
+<p>The next installment, <strong>MacBook Best Practices 02: Building an Effective Learning, Research, and Development Workflow</strong>, will explore workspace organization, information management, development environments, automation, and coordination between local and remote tasks.</p>
+<h2>References</h2>
+<ol>
+<li><a href="https://www.apple.com/os/macos/">Apple: macOS 27</a></li>
+<li><a href="https://support.apple.com/guide/mac-help/set-sleep-and-wake-settings-mchle41a6ccd/mac">Apple: Set sleep and wake settings for your Mac</a></li>
+<li><a href="https://support.apple.com/guide/mac-help/what-is-safe-sleep-mh10328/mac">Apple: What is Safe Sleep?</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/power/system-power-states">Microsoft: System power states</a></li>
+<li><a href="https://support.apple.com/guide/mac-help/mchle41a6ccd/12.0/mac/12.0">Apple: Sleep and wake settings in Monterey</a></li>
+<li><a href="https://support.apple.com/en-us/102501">Apple: If your external display is dark or low resolution</a></li>
+<li><a href="https://support.apple.com/en-us/102338">Apple: Optimized Battery Charging and Charge Limit</a></li>
+<li><a href="https://www.apple.com/batteries/maximizing-performance/">Apple: Maximizing battery life and lifespan</a></li>
+<li><a href="https://support.apple.com/en-us/102588">Apple: Battery health management in Intel-based Mac laptops</a></li>
+<li><a href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html">Apple Developer: Creating Launch Daemons and Agents</a></li>
+<li><a href="https://docs.docker.com/desktop/setup/install/mac-install/">Docker: Install Docker Desktop on Mac</a></li>
+<li>Installed macOS manuals: <code>man caffeinate</code> and <code>man pmset</code>. Available parameters and behavior depend on the installed version and hardware.</li>
+<li><a href="https://support.apple.com/en-us/101613">Apple: Power modes on Mac</a></li>
+<li><a href="https://support.apple.com/en-us/102555">Apple: Connect external displays and check model support</a></li>
+<li><a href="https://support.apple.com/guide/mac-help/protect-data-on-your-mac-with-filevault-mh11785/mac">Apple: Protect data on your Mac with FileVault</a></li>
+<li><a href="https://support.apple.com/guide/mac-help/shut-down-or-restart-your-mac-mchlp2522/mac">Apple: Shut down or restart your Mac</a></li>
+<li><a href="https://support.apple.com/en-us/102397">Apple: Charge your Mac laptop</a></li>
+<li><a href="https://www.apple.com/batteries/why-lithium-ion/">Apple: Lithium-ion batteries and charge cycles</a></li>
+</ol>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/macbook-01-mobile-work-display-battery/" data-page-title="MacBook Best Practices 01: Mobile Work, Closed-Display Setup, and Battery Care" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
