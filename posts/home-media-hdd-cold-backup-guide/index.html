@@ -1,0 +1,408 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Choosing HDDs for Family Media Backups: 4–5 TB, SMR/CMR, and 1 TB Transfers · LATENTX</title>
+    <meta name="description" content="A ¥700–1,500 buying guide for 4–5 TB family-media backups, covering WD and Toshiba portable drives, a confirmed-CMR enclosure setup, Seagate Expansion slowdown reports, and recoverable offline archives.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Choosing HDDs for Family Media Backups: 4–5 TB, SMR/CMR, and 1 TB Transfers · LATENTX">
+    <meta property="og:description" content="A ¥700–1,500 buying guide for 4–5 TB family-media backups, covering WD and Toshiba portable drives, a confirmed-CMR enclosure setup, Seagate Expansion slowdown reports, and recoverable offline archives.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/home-media-hdd-cold-backup-guide/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/home-media-hdd-cold-backup-guide/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/home-media-hdd-cold-backup-guide/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/home-media-hdd-cold-backup-guide/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/home-media-hdd-cold-backup-guide/"
+    data-page-title="Choosing HDDs for Family Media Backups: 4–5 TB, SMR/CMR, and 1 TB Transfers"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/home-media-hdd-cold-backup-guide/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/home-media-hdd-cold-backup-guide/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat home-media-hdd-cold-backup-guide.md</div>
+    <h1>Choosing HDDs for Family Media Backups: 4–5 TB, SMR/CMR, and 1 TB Transfers</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-20">PUBLISHED 2026.10.20</time>
+      <span>13 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#HDD</span><span>#SSD</span><span>#Backup</span><span>#CMR</span><span>#SMR</span><span>#Home Lab</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/home-media-hdd-cold-backup-guide/" data-page-title="Choosing HDDs for Family Media Backups: 4–5 TB, SMR/CMR, and 1 TB Transfers" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p>Family photos, home videos, and a carefully organized media library need capacity, recoverability, and a sensible total cost. For a drive that rarely travels and mainly serves as an offline backup, size and appearance can take a back seat. Sustained writing still matters: importing 1 TB for the first time is a different workload from occasionally copying a few movies.</p>
+<p><strong>For repeated transfers of hundreds of GB to 1 TB, I favor a specifically identified 3.5-inch CMR HDD in a powered USB enclosure. For an initial archive followed by occasional additions, a ready-made portable HDD can still offer good value. Irreplaceable family files always need independent copies.</strong></p>
+<p>This article follows a selection process from initial shortlist to reassessment. The original criteria were <strong>¥800–2,000, at least 4 TB, little concern about size, and a preference for HDDs and JD self-operated sellers</strong>. After examining Expansion write-performance reports, the final criteria became <strong>¥700–1,500, 4–5 TB, excluding Seagate Expansion</strong>. The brand scope is Seagate, Western Digital, and Toshiba as HDD manufacturers; it is not a ranking of SSD or overall storage brands.</p>
+<p><strong>Research and price-reference date: 20 October 2026.</strong> This is a public-source buying guide, not my own hardware benchmark. Public listing prices, comparison-site information, JD self-operated offers, and checkout prices are distinguished. Stock, discounts, warranty, and seller identity must be checked on the actual offer.</p>
+<h2>1. Does Expansion become slow when writing around 1 TB?</h2>
+<h3>Reports exist; a universal 1 TB threshold is unverified</h3>
+<p>Seagate explains that an external drive may initially show a high burst rate and then slow once its cache fills. SMR housekeeping can also increase sustained-write costs, but caching, recording technology, USB problems, and hardware faults are different explanations. <a href="https://www.seagate.com/support/kb/Why-cant-I-reach-the-advertised-performance-of-my-external-drive/">Seagate performance guidance</a></p>
+<p>An Expansion Portable 5 TB owner reports substantially slower sustained writes near full capacity. Conversely, an STKM5000400 purchaser reported roughly 100–125 MB/s sequential transfers around half capacity without encountering a sudden performance cliff. These are observations under particular conditions, not a guarantee for every production batch. <a href="https://www.reddit.com/r/DataHoarder/comments/oar2wn/">5 TB owner report</a> · <a href="https://tweakers.net/productreview/276588/seagate-expansion-portable-drive-2021-5tb-zwart.html">Original STKM5000400 review</a></p>
+<p>The defensible conclusions are:</p>
+<ul>
+<li><strong>Long, large write operations can be slow.</strong></li>
+<li><strong>It is unverified that every currently sold Expansion 5 TB must fall to a particular speed during a sequential 1 TB write to an empty drive.</strong></li>
+<li>First writes to an empty disk, overwrites near full capacity, small-file batches, and repeated backup updates are different tests.</li>
+<li>Writing approximately 1 TB of data is not the same question as evaluating a 1 TB-capacity Expansion. Results from one desktop Expansion model also cannot describe the entire family.</li>
+</ul>
+<p>Expansion is excluded here as a purchasing constraint, not as a finding that all Seagate drives are slow or unreliable. The useful filters are <strong>exact model, CMR/SMR, workload, sales channel, and backup copies</strong>.</p>
+<h3>A different brand does not automatically remove the issue</h3>
+<p>WD explicitly states that external-drive internals can vary, including recording technology, model, rotation speed, and cache. CMR or SMR is not uniformly guaranteed. A brand, capacity, or family name alone cannot establish sustained-write behavior. <a href="https://support-en.wd.com/app/answers/detailweb/a_id/13652/">WD external-drive policy</a></p>
+<p>Likewise, without model-specific evidence, a Toshiba 4 TB portable should not be presented as a confirmed way to avoid SMR. This guide evaluates these portable products with SMR risk in mind and does not promise that a brand swap solves TB-scale write slowdowns.</p>
+<h2>2. Recommendations within the final budget</h2>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Product or combination</th>
+<th>Observed reference price</th>
+<th>Strength</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Repeated large writes</td>
+<td><strong>WD Blue WD40EZAX 4 TB + UGREEN 70501 USB enclosure</strong></td>
+<td>About <strong>¥1,299 + ¥159 = ¥1,458</strong></td>
+<td>Confirmed CMR; drive and enclosure can be replaced separately, and the SATA drive can migrate to compatible equipment</td>
+<td>Assembly, external power, and more bulk; the total combines two listing references, not a verified self-operated bundle</td>
+</tr>
+<tr>
+<td>Ready-made capacity</td>
+<td><strong>WD My Passport 5 TB</strong></td>
+<td>Red-model public listing: <strong>¥1,349</strong></td>
+<td>5 TB, USB power, password protection and hardware encryption</td>
+<td>Seller not verified as JD self-operated; sustained-write slowdowns remain possible</td>
+</tr>
+<tr>
+<td>Lower total spending</td>
+<td><strong>Toshiba Canvio Basics A5 4 TB</strong></td>
+<td>Public listing: <strong>¥1,199</strong></td>
+<td>Straightforward, USB powered, suitable for infrequent archives</td>
+<td>Less capacity; no verified basis for promising faster TB-scale writes than Expansion</td>
+</tr>
+</tbody></table>
+<p>Purchase and price references:</p>
+<ul>
+<li>CMR setup: <a href="https://item.jd.com/product/iSlLDPTrdNFs_gHcJYR4yg.html">WD40EZAX listing</a> · <a href="https://item.jd.com/product/N3GJjhfylW9sH2MJnOH5LQ.html">UGREEN 70501 enclosure</a>. WD explicitly identifies <strong>WD40EZAX as CMR</strong> in its <a href="https://www.westerndigital.com/products/internal-drives/wd-blue-desktop-sata-hdd?sku=WD40EZAX">official specifications</a>.</li>
+<li><a href="https://item.jd.com/product/YPy8nGS8EEK4EskChWefLA.html">My Passport 5 TB listing</a>. This quote must not be labeled a verified JD self-operated checkout price.</li>
+<li><a href="https://item.jd.com/product/nM5NEtovjJL9ZuF9yqPbhg.html">Toshiba A5 4 TB listing</a>. Toshiba&#39;s self-operated store also lists the family; check the matching capacity and offer.</li>
+</ul>
+<p><strong>The CMR setup best fits the combination of low concern about size and concern about sustained writing.</strong> It avoids SMR-specific reorganization, but disk position, source speed, file count, USB connectivity, and background activity can still change throughput. Constant speed is not guaranteed.</p>
+<p>Choose an enclosure supporting <strong>3.5-inch SATA</strong> with its matching external power adapter. Check the cable needed for your Mac and count any extra cable toward the ¥1,500 ceiling. UGREEN supplies the enclosure and bridge; WD supplies the storage medium. A replaceable enclosure helps serviceability, not guaranteed data recovery.</p>
+<p>For a ready-made portable, compare My Passport 5 TB first. Choose A5 if 4 TB is enough and lower spending matters. Game branding, decorative shells, and encryption are not reasons to pay a large premium for ordinary static media. An Elements 5 TB listing showed about <strong>¥1,599</strong>, so it is outside the final budget. <a href="https://item.jd.com/product/tniplC8XiPAmflvDJNi8DQ.html">Price reference</a></p>
+<h2>3. JD self-operated, Tmall, and Douyin channels</h2>
+<table>
+<thead>
+<tr>
+<th>Brand</th>
+<th>Preferred JD entrance</th>
+<th>Other channels</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Western Digital</td>
+<td><a href="https://mall.jd.com/view_page-303992090.html">JD self-operated store</a> · <a href="https://item.jd.com/100048251752.html">WD40EZAX linked by that store</a></td>
+<td><a href="https://list.tmall.com/search_product.htm?q=%E8%A5%BF%E9%83%A8%E6%95%B0%E6%8D%AE%20My%20Passport%205TB">Tmall My Passport 5 TB search</a>; verify seller authorization</td>
+</tr>
+<tr>
+<td>Toshiba</td>
+<td><a href="https://mall.jd.com/index-1000000328.html">JD self-operated store</a></td>
+<td><a href="https://toshibasm.tmall.com/">Authorized Tmall store</a> · <a href="https://v.douyin.com/iMeYGLGD/">Official Douyin store entrance</a></td>
+</tr>
+<tr>
+<td>Seagate, original-shortlist context only</td>
+<td><a href="https://seagate.jd.com/">JD self-operated store</a></td>
+<td><a href="https://seagatecunchu.tmall.com/">Tmall flagship</a>; Expansion remains excluded from the final list</td>
+</tr>
+</tbody></table>
+<p>Seagate and Toshiba publish their corresponding channel references on the <a href="https://www.seagate.com/cn/zh/news/news-archive/seagates-june-18th-shopping-festival-promotion-is-here-a-big-discount-in-the-middle-of-the-year-the-right-time-to-upgrade-your-storage-pr/">Seagate website</a> and <a href="https://toshiba-semicon-storage.com/cn/canvio/contact/onlinestore.html">Toshiba authorized-store page</a>. A store entrance does not establish a particular SKU&#39;s stock or price. A search link is not a verified official-store link.</p>
+<p>Check capacity, full model number, new condition, mainland warranty, invoice, and seller. JD delivery alone does not establish that JD is the seller. Bundled recovery services have regional, time, and usage conditions; they do not replace backup copies.</p>
+<h2>4. SMR versus CMR: mainly a write-behavior distinction</h2>
+<p>**CMR—Conventional Magnetic Recording—**places tracks beside one another. **SMR—Shingled Magnetic Recording—**partially overlaps tracks to increase density. Updating some SMR data can require reading, reorganizing, and rewriting a larger region. <a href="https://www.westerndigital.com/products/product-portfolio">WD explanation</a> · <a href="https://toshiba.semicon-storage.com/content/dam/toshiba-ss-v3/master/en/company/technical-review/pdf/technical-review-large-capacity-hdds_e.pdf">Toshiba technical paper</a></p>
+<table>
+<thead>
+<tr>
+<th>Workload or question</th>
+<th>CMR</th>
+<th>SMR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Frequent overwrites and random writes</td>
+<td>Usually more consistent</td>
+<td>Housekeeping can introduce substantial latency and variability</td>
+</tr>
+<tr>
+<td>Large-file archives</td>
+<td>Suitable</td>
+<td>Can suit infrequent sequential writes if waiting is acceptable</td>
+</tr>
+<tr>
+<td>Reading movies and photos</td>
+<td>Suitable</td>
+<td>Also suitable; a write slowdown does not automatically imply playback trouble</td>
+</tr>
+<tr>
+<td>NAS, array rebuilds, databases</td>
+<td>Generally preferred, subject to compatibility</td>
+<td>Ordinary consumer models are generally not the first choice</td>
+</tr>
+<tr>
+<td>Quality and lifetime</td>
+<td>Not a guarantee against failure</td>
+<td>Recording method alone does not establish poor quality</td>
+</tr>
+</tbody></table>
+<p>PMR—Perpendicular Magnetic Recording—is not a direct substitute for the CMR/SMR distinction. A PMR label alone is insufficient proof of CMR; check the full model and manufacturer specification.</p>
+<p>SMR is not categorically unsuitable for cold backups. However, when sustained-write behavior is a specific purchasing concern, selecting a documented CMR model addresses that concern more directly than swapping logos. Seagate likewise distinguishes recording technologies by product family rather than assigning one technology to its entire brand. <a href="https://www.seagate.com/products/cmr-smr-list/">Seagate CMR/SMR list</a></p>
+<h2>5. HDD versus SSD: why HDD remains the preference here</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>HDD</th>
+<th>SSD</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cost per TB</td>
+<td>Usually lower for bulk media</td>
+<td>Usually higher at equivalent capacity</td>
+</tr>
+<tr>
+<td>Sequential playback and archives</td>
+<td>Suitable; depends on model and workload</td>
+<td>Faster, though static media may not benefit much</td>
+</tr>
+<tr>
+<td>Applications, editing, small files</td>
+<td>Slow random access</td>
+<td>Lower latency and better random performance</td>
+</tr>
+<tr>
+<td>Transport and noise</td>
+<td>Moving parts, vulnerable to shocks while operating, audible mechanics</td>
+<td>No moving parts, better suited to travel, no mechanical noise</td>
+</tr>
+<tr>
+<td>Extended power-off storage</td>
+<td>Economical but still needs checks and migration</td>
+<td>Retention depends on wear, temperature, and other conditions; not maintenance-free</td>
+</tr>
+</tbody></table>
+<p>See the manufacturer&#39;s explanation of <a href="https://www.seagate.com/blog/how-do-hdds-and-ssds-store-data/">HDD and SSD operation</a>. There is no universal rule that every SSD loses its data after a fixed number of unpowered months. Wear and storage temperature matter. <a href="https://www.seagate.com/files/www-content/support-content/raid-systems/_shared/documentation/systems-storage-management-guide-83-00007047-10-01-g250.pdf">Retention guidance</a></p>
+<p><strong>HDD matches this capacity-focused budget; SSD is more useful for active work and frequent transport. Neither is an unattended ten-year vault.</strong> USB-C describes a connector, and an interface&#39;s theoretical bandwidth is not the drive&#39;s sustained-write speed.</p>
+<h2>6. Preserve family media by designing copies first</h2>
+<h3>Separate irreplaceable memories from replaceable media</h3>
+<p><strong>Irreplaceable files:</strong> family photos, home videos, and important documents deserve a 3-2-1 approach: three copies, two media types, and one off-site copy. An example is an original on a computer or home server, an offline HDD backup, and an encrypted off-site cloud copy or another remotely stored copy. Multiple HDDs improve device and location isolation but do not strictly provide two media types. <a href="https://www.seagate.com/support/kb/what-is-a-backup/">Backup and 3-2-1 explanation</a></p>
+<p><strong>Replaceable media:</strong> decide how many copies movies and music deserve according to the cost of obtaining them again. Preserve catalogs and organization work without assuming every replaceable file needs three copies.</p>
+<h3>Give the active library and offline backup different roles</h3>
+<p>A practical starting point is an always-available home machine managing the active library, an external HDD connected periodically for backup and verification, and an off-site copy for important files. Safely eject and disconnect the backup after completion. A mobile work computer should not host the only continuously required service.</p>
+<p>If services run in a Linux VM, do not keep the only data copy inside a disposable VM system disk. A separate virtual data disk helps separate data from system rebuilds, but when both disks share the host&#39;s physical SSD they share that physical failure domain. Attached external storage also does not automatically become an independently available NAS.</p>
+<p>A drive continuously attached for playback is an active library. A disconnected drive updated on a schedule serves the offline backup role. RAID, synchronization, Kubernetes PVCs, and separate directories do not automatically provide independent backups. Synchronization can propagate deletion, making version retention or other recoverable copies important.</p>
+<h3>Verify contents and restoration</h3>
+<ul>
+<li>Verify file integrity after each backup and open sample photos and videos.</li>
+<li>As a maintenance recommendation, perform a full read/integrity check every 6–12 months and test selected restores. This is not a universal manufacturer lifetime standard.</li>
+<li>Merely powering a disk on does not repair or refresh every file. Normal SMART status is not a recovery guarantee.</li>
+<li>Store disconnected disks somewhere dry, temperature-stable, and protected from impact. Prioritize protecting readable copies when errors or checksum mismatches appear.</li>
+<li>Plan migration as capacity, device age, and interfaces change. Retain the older copy until copying, verification, and restoration checks succeed.</li>
+</ul>
+<p>With a ¥1,500 total budget, buy one disk as an additional backup and retain the source files. At the A5 reference of ¥1,199, two 4 TB units would cost about ¥2,398. A complete multi-disk setup does not fit that budget merely because it is desirable. Moving everything to the new disk and deleting the originals still leaves one copy.</p>
+<h2>7. Earlier, broader-budget candidates for future expansion</h2>
+<p>The table preserves the initial ¥800–2,000 research context. <strong>It is not the final ¥700–1,500, 4–5 TB shortlist.</strong> Prices are snapshots from the research, not guaranteed self-operated checkout offers.</p>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Earlier price reference</th>
+<th>Current treatment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Seagate Expansion 5 TB</td>
+<td>About ¥1,399</td>
+<td>Excluded after the write-performance reassessment and revised purchasing constraint</td>
+</tr>
+<tr>
+<td>WD Elements Portable 6 TB</td>
+<td>About ¥1,709</td>
+<td>Outside final capacity and budget; future-expansion reference only. <a href="https://item.jd.com/product/RI-GBLKfSowzUNd3XrudEw.html">Product</a></td>
+</tr>
+<tr>
+<td>WD My Passport 6 TB</td>
+<td>About ¥1,959</td>
+<td>Outside final capacity and budget. <a href="https://item.jd.com/product/CaVxK1wrm9WHmHxxEvCiUA.html">Product</a></td>
+</tr>
+<tr>
+<td>WD Elements Desktop 8 TB</td>
+<td>Comparison reference around ¥2,069</td>
+<td>Larger, externally powered; even the original budget requires a suitable offer. <a href="https://item.jd.com/100189573972.html">Product listed by the self-operated store</a> · <a href="https://detail.zol.com.cn/1412/1411547/price.shtml">Comparison reference</a></td>
+</tr>
+</tbody></table>
+<p>Start by identifying the actual inconvenience: waiting overnight for an initial copy, or suffering repeated slow overwrites on every backup. Then answer it with a specific model, a suitable seller, and recoverable copies. For irreplaceable family memories, a second verified copy usually deserves investment before appearance, bundled software, or headline specifications.</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/home-media-hdd-cold-backup-guide/" data-page-title="Choosing HDDs for Family Media Backups: 4–5 TB, SMR/CMR, and 1 TB Transfers" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
