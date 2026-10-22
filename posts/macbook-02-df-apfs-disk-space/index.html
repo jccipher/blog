@@ -1,0 +1,472 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>MacBook Best Practices 02: Understanding df -h and APFS Disk Space · LATENTX</title>
+    <meta name="description" content="Read a real macOS df -h report: understand each column, APFS shared capacity, the Capacity calculation, and virtual filesystems showing 100%, then investigate with df, du, and diskutil.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="MacBook Best Practices 02: Understanding df -h and APFS Disk Space · LATENTX">
+    <meta property="og:description" content="Read a real macOS df -h report: understand each column, APFS shared capacity, the Capacity calculation, and virtual filesystems showing 100%, then investigate with df, du, and diskutil.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/macbook-02-df-apfs-disk-space/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/macbook-02-df-apfs-disk-space/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/macbook-02-df-apfs-disk-space/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/macbook-02-df-apfs-disk-space/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/macbook-02-df-apfs-disk-space/"
+    data-page-title="MacBook Best Practices 02: Understanding df -h and APFS Disk Space"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/macbook-02-df-apfs-disk-space/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/macbook-02-df-apfs-disk-space/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat macbook-02-df-apfs-disk-space.md</div>
+    <h1>MacBook Best Practices 02: Understanding df -h and APFS Disk Space</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-22">PUBLISHED 2026.10.22</time>
+      <span>9 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#MacBook</span><span>#Terminal</span><span>#APFS</span><span>#Disk Space</span><span>#df</span><span>#du</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/macbook-02-df-apfs-disk-space/" data-page-title="MacBook Best Practices 02: Understanding df -h and APFS Disk Space" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p>💻 You run <code>df -h</code> on a MacBook to check free storage. Several rows show the same <code>926Gi</code> capacity and <code>484Gi</code> available, while two others report <code>100%</code>. Has the disk filled up, and how many disks are there?</p>
+<p><strong>In this example, the main APFS container has about <code>926Gi</code> of capacity and <code>484Gi</code> remaining. The repeated figures belong to volumes sharing space. The two special filesystems reporting <code>100%</code> do not establish that the storage disk is full.</strong></p>
+<p>This is <strong>part 02 of the MacBook Best Practices series</strong>. It explains macOS storage statistics through an actual terminal report. The numbers describe that captured state; documentation and local command manuals were checked on <strong>October 22, 2026</strong>. Device identifiers and auxiliary-volume layouts vary across computers and macOS versions.</p>
+<h2>1. What does df -h inspect?</h2>
+<pre><code class="language-bash">df -h
+</code></pre>
+<p><code>df</code> reports space statistics for mounted filesystems. Without a path argument, it normally lists the mounted filesystems. <code>-h</code> makes capacity figures easier to read. The <a href="https://github.com/apple-oss-distributions/file_cmds/blob/main/df/df.1">macOS df(1) manual</a> documents its options and accounting.[1]</p>
+<p>In this terminal line:</p>
+<pre><code class="language-text">➜  ~ df -h
+</code></pre>
+<p><code>➜ ~</code> is the shell prompt. The tilde represents the current user&#39;s home directory; the command itself is just <code>df -h</code>.</p>
+<p>The units also matter:</p>
+<table>
+<thead>
+<tr>
+<th>Display</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Ki</code></td>
+<td>Units of 1,024 bytes, or KiB</td>
+</tr>
+<tr>
+<td><code>Mi</code></td>
+<td>Units of 1,024² bytes, or MiB</td>
+</tr>
+<tr>
+<td><code>Gi</code></td>
+<td>Units of 1,024³ bytes, or GiB</td>
+</tr>
+<tr>
+<td><code>Bi</code></td>
+<td>Bytes</td>
+</tr>
+</tbody></table>
+<p>Capacity columns use powers of 1,024 with <code>df -h</code>, whereas <code>df -H</code> uses powers of 1,000. Storage vendors typically advertise decimal GB and TB. <strong>One GiB is approximately 1.074 GB</strong>, so the numbers are not directly interchangeable.</p>
+<h2>2. Start with the Data row</h2>
+<pre><code class="language-text">Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s3s1   926Gi    13Gi   484Gi     3%    484k  4.3G    0%   /
+devfs            199Ki   199Ki     0Bi   100%     688     0  100%   /dev
+/dev/disk3s6     926Gi   2.0Gi   484Gi     1%       1  5.1G    0%   /System/Volumes/VM
+/dev/disk3s4     926Gi    10Gi   484Gi     3%    1.0k  5.1G    0%   /System/Volumes/Preboot
+/dev/disk3s2     926Gi    99Mi   484Gi     1%     110  5.1G    0%   /System/Volumes/Update
+/dev/disk1s2     500Mi   6.0Mi   476Mi     2%       1  4.9M    0%   /System/Volumes/xarts
+/dev/disk1s1     500Mi   5.8Mi   476Mi     2%      31  4.9M    0%   /System/Volumes/iSCPreboot
+/dev/disk1s3     500Mi   7.1Mi   476Mi     2%      79  4.9M    0%   /System/Volumes/Hardware
+/dev/disk3s1     926Gi   416Gi   484Gi    47%    2.4M  5.1G    0%   /System/Volumes/Data
+map auto_home      0Bi     0Bi     0Bi   100%       0     0     -   /System/Volumes/Data/home
+/dev/disk3s5     926Gi   1.4Gi   484Gi     1%      67  5.1G    0%   /Volumes/Recovery
+/dev/disk2s1     5.0Gi   2.4Gi   2.6Gi    49%      66   27M    0%   /System/Volumes/Update/SFR/mnt1
+</code></pre>
+<p>For everyday questions about user files and installed applications, start with <code>/System/Volumes/Data</code>:</p>
+<pre><code class="language-text">/dev/disk3s1  926Gi  416Gi  484Gi  47%  2.4M  5.1G  0%  /System/Volumes/Data
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Meaning</th>
+<th>Reading this example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Filesystem</code></td>
+<td>Filesystem or device identifier</td>
+<td><code>/dev/disk3s1</code> identifies a volume; it is not a physical-drive count</td>
+</tr>
+<tr>
+<td><code>Size</code></td>
+<td>Reported total capacity</td>
+<td>Here it reflects the shared container&#39;s approximately <code>926Gi</code> capacity</td>
+</tr>
+<tr>
+<td><code>Used</code></td>
+<td>Space used by this volume</td>
+<td>The Data volume uses about <code>416Gi</code></td>
+</tr>
+<tr>
+<td><code>Avail</code></td>
+<td>Space available to this filesystem</td>
+<td>About <code>484Gi</code>, shared across these volumes</td>
+</tr>
+<tr>
+<td><code>Capacity</code></td>
+<td>Usage calculated from this volume&#39;s used and available space</td>
+<td><code>47%</code> is not the usage of the entire physical drive</td>
+</tr>
+<tr>
+<td><code>iused</code></td>
+<td>Used inodes or file nodes</td>
+<td><code>2.4M</code> means approximately 2.4 million nodes</td>
+</tr>
+<tr>
+<td><code>ifree</code></td>
+<td>Available nodes reported by the filesystem</td>
+<td><code>5.1G</code> is a count, not 5.1 GiB of storage</td>
+</tr>
+<tr>
+<td><code>%iused</code></td>
+<td>Node usage percentage</td>
+<td>A rounded <code>0%</code> does not mean there are no files</td>
+</tr>
+<tr>
+<td><code>Mounted on</code></td>
+<td>Mount point</td>
+<td>The location where the filesystem joins the directory tree</td>
+</tr>
+</tbody></table>
+<p>An inode is roughly a record describing a filesystem object, such as a file or directory. It is not strictly a count of ordinary files. With APFS, <code>ifree</code> should not be treated as a direct prediction of how many more files can be created. For everyday storage checks, start with the capacity columns.</p>
+<p>A <strong>mount point</strong> connects a filesystem to a directory. <code>/</code> is the root of the directory tree, but filesystems mounted beneath it have their own accounting. The root row&#39;s <code>13Gi</code> therefore does not represent all data on the Mac.</p>
+<h2>3. Why do several rows show 926Gi?</h2>
+<p>The key distinction is between an <strong>APFS container</strong> and its <strong>volumes</strong>.</p>
+<p>Multiple volumes in one container draw from a common free-space pool. When one grows, less space remains for the others. Apple&#39;s <a href="https://support.apple.com/guide/disk-utility/dskua9e6a110/mac">APFS volume guide</a> explains this allocation model.[2]</p>
+<p>For this report, the relationship is approximately:</p>
+<pre><code class="language-text">Main APFS container: about 926Gi
+├─ Data volume       about 416Gi used
+├─ System volume     about  13Gi used
+├─ Preboot           about  10Gi used
+├─ VM                about   2Gi used
+├─ Recovery, Update, and other overhead
+└─ Shared remaining space: about 484Gi
+</code></pre>
+<p>Do not add the repeated <code>926Gi</code> capacities or count the shared <code>484Gi</code> more than once. Subtracting Data&#39;s <code>416Gi</code> from <code>926Gi</code> does not yield <code>484Gi</code>, because other volumes and filesystem overhead also consume container space.</p>
+<p>Using the rounded figures, the main container has approximately:</p>
+<pre><code class="language-text">926Gi - 484Gi ≈ 442Gi used
+442 ÷ 926 ≈ 48%
+</code></pre>
+<p>This is a container-level estimate, not an exact account of every partition on the physical SSD. Use <code>diskutil apfs list</code> for a fuller container report.</p>
+<h2>4. Why does Capacity show 47%?</h2>
+<p>For this shared-space report, macOS <code>df</code> uses the following relationship:[1]</p>
+<pre><code class="language-text">Capacity = volume used space ÷ (volume used space + available space)
+</code></pre>
+<p>For Data, the displayed numbers give:</p>
+<pre><code class="language-text">416 ÷ (416 + 484) ≈ 46.2%
+</code></pre>
+<p><code>df</code> normally rounds percentages upward, while the capacity figures themselves have also been rounded. That explains the displayed <code>47%</code>; the human-readable figures cannot reconstruct the underlying accounting exactly.</p>
+<p>These calculations answer different questions:</p>
+<table>
+<thead>
+<tr>
+<th>Calculation</th>
+<th>Question answered</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>416 ÷ 926 ≈ 45%</code></td>
+<td>Approximately what share of total container capacity does Data occupy?</td>
+</tr>
+<tr>
+<td><code>416 ÷ (416 + 484)</code>, displayed as <code>47%</code></td>
+<td>What usage figure does <code>df</code> report for Data?</td>
+</tr>
+<tr>
+<td><code>(926 - 484) ÷ 926 ≈ 48%</code></td>
+<td>Approximately how much of the main container is occupied overall?</td>
+</tr>
+</tbody></table>
+<p><strong>To judge remaining writable space, prioritize <code>Avail</code> and inspect the container. A single volume&#39;s <code>Capacity</code> is not a universal SSD usage percentage.</strong></p>
+<h2>5. What are all these system volumes?</h2>
+<p>Modern macOS separates system files from changing data. Apple&#39;s <a href="https://support.apple.com/guide/security/role-of-apple-file-system-seca6147599e/web">Role of Apple File System</a> describes the principal volumes and explains that macOS 11 and later boot from a system snapshot.[3]</p>
+<table>
+<thead>
+<tr>
+<th>Mount point or name</th>
+<th>Practical interpretation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/</code></td>
+<td>System root; this report&#39;s <code>disk3s3s1</code> is the mounted system snapshot</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/Data</code></td>
+<td>Changing data, including user files, user-installed applications, and much runtime data</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/VM</code></td>
+<td>Swap files; the reported usage is disk space, not installed RAM</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/Preboot</code></td>
+<td>Supporting data needed during startup</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/Update</code></td>
+<td>A system-update-related volume</td>
+</tr>
+<tr>
+<td><code>/Volumes/Recovery</code></td>
+<td>Recovery-system volume</td>
+</tr>
+<tr>
+<td><code>xarts</code>, <code>iSCPreboot</code>, <code>Hardware</code></td>
+<td>Internal auxiliary volumes related to startup, security, or hardware support; <code>df</code> alone cannot fully establish their individual roles</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/Update/SFR/mnt1</code></td>
+<td>An auxiliary mount beneath the update directory; its precise origin cannot be established from this row alone</td>
+</tr>
+</tbody></table>
+<p>Device numbers are identifiers, not a list of purchased drives. For example, <code>disk3</code> can identify a synthesized APFS container; suffixes distinguish volumes or other slices. Use <code>diskutil list</code> and <code>diskutil info</code> to establish the actual hierarchy and device origin.</p>
+<h2>6. Do the two 100% entries require action?</h2>
+<pre><code class="language-text">devfs          ... 100% ... /dev
+map auto_home  ... 100% ... /System/Volumes/Data/home
+</code></pre>
+<p><code>devfs</code> is a virtual filesystem presenting device nodes. <code>map auto_home</code> is an automounter mapping entry. Neither is an ordinary storage volume whose capacity percentage can be interpreted like the Data volume&#39;s.</p>
+<p><strong>In this report, these two <code>100%</code> values are not evidence that the storage disk is full.</strong> The relevant storage volumes and container still report approximately <code>484Gi</code> available.</p>
+<h2>7. From remaining capacity to large directories</h2>
+<p>Use the tools together: <strong><code>df</code> reports filesystem space; <code>du</code> measures the usage of selected files or directories.</strong> The following commands inspect information.</p>
+<h3>Check the filesystem containing your home directory</h3>
+<pre><code class="language-bash">df -h ~
+</code></pre>
+<p>This checks the filesystem containing your home directory, not the home directory&#39;s own size. To hide the inode columns, add uppercase <code>-I</code>:</p>
+<pre><code class="language-bash">df -h -I ~
+</code></pre>
+<h3>Measure your home directory and its immediate subdirectories</h3>
+<pre><code class="language-bash">du -sh ~
+du -h -d 1 ~ | sort -h
+</code></pre>
+<p>The first command reports a total. The second lists directories one level deep and sorts the human-readable sizes from smallest to largest; it also includes the home-directory total. <code>-d 1</code> limits the reporting depth, but deeper contents still need scanning, so a large directory can take time.</p>
+<p>If <code>Operation not permitted</code> or <code>Permission denied</code> appears, some directories were unreadable and the result may be incomplete. Directory totals from <code>du</code> also need not match APFS container usage. Scan scope, permissions, snapshots, and shared blocks affect the comparison.</p>
+<h3>Inspect disks, containers, and volumes</h3>
+<pre><code class="language-bash">diskutil list
+diskutil apfs list
+</code></pre>
+<p>To investigate the final mount in this particular report:</p>
+<pre><code class="language-bash">diskutil info /dev/disk2s1
+</code></pre>
+<p>That identifier belongs to this example. On another computer, or after mounts change, find the current identifier with <code>diskutil list</code> first.</p>
+<h3>Read your local manuals</h3>
+<pre><code class="language-bash">man df
+man du
+man diskutil
+</code></pre>
+<p>Press <code>q</code> to exit. macOS utilities may accept different options from the GNU versions commonly found on Linux; check the local manual when adapting commands.</p>
+<h2>8. A practical reference</h2>
+<table>
+<thead>
+<tr>
+<th>What you want to know</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Space across mounted filesystems</td>
+<td><code>df -h</code></td>
+</tr>
+<tr>
+<td>Remaining space on the filesystem containing home</td>
+<td><code>df -h -I ~</code></td>
+</tr>
+<tr>
+<td>Space used by the home directory itself</td>
+<td><code>du -sh ~</code></td>
+</tr>
+<tr>
+<td>Which immediate home subdirectories are large</td>
+<td><code>du -h -d 1 ~ | sort -h</code></td>
+</tr>
+<tr>
+<td>Disk, partition, and container relationships</td>
+<td><code>diskutil list</code></td>
+</tr>
+<tr>
+<td>APFS container space allocation</td>
+<td><code>diskutil apfs list</code></td>
+</tr>
+</tbody></table>
+<p>For a report like this one, start with Data&#39;s <code>Avail</code>, confirm the APFS container structure, and then use <code>du</code> to investigate particular directories. That sequence gives a more useful reading than adding every capacity row or reacting to an isolated <code>100%</code>.</p>
+<h2>References</h2>
+<ol>
+<li>Apple Open Source: <a href="https://github.com/apple-oss-distributions/file_cmds/blob/main/df/df.1">df(1) manual source</a>. Options, units, APFS examples, and the Capacity calculation; also checked against local <code>man df</code>, <code>man du</code>, and <code>man diskutil</code>.</li>
+<li>Apple Support: <a href="https://support.apple.com/guide/disk-utility/dskua9e6a110/mac">Add, delete, or erase APFS volumes in Disk Utility on Mac</a>. Containers, volumes, and shared capacity.</li>
+<li>Apple Platform Security: <a href="https://support.apple.com/guide/security/role-of-apple-file-system-seca6147599e/web">Role of Apple File System</a>. Principal volume roles and system-snapshot startup.</li>
+</ol>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/macbook-02-df-apfs-disk-space/" data-page-title="MacBook Best Practices 02: Understanding df -h and APFS Disk Space" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

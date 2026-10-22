@@ -1,0 +1,483 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>MacBook 使用心得与最佳实践 02：读懂 df -h 与 APFS 磁盘空间 · LATENTX</title>
+    <meta name="description" content="从一份真实 df -h 输出出发，逐列解读 Mac 磁盘空间，解释 APFS 共享容量、Capacity 的计算口径和虚拟文件系统的 100%，并提供 df、du 与 diskutil 实用命令。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="MacBook 使用心得与最佳实践 02：读懂 df -h 与 APFS 磁盘空间 · LATENTX">
+    <meta property="og:description" content="从一份真实 df -h 输出出发，逐列解读 Mac 磁盘空间，解释 APFS 共享容量、Capacity 的计算口径和虚拟文件系统的 100%，并提供 df、du 与 diskutil 实用命令。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/macbook-02-df-apfs-disk-space/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/macbook-02-df-apfs-disk-space/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/macbook-02-df-apfs-disk-space/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/macbook-02-df-apfs-disk-space/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/macbook-02-df-apfs-disk-space/"
+    data-page-title="MacBook 使用心得与最佳实践 02：读懂 df -h 与 APFS 磁盘空间"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/macbook-02-df-apfs-disk-space/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/macbook-02-df-apfs-disk-space/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat macbook-02-df-apfs-disk-space.md</div>
+    <h1>MacBook 使用心得与最佳实践 02：读懂 df -h 与 APFS 磁盘空间</h1>
+    <div class="article-meta">
+      <time datetime="2026-10-22">发布于 2026.10.22</time>
+      <span>9 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#MacBook</span><span>#Terminal</span><span>#APFS</span><span>#Disk Space</span><span>#df</span><span>#du</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/macbook-02-df-apfs-disk-space/" data-page-title="MacBook 使用心得与最佳实践 02：读懂 df -h 与 APFS 磁盘空间" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p>💻 在 MacBook 终端里输入 <code>df -h</code>，本想看看硬盘还剩多少空间，结果看到一串 <code>/dev/disk…</code>：好几行容量都是 <code>926Gi</code>，可用空间都是 <code>484Gi</code>，还有两行赫然写着 <code>100%</code>。</p>
+<p>这些数字并不矛盾。<strong>这份样例的主 APFS 容器约有 <code>926Gi</code> 容量，还剩 <code>484Gi</code>；重复出现的是共享空间的不同卷，两处特殊文件系统的 <code>100%</code> 也不表示硬盘已经写满。</strong></p>
+<p>这是 <strong>MacBook 使用心得与最佳实践系列的第 02 篇</strong>。本文以一份实际终端输出为例，解释 macOS 的磁盘统计。样例数值只代表当时状态；文档与本机命令手册核对日期为 <strong>2026 年 10 月 22 日</strong>。设备编号和辅助卷布局会因电脑与系统版本而变化。</p>
+<h2>一、先读命令：df -h 到底查什么？</h2>
+<pre><code class="language-bash">df -h
+</code></pre>
+<p><code>df</code> 查看已挂载文件系统的空间统计；不指定路径时，通常列出当前已挂载的各个文件系统。<code>-h</code> 表示以方便阅读的单位显示容量。<a href="https://github.com/apple-oss-distributions/file_cmds/blob/main/df/df.1">macOS 的 df(1) 手册</a>列出了参数和统计口径。[1]</p>
+<p>终端中的这一行：</p>
+<pre><code class="language-text">➜  ~ df -h
+</code></pre>
+<p>前面的 <code>➜ ~</code> 是命令提示符。<code>~</code> 表示当前用户的主目录，真正执行的命令只有 <code>df -h</code>。</p>
+<p>这里也要分清单位：</p>
+<table>
+<thead>
+<tr>
+<th>显示</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Ki</code></td>
+<td>以 1,024 字节为一个单位，即 KiB</td>
+</tr>
+<tr>
+<td><code>Mi</code></td>
+<td>以 1,024² 字节为一个单位，即 MiB</td>
+</tr>
+<tr>
+<td><code>Gi</code></td>
+<td>以 1,024³ 字节为一个单位，即 GiB</td>
+</tr>
+<tr>
+<td><code>Bi</code></td>
+<td>字节</td>
+</tr>
+</tbody></table>
+<p><code>df -h</code> 的容量列使用 1,024 进制，<code>df -H</code> 则使用 1,000 进制。硬盘厂商通常使用十进制 GB、TB；<strong><code>1GiB</code> 约等于 <code>1.074GB</code>，两种写法不能直接当成相同数值比较。</strong></p>
+<h2>二、一份完整输出，先找到 Data 这一行</h2>
+<pre><code class="language-text">Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s3s1   926Gi    13Gi   484Gi     3%    484k  4.3G    0%   /
+devfs            199Ki   199Ki     0Bi   100%     688     0  100%   /dev
+/dev/disk3s6     926Gi   2.0Gi   484Gi     1%       1  5.1G    0%   /System/Volumes/VM
+/dev/disk3s4     926Gi    10Gi   484Gi     3%    1.0k  5.1G    0%   /System/Volumes/Preboot
+/dev/disk3s2     926Gi    99Mi   484Gi     1%     110  5.1G    0%   /System/Volumes/Update
+/dev/disk1s2     500Mi   6.0Mi   476Mi     2%       1  4.9M    0%   /System/Volumes/xarts
+/dev/disk1s1     500Mi   5.8Mi   476Mi     2%      31  4.9M    0%   /System/Volumes/iSCPreboot
+/dev/disk1s3     500Mi   7.1Mi   476Mi     2%      79  4.9M    0%   /System/Volumes/Hardware
+/dev/disk3s1     926Gi   416Gi   484Gi    47%    2.4M  5.1G    0%   /System/Volumes/Data
+map auto_home      0Bi     0Bi     0Bi   100%       0     0     -   /System/Volumes/Data/home
+/dev/disk3s5     926Gi   1.4Gi   484Gi     1%      67  5.1G    0%   /Volumes/Recovery
+/dev/disk2s1     5.0Gi   2.4Gi   2.6Gi    49%      66   27M    0%   /System/Volumes/Update/SFR/mnt1
+</code></pre>
+<p>日常关心用户文件和应用占用时，可以先找到 <code>/System/Volumes/Data</code>：</p>
+<pre><code class="language-text">/dev/disk3s1  926Gi  416Gi  484Gi  47%  2.4M  5.1G  0%  /System/Volumes/Data
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>含义</th>
+<th>样例解读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Filesystem</code></td>
+<td>文件系统或设备标识</td>
+<td><code>/dev/disk3s1</code> 标识一个卷，不能据此数物理硬盘</td>
+</tr>
+<tr>
+<td><code>Size</code></td>
+<td>报告的总容量</td>
+<td>这里体现约 <code>926Gi</code> 的共享容器容量</td>
+</tr>
+<tr>
+<td><code>Used</code></td>
+<td>该卷已使用的空间</td>
+<td>Data 卷约用了 <code>416Gi</code></td>
+</tr>
+<tr>
+<td><code>Avail</code></td>
+<td>该文件系统可用的空间</td>
+<td>此处为各卷共享的约 <code>484Gi</code></td>
+</tr>
+<tr>
+<td><code>Capacity</code></td>
+<td>按该卷已用与可用空间计算的使用比例</td>
+<td><code>47%</code> 不等于整块硬盘的占用率</td>
+</tr>
+<tr>
+<td><code>iused</code></td>
+<td>已使用的 inode／文件节点数</td>
+<td><code>2.4M</code> 约为 240 万个节点</td>
+</tr>
+<tr>
+<td><code>ifree</code></td>
+<td>文件系统报告的可用节点数</td>
+<td><code>5.1G</code> 表示数量，不是 <code>5.1GiB</code> 容量</td>
+</tr>
+<tr>
+<td><code>%iused</code></td>
+<td>文件节点使用比例</td>
+<td><code>0%</code> 是取整后的显示，不代表没有文件</td>
+</tr>
+<tr>
+<td><code>Mounted on</code></td>
+<td>挂载点</td>
+<td>通过哪个目录接入并访问该文件系统</td>
+</tr>
+</tbody></table>
+<p>inode 可以粗略理解为记录文件、目录等对象信息的节点，不必把它当成严格的“普通文件总数”。APFS 下也不宜用 <code>ifree</code> 直接推算还能创建多少个文件。日常判断磁盘余量，先看容量列。</p>
+<p><strong>挂载点（mount point）就是文件系统接入目录树的位置。</strong> <code>/</code> 是整棵目录树的根；挂载在它下面的卷可以有自己的空间统计。因此，根目录这一行的 <code>13Gi</code> 并不是整台 Mac 所有数据的大小。</p>
+<h2>三、为什么好多行都是 926Gi？</h2>
+<p>关键在 <strong>APFS 容器（container）与卷（volume）</strong> 的区别。</p>
+<p>同一个 APFS 容器可以包含多个卷。各卷按需使用空间，共享容器中的空闲部分；某个卷增长，会减少其他卷能使用的余量。<a href="https://support.apple.com/zh-cn/guide/disk-utility/dskua9e6a110/mac">Apple 的 APFS 宗卷说明</a>介绍了这一机制。[2]</p>
+<p>这份样例可以画成：</p>
+<pre><code class="language-text">主 APFS 容器：约 926Gi
+├─ Data       已用约 416Gi
+├─ 系统卷     已用约  13Gi
+├─ Preboot    已用约  10Gi
+├─ VM         已用约   2Gi
+├─ Recovery、Update 与其他开销
+└─ 各卷共享的剩余空间：约 484Gi
+</code></pre>
+<p>因此，多个 <code>926Gi</code> 不能相加，重复的 <code>484Gi</code> 也只能算一次。<code>926Gi - 416Gi</code> 不等于 <code>484Gi</code>，是因为 Data 之外的卷及文件系统开销也使用了容器空间。</p>
+<p>如果只用这份经过舍入的输出粗算，主容器已占用约：</p>
+<pre><code class="language-text">926Gi - 484Gi ≈ 442Gi
+442 ÷ 926 ≈ 48%
+</code></pre>
+<p>这是主容器层面的近似值，不是整块物理 SSD 所有分区的精确统计。需要更完整的容器信息时，用 <code>diskutil apfs list</code>。</p>
+<h2>四、Capacity 为什么显示 47%，而不是 45% 或 48%？</h2>
+<p>在这种共享空间的输出里，macOS <code>df</code> 的口径是：[1]</p>
+<pre><code class="language-text">Capacity = 该卷已用空间 ÷（该卷已用空间 + 该卷可用空间）
+</code></pre>
+<p>数据卷近似为：</p>
+<pre><code class="language-text">416 ÷（416 + 484）≈ 46.2%
+</code></pre>
+<p><code>df</code> 通常将百分比向上取整，而容量列本身也经过舍入，因此这里显示 <code>47%</code>。不要拿显示出来的整数容量精确反推底层统计。</p>
+<p>三种比例回答的是不同问题：</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>回答的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>416 ÷ 926 ≈ 45%</code></td>
+<td>Data 卷占容器总容量的大约多少</td>
+</tr>
+<tr>
+<td><code>416 ÷ (416 + 484)</code>，显示 <code>47%</code></td>
+<td><code>df</code> 对 Data 卷采用的使用率口径</td>
+</tr>
+<tr>
+<td><code>(926 - 484) ÷ 926 ≈ 48%</code></td>
+<td>主容器整体大约用了多少</td>
+</tr>
+</tbody></table>
+<p>判断还能继续写入多少数据，<strong>优先看 <code>Avail</code>，再结合容器统计；不要把某一行的 <code>Capacity</code> 当成整个 SSD 的统一占用率。</strong></p>
+<h2>五、这些系统卷都在做什么？</h2>
+<p>系统和用户数据分开存放，是现代 macOS 的正常设计。<a href="https://support.apple.com/guide/security/role-of-apple-file-system-seca6147599e/web">Apple 平台安全指南中的 APFS 说明</a>解释了核心卷的职责，以及 macOS 11 及后续版本从系统快照启动的方式。[3]</p>
+<table>
+<thead>
+<tr>
+<th>挂载点或名称</th>
+<th>可以怎样理解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/</code></td>
+<td>系统根目录；样例中的 <code>disk3s3s1</code> 对应挂载的系统快照</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/Data</code></td>
+<td>可变数据，包括用户文件、用户安装的应用及许多系统运行数据</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/VM</code></td>
+<td>存放虚拟内存交换文件；这里统计的是磁盘占用，不是内存条容量</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/Preboot</code></td>
+<td>保存启动所需的辅助数据</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/Update</code></td>
+<td>系统更新相关卷</td>
+</tr>
+<tr>
+<td><code>/Volumes/Recovery</code></td>
+<td>恢复系统卷</td>
+</tr>
+<tr>
+<td><code>xarts</code>、<code>iSCPreboot</code>、<code>Hardware</code></td>
+<td>系统内部的辅助卷，涉及启动、安全或硬件支持；具体职责不能只凭 <code>df</code> 完整判断</td>
+</tr>
+<tr>
+<td><code>/System/Volumes/Update/SFR/mnt1</code></td>
+<td>更新目录下的辅助挂载；仅凭这一行不能确定来源，更不能断言它是另一块物理硬盘</td>
+</tr>
+</tbody></table>
+<p>设备编号是标识，不是产品清单。比如 <code>disk3</code> 可以表示一个合成的 APFS 容器；<code>s1</code> 等后缀用于区分其中的卷或其他切片。要核对层级和设备来源，应查看 <code>diskutil list</code> 和 <code>diskutil info</code>。</p>
+<h2>六、devfs 和 auto_home 的 100% 要处理吗？</h2>
+<pre><code class="language-text">devfs          ... 100% ... /dev
+map auto_home  ... 100% ... /System/Volumes/Data/home
+</code></pre>
+<p><code>devfs</code> 是用于呈现设备节点的虚拟文件系统。<code>map auto_home</code> 是自动挂载服务的映射入口。它们并不是普通的文件存储卷，容量数字不能照搬普通磁盘的判断方式。</p>
+<p><strong>在这份输出中，这两处 <code>100%</code> 本身不构成磁盘空间不足的证据。</strong> 真正需要关注的是承载文件的存储卷及其容器，而这里主容器仍有约 <code>484Gi</code> 可用。</p>
+<h2>七、从“还剩多少”查到“谁占用了空间”</h2>
+<p><code>df</code> 和 <code>du</code> 可以配合使用：<strong><code>df</code> 看文件系统余量，<code>du</code> 看指定文件或目录的占用。</strong> 以下命令用于查看信息。</p>
+<h3>1. 只看主目录所在文件系统</h3>
+<pre><code class="language-bash">df -h ~
+</code></pre>
+<p>这里查的是“承载主目录的文件系统”，不是“主目录自己有多大”。想隐藏文件节点统计，可以加大写的 <code>-I</code>：</p>
+<pre><code class="language-bash">df -h -I ~
+</code></pre>
+<h3>2. 看主目录以及各一级目录的大小</h3>
+<pre><code class="language-bash">du -sh ~
+du -h -d 1 ~ | sort -h
+</code></pre>
+<p>第一条汇总主目录占用；第二条显示一级目录，并按可读容量从小到大排序，底部还会包含主目录总计。<code>-d 1</code> 限制输出层级，扫描仍需读取其下层内容，目录大时可能耗时。</p>
+<p>若出现 <code>Operation not permitted</code> 或 <code>Permission denied</code>，表示有目录未能读取，结果可能不完整。<code>du</code> 遍历得到的目录占用，也不能直接等同于 APFS 容器总用量；扫描范围、访问权限、快照和共享数据块等都会影响比较。</p>
+<h3>3. 看物理磁盘、容器和卷的关系</h3>
+<pre><code class="language-bash">diskutil list
+diskutil apfs list
+</code></pre>
+<p>需要调查样例中的最后一个挂载时，可以进一步查看：</p>
+<pre><code class="language-bash">diskutil info /dev/disk2s1
+</code></pre>
+<p>这条设备路径只对应本例。换一台电脑，或挂载状态发生变化后，应先用 <code>diskutil list</code> 找到当前标识。</p>
+<h3>4. 查本机命令手册</h3>
+<pre><code class="language-bash">man df
+man du
+man diskutil
+</code></pre>
+<p>按 <code>q</code> 退出手册。macOS 自带命令与 Linux 常见的 GNU 版本可能使用不同参数，复制命令前，以本机手册为准。</p>
+<h2>八、一张日常速查表</h2>
+<table>
+<thead>
+<tr>
+<th>想知道什么</th>
+<th>使用命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>所有已挂载文件系统的空间</td>
+<td><code>df -h</code></td>
+</tr>
+<tr>
+<td>主目录所在文件系统还剩多少</td>
+<td><code>df -h -I ~</code></td>
+</tr>
+<tr>
+<td>主目录自己占用了多少</td>
+<td><code>du -sh ~</code></td>
+</tr>
+<tr>
+<td>主目录下哪些目录较大</td>
+<td><code>du -h -d 1 ~ | sort -h</code></td>
+</tr>
+<tr>
+<td>磁盘与分区、容器的关系</td>
+<td><code>diskutil list</code></td>
+</tr>
+<tr>
+<td>APFS 容器的空间分配</td>
+<td><code>diskutil apfs list</code></td>
+</tr>
+</tbody></table>
+<p>再看到类似输出时，可以先找 Data 行的 <code>Avail</code>，再确认 APFS 容器结构，最后用 <code>du</code> 追踪具体目录。这比逐行相加容量，或只盯住一个 <code>100%</code>，更容易得到准确判断。</p>
+<h2>参考资料</h2>
+<ol>
+<li>Apple Open Source：<a href="https://github.com/apple-oss-distributions/file_cmds/blob/main/df/df.1">df(1) 手册源码</a>。命令参数、单位、APFS 样例及 Capacity 计算说明；同时核对本机 <code>man df</code>、<code>man du</code> 和 <code>man diskutil</code>。</li>
+<li>Apple 支持：<a href="https://support.apple.com/zh-cn/guide/disk-utility/dskua9e6a110/mac">在 Mac 上的“磁盘工具”中添加、删除或抹掉 APFS 宗卷</a>。容器、卷与共享空间机制。</li>
+<li>Apple Platform Security：<a href="https://support.apple.com/guide/security/role-of-apple-file-system-seca6147599e/web">Role of Apple File System</a>。核心卷职责与系统快照启动。</li>
+</ol>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/macbook-02-df-apfs-disk-space/" data-page-title="MacBook 使用心得与最佳实践 02：读懂 df -h 与 APFS 磁盘空间" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
