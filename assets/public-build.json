@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "build_id": "20261022T192721+0800-ba4c09c3",
-  "built_at": "2026-10-22T19:27:21+08:00",
+  "build_id": "20261026T031226+0800-51a949f8",
+  "built_at": "2026-10-26T03:12:26+08:00",
   "files": [
     {
       "path": ".github/workflows/pages.yml",
@@ -25,8 +25,8 @@
     },
     {
       "path": "archives/index.html",
-      "bytes": 22942,
-      "sha256": "e5f3215c7313c6c410b3dbec63a3f8abd56aebf52ffb3f3bb1783b0e04144139"
+      "bytes": 23186,
+      "sha256": "1c84c4e116817d1fbf66325e643bae407006970edb0846dfd29e636985efd528"
     },
     {
       "path": "assets/audio-manifest.json",
@@ -425,13 +425,13 @@
     },
     {
       "path": "favorites/index.html",
-      "bytes": 65003,
-      "sha256": "503b362c8c011f15ae64eb1dbd2c6d04fc4bcd413ba989cc3e95536ebeda832b"
+      "bytes": 65885,
+      "sha256": "de5e8b09ef980661d849d13dbce78bb2a743d67186c9864552ae6ea397fe6bac"
     },
     {
       "path": "index.html",
-      "bytes": 15270,
-      "sha256": "3ed1d52238314de65ac4206c2cd2277fe28bc31bb1dcdbc3d669cd9a9b8da50a"
+      "bytes": 15310,
+      "sha256": "957918221d30b9bd7cf7a36501402d49a647c76006c2cf39797c250087a53bb7"
     },
     {
       "path": "posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -719,6 +719,11 @@
       "sha256": "3ceb46d8932c559c8764b8bc5b41ff0d65b66225d894ff6ac86078e0e782b2ff"
     },
     {
+      "path": "posts/llm-agent-weekly-2026-w44/index.html",
+      "bytes": 23592,
+      "sha256": "e0cf83799452d460875431618a27a0a8d7f7e8bb6baa83bb09e2774031e30cad"
+    },
+    {
       "path": "posts/macbook-01-mobile-work-display-battery/index.html",
       "bytes": 37867,
       "sha256": "0556963485493ced443f5254398ea3bd1b6eeb970c40f66f7932c21beec1906a"
@@ -770,18 +775,18 @@
     },
     {
       "path": "zh/archives/index.html",
-      "bytes": 23208,
-      "sha256": "e5833d21807b9fa59e1c4b7aa458dc4ff2f4183e64ffe975e88ac1541a6843e8"
+      "bytes": 23455,
+      "sha256": "3d94981b5ab52e2387fd723e37584c0ceb6186451264aa9633b9d16f106b764b"
     },
     {
       "path": "zh/favorites/index.html",
-      "bytes": 71830,
-      "sha256": "d30610c7167f869d337aa9e45d87447d421f5d96310cde7e81d32db27838fa8e"
+      "bytes": 72776,
+      "sha256": "07edbe73f4577b326df9aba93f615f02f99be6afe0e288dac0e7893d319dc8a1"
     },
     {
       "path": "zh/index.html",
-      "bytes": 15808,
-      "sha256": "c7806a9701a06f113d4b7ea71b9f6ca0eeed85d862f5899c078841741b99ca49"
+      "bytes": 15739,
+      "sha256": "963539858525f719b2781093a74ff89365384977b6c77faca153f73a899ba66c"
     },
     {
       "path": "zh/posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -1067,6 +1072,11 @@
       "path": "zh/posts/llm-agent-weekly-2026-w43-trial/index.html",
       "bytes": 21924,
       "sha256": "bb31a6d8626c34b5d687276d7a5c3990c403af2ded1f40ea525d831e19349d95"
+    },
+    {
+      "path": "zh/posts/llm-agent-weekly-2026-w44/index.html",
+      "bytes": 21662,
+      "sha256": "5392cca9ebca14d97a756b4249f56b6f1ffee1ea6f721abba3cfb83374f8201b"
     },
     {
       "path": "zh/posts/macbook-01-mobile-work-display-battery/index.html",
