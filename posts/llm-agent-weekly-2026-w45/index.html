@@ -1,0 +1,277 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>LLM & Agent Weekly 2026-W45: Authorization Across Skills and Session-Aware Serving · LATENTX</title>
+    <meta name="description" content="Six primary readings on Skill composition, verifiable claims, harness transfer, scanned-document evaluation, tool-aware scheduling, and KV capacity.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="LLM & Agent Weekly 2026-W45: Authorization Across Skills and Session-Aware Serving · LATENTX">
+    <meta property="og:description" content="Six primary readings on Skill composition, verifiable claims, harness transfer, scanned-document evaluation, tool-aware scheduling, and KV capacity.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w45/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w45/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/llm-agent-weekly-2026-w45/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w45/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/llm-agent-weekly-2026-w45/"
+    data-page-title="LLM &amp; Agent Weekly 2026-W45: Authorization Across Skills and Session-Aware Serving"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/llm-agent-weekly-2026-w45/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/llm-agent-weekly-2026-w45/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat llm-agent-weekly-2026-w45.md</div>
+    <h1>LLM & Agent Weekly 2026-W45: Authorization Across Skills and Session-Aware Serving</h1>
+    <div class="article-meta">
+      <time datetime="2026-11-02">PUBLISHED 2026.11.02</time>
+      <span>9 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#Agents</span><span>#Evaluation</span><span>#Reliability</span><span>#MCP</span><span>#Inference</span><span>#Architecture</span><span>#vLLM</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/llm-agent-weekly-2026-w45/" data-page-title="LLM &amp; Agent Weekly 2026-W45: Authorization Across Skills and Session-Aware Serving" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p><strong>Issue 2026-W45 · Published November 2, 2026 · Asia/Shanghai.</strong> Observation window: <strong>[October 26, 03:00, November 2, 03:00)</strong>, or <strong>[October 25, 19:00, November 1, 19:00) UTC</strong>. Six primary documents inform this independent bilingual review, separate from the daily single-source queue. Five are preprints; one is a maintainer engineering account. LATENTX read the primary bodies and version histories but did not independently reproduce experiments.</p>
+<h2>Four judgments for platform architects</h2>
+<ol>
+<li><strong>Treat Skill additions as system changes.</strong> Composition changes how existing permissions are exercised. Review downstream use of artifacts, approval signals, and destinations.</li>
+<li><strong>Bind assertions to observable evidence.</strong> An authenticated agent&#39;s message still needs verification. A historical success receipt also needs a freshness check before a consequential action.</li>
+<li><strong>Version the model and its interface together.</strong> Field order, tool encoding, and execution rules are part of the deployed system. Compare frozen behavior separately from equal-budget adaptation.</li>
+<li><strong>Optimize the whole session.</strong> Tool latency, cache retention, and decode capacity interact. Lower mean latency, peak throughput, and more KV capacity are distinct objectives.</li>
+</ol>
+<p>These are editorial judgments, not findings independently established by LATENTX.</p>
+<h2>Theme selections</h2>
+<h3>1. CoSA: authorization can disappear between individually admitted Skills</h3>
+<p><strong>Read first · v1, October 26.</strong> <a href="https://arxiv.org/html/2610.35082v1">CoSA: The Conflict of Skills Attack in Real-World LLM Agent Ecosystems</a>.</p>
+<p><strong>Author report:</strong> Across 288 controlled tasks, five models and three harnesses, adding at most 5% to each Skill pool raises violations from 35.02% to 58.45%. Existing permissions and Skills stay fixed. The OpenClaw recruiting guard experiment reduces violations from 65.28% to 6.67%, with benign completion moving from 66.67% to 65.00%.</p>
+<p><strong>Architecture/value:</strong> Preserve purpose and authorization through artifact handoffs. <strong>Limit:</strong> this is a fixed evaluation grid, not a production incident probability; defense evidence covers a narrower domain and harness.</p>
+<h3>2. PCM: evidence-bearing messages need an independent trust boundary</h3>
+<p><strong>High priority · v1, October 29 · research proposal, not an MCP standard.</strong> <a href="https://arxiv.org/html/2610.39109v1">PCM: A Proof-Carrying Message Protocol for Verifiable Multi-Agent Communication</a>.</p>
+<p><strong>Author proposal:</strong> Signed append-only records support claims and narrowing human-rooted grants. Agent self-reports cannot establish proof. In the authors&#39; 926-message test, 10 false claims are accepted, all using stale evidence.</p>
+<p><strong>Architecture/value:</strong> Verify action receipts outside agent-writable state and recheck current state before execution. <strong>Limit:</strong> honest signers and attesting executors are assumptions; evidence does not prove freshness, completeness, or benign intent. Protocol baselines include modeled implementations, not audited production deployments.</p>
+<h3>3. A fixed-model harness comparison can reject a useful interface</h3>
+<p><strong>High priority · first submitted October 27; v2 October 28.</strong> <a href="https://arxiv.org/html/2610.37255v2">Your Policy Is Secretly a Harness: The Decision Geometry of Agent Interfaces</a>.</p>
+<p><strong>Author finding:</strong> Under KL-regularized control, deployed return separates into harness ceiling and policy mismatch. In a Qwen3.5-2B MiniWoB++ study, reversing observation fields drops trained success from 85.0% to 19.2% despite unchanged optimal decisions.</p>
+<p><strong>Architecture/value:</strong> Pin serialization and test both immediate migration and equal-budget adaptation. <strong>Limit:</strong> controlled tasks support the mechanism; using a stronger teacher to estimate a coding harness&#39;s optimum remains a proxy, not a universal capability ceiling.</p>
+<h3>4. TreasuryQA: test the search-to-scan path, including wrong digits</h3>
+<p><strong>High priority · v1, October 28 UTC.</strong> <a href="https://arxiv.org/html/2610.38924v1">TreasuryQA Bench: Can AI Agents Work an Archive of Scanned Financial Records?</a>.</p>
+<p><strong>Author evidence:</strong> 70 questions over 1,435 scanned publications use a Dropbox twin, MCP and OCR. Ten pinned model–harness pairs attempt each task three times at high reasoning effort. Claude Opus 5.5 in Claude Code reaches 64.8% pass@1; adjacent rankings are not statistically significant after correction.</p>
+<p><strong>Architecture/value:</strong> Retain page evidence and use numeric tolerance graders. <strong>Limit:</strong> only three worked examples are public; most tasks remain private. Provider hardware and serving concurrency are not controlled, and listed model cost excludes OCR charges.</p>
+<h3>5. TAO: schedule tool readiness with cache value and placement</h3>
+<p><strong>High priority · v1, October 27.</strong> <a href="https://arxiv.org/html/2610.37230v1">TAO: Tool-Aware Joint Scheduling for LLM-Based Agentic Serving</a>.</p>
+<p><strong>Author measurement:</strong> DeepSeek-V4 Flash on two nodes, each with 4×H100, SWE-Lite and 64 workers reports 26.8% lower mean task latency, 36.3% lower mean TTFT and 29.5% more decode throughput against the best baseline per metric. Baselines include Dynamo, round-robin/cache-aware vLLM and ThunderAgent; observed node cache credit decays with age.</p>
+<p><strong>Architecture/value:</strong> Measure post-tool return delay alongside total task time. <strong>Limit:</strong> maxima are not universal; Qwen3-32B SWE-verified at 128 workers has 2.5% worse latency than the best baseline. Cache policy and predictor error must accompany comparisons.</p>
+<h3>6. Mistral Large 4: KV capacity is not decode speed</h3>
+<p><strong>High priority · maintainer page dated October 29; earliest public timestamp not independently established.</strong> <a href="https://vllm.ai/blog/2026-10-29-mistral-large-4">Day 0 support for Mistral Large 4 on vLLM</a>.</p>
+<p><strong>Author measurement:</strong> On 8×GB300, NVFP4, TP8 versus TP8+DCP8, no speculative decoding, 8k–60k inputs and up to 128 concurrent requests, DCP decodes 16–28% slower per token. KV capacity rises from 3.60M to 28.76M tokens at memory utilization 0.85; this is capacity, not a throughput multiplier.</p>
+<p><strong>Architecture/value:</strong> Enable DCP when KV residency constrains sessions. <strong>Limit:</strong> matching prefix-cache state is not established for that comparison; P/D results explicitly disable prefix caching. Do not combine these separate experiments.</p>
+<h2>Architecture decisions and tradeoffs</h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Benefit</th>
+<th>Cost and acceptance evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Check authorization at the side-effect boundary</td>
+<td>Preserves action, target and purpose across Skills</td>
+<td>Extra checks and false blocks; retain allowed controls</td>
+</tr>
+<tr>
+<td>Store attestations outside agent-writable state</td>
+<td>Makes reported actions verifiable</td>
+<td>Signer operations and freshness checks remain necessary</td>
+</tr>
+<tr>
+<td>Version model, prompts, schema and harness as one release</td>
+<td>Makes regressions attributable</td>
+<td>More evaluation cells; separate adaptation budgets</td>
+</tr>
+<tr>
+<td>Add tool-aware scheduling before buying capacity</td>
+<td>Can reduce idle time and post-tool delay</td>
+<td>Predictor error, planner overhead and fairness need observation</td>
+</tr>
+<tr>
+<td>Shard KV only when capacity binds</td>
+<td>Supports longer resident sessions</td>
+<td>Collectives add latency; compare the same workload/cache state</td>
+</tr>
+</tbody></table>
+<h2>PoC and acceptance metrics</h2>
+<p>The following are <strong>editorial pilot targets</strong>, not published results or permission to deploy:</p>
+<ul>
+<li><strong>Composition test:</strong> run the same 100 synthetic business requests before and after a Skill addition. Require zero unauthorized writes or exports and no more than a 2 percentage-point loss in allowed completion; inspect every blocked control.</li>
+<li><strong>Evidence test:</strong> replay fabricated, stale, cross-tenant and duplicate receipts, including after restart. Require zero consequential actions from invalid evidence and a fresh read before each state-dependent action.</li>
+<li><strong>Interface migration:</strong> freeze checkpoint and task set, then change one interface element at a time. Record valid completion, correctness, tool errors, tokens and cost. Set a 2 percentage-point non-inferiority margin with a task-bootstrap interval; test adaptation separately with equal budgets.</li>
+<li><strong>Serving test:</strong> sweep 16/32/64 sessions with fixed model, precision, hardware, input/output lengths and tool-delay distribution. Compare cold and warm caches separately. Record p50/p95 TTFT, post-tool delay, total task time, throughput, cache hit rate, failures and per-session fairness. Promote only if p95 task latency improves at least 10% without more failures or a throughput loss above 5%.</li>
+</ul>
+<h2>Continue reading</h2>
+<p>Read CoSA and PCM together for the authorization/evidence boundary; then the harness paper and TreasuryQA for evaluation design; finally TAO and the vLLM account for serving tradeoffs. Links above point directly to the six primary bodies and pin paper versions.</p>
+<h2>Method limits</h2>
+<p>arXiv submission histories determine first submission and revision dates; UTC and Shanghai dates can differ. Submission is a dated preprint record, not proof of peer review or the absence of an earlier workshop artifact. The vLLM item is included as a dated engineering account with uncertain earliest public availability. Aggregator upload dates are not treated as new results: <em>When Agents Fail</em> first submitted October 23 and <em>Matched Capabilities, Different Behaviors</em> first submitted October 25 are outside this window. The official MCP blog supplied no new in-window specification announcement in this search; PCM must not be described as one. Search coverage is selective and no independent replication was performed. Missing experimental conditions remain unknown rather than inferred.</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/llm-agent-weekly-2026-w45/" data-page-title="LLM &amp; Agent Weekly 2026-W45: Authorization Across Skills and Session-Aware Serving" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

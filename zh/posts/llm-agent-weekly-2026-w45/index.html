@@ -1,0 +1,288 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>LLM 与 Agent 研究周刊 2026-W45：跨技能授权与会话感知推理 · LATENTX</title>
+    <meta name="description" content="六份一手材料，聚焦技能组合授权、可验证断言、Harness 迁移、扫描文档评测、工具感知调度与 KV 容量取舍。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="LLM 与 Agent 研究周刊 2026-W45：跨技能授权与会话感知推理 · LATENTX">
+    <meta property="og:description" content="六份一手材料，聚焦技能组合授权、可验证断言、Harness 迁移、扫描文档评测、工具感知调度与 KV 容量取舍。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/llm-agent-weekly-2026-w45/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w45/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/llm-agent-weekly-2026-w45/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w45/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/llm-agent-weekly-2026-w45/"
+    data-page-title="LLM 与 Agent 研究周刊 2026-W45：跨技能授权与会话感知推理"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/llm-agent-weekly-2026-w45/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/llm-agent-weekly-2026-w45/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat llm-agent-weekly-2026-w45.md</div>
+    <h1>LLM 与 Agent 研究周刊 2026-W45：跨技能授权与会话感知推理</h1>
+    <div class="article-meta">
+      <time datetime="2026-11-02">发布于 2026.11.02</time>
+      <span>9 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#Agents</span><span>#Evaluation</span><span>#Reliability</span><span>#MCP</span><span>#Inference</span><span>#Architecture</span><span>#vLLM</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/llm-agent-weekly-2026-w45/" data-page-title="LLM 与 Agent 研究周刊 2026-W45：跨技能授权与会话感知推理" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p><strong>2026-W45 · 发布日期：2026年11月2日 · Asia/Shanghai。</strong> 观察窗口为 <strong>[10月26日03:00，11月2日03:00)</strong>，对应 UTC <strong>[10月25日19:00，11月1日19:00)</strong>。本期为独立双语多来源综述，不进入每日单来源队列。六份一手材料包括五篇预印本和一篇维护者工程文章；已核读正文与版本记录，未独立复现实验。</p>
+<h2>面向平台架构师的四条判断</h2>
+<ol>
+<li><strong>把 Skill 新增视为系统变更。</strong> 组合会改变既有权限的使用方式，应检查产物、审批信号和目的地址在下游的用途。</li>
+<li><strong>把断言绑定到可观测证据。</strong> 消息发送方通过认证，仍不等于消息内容得到证实；历史成功收据在关键动作前仍需新鲜度检查。</li>
+<li><strong>模型与接口共同版本化。</strong> 字段顺序、工具编码和执行规则均属于部署系统；冻结模型迁移与等预算适配应分开评估。</li>
+<li><strong>以完整会话为优化对象。</strong> 工具等待、缓存驻留和解码容量相互影响；平均延迟、峰值吞吐和 KV 容量是不同目标。</li>
+</ol>
+<p>以上为编辑判断，不是 LATENTX 独立验证的研究结论。</p>
+<h2>主题精选</h2>
+<h3>1. CoSA：单个 Skill 通过准入，组合后仍可能丢失授权</h3>
+<p><strong>优先阅读 · v1，10月26日。</strong> <a href="https://arxiv.org/html/2610.35082v1">CoSA: The Conflict of Skills Attack in Real-World LLM Agent Ecosystems</a>。</p>
+<p><strong>作者报告：</strong> 在288个受控任务、五个模型与三个 Harness 上，每个技能池最多新增5%的 Skill，违规率从35.02%升至58.45%，既有权限与 Skill 保持不变。OpenClaw 招聘场景的防护实验将违规率从65.28%降至6.67%，正常任务完成率从66.67%变为65.00%。</p>
+<p><strong>架构影响与价值：</strong> 在产物交接中保留用途限制与授权条件。<strong>限制：</strong> 这是固定评测网格的结果，不是生产事故概率；防御证据仅覆盖更窄的领域与 Harness。</p>
+<h3>2. PCM：携带证据的消息需要独立信任边界</h3>
+<p><strong>高优先级 · v1，10月29日 · 研究提案，并非 MCP 标准。</strong> <a href="https://arxiv.org/html/2610.39109v1">PCM: A Proof-Carrying Message Protocol for Verifiable Multi-Agent Communication</a>。</p>
+<p><strong>作者方案：</strong> 以签名追加日志支持事实断言与源自人类、只能收窄的授权链；Agent 自报不能构成证明。作者的926条消息测试中接受了10条虚假断言，均使用过期证据。</p>
+<p><strong>架构影响与价值：</strong> 在 Agent 不可改写的状态之外验证动作收据，并在执行前复核当前状态。<strong>限制：</strong> 可信签名方与执行见证方是前提；证据不证明新鲜度、完整性或良好意图。协议基线包含建模实现，不能当作生产部署审计。</p>
+<h3>3. 固定模型比较可能否决有潜力的 Harness 接口</h3>
+<p><strong>高优先级 · 10月27日首次提交，10月28日 v2。</strong> <a href="https://arxiv.org/html/2610.37255v2">Your Policy Is Secretly a Harness: The Decision Geometry of Agent Interfaces</a>。</p>
+<p><strong>作者发现：</strong> 在 KL 正则控制假设下，部署回报可分为 Harness 上限与策略失配。在 Qwen3.5-2B 的 MiniWoB++ 实验中，仅反转观测字段顺序，最优决策不变，训练后模型成功率却从85.0%降至19.2%。</p>
+<p><strong>架构影响与价值：</strong> 固定序列化格式，分别评估即时迁移和等预算适配。<strong>限制：</strong> 受控任务支持机制分析；以更强教师估计编码 Harness 的最优策略仍是代理指标，不能代表通用能力上限。</p>
+<h3>4. TreasuryQA：覆盖从搜索到扫描识读的完整链路</h3>
+<p><strong>高优先级 · v1，UTC 10月28日。</strong> <a href="https://arxiv.org/html/2610.38924v1">TreasuryQA Bench: Can AI Agents Work an Archive of Scanned Financial Records?</a>。</p>
+<p><strong>作者证据：</strong> 70个问题对应1,435份扫描出版物，通过 Dropbox 仿真环境、MCP 与 OCR 完成。十组固定版本的模型与 Harness 均采用高推理强度，每题尝试三次。Claude Opus 5.5 配合 Claude Code 的 pass@1 为64.8%；校正多重比较后，相邻排名差异并不显著。</p>
+<p><strong>架构影响与价值：</strong> 保存页级证据，用数值容差判分。<strong>限制：</strong> 只公开三个完整例题，多数任务私有；提供方硬件与服务并发未受控，所列模型成本不含 OCR 费用。</p>
+<h3>5. TAO：联合调度工具就绪、缓存价值与放置</h3>
+<p><strong>高优先级 · v1，10月27日。</strong> <a href="https://arxiv.org/html/2610.37230v1">TAO: Tool-Aware Joint Scheduling for LLM-Based Agentic Serving</a>。</p>
+<p><strong>作者测量：</strong> DeepSeek-V4 Flash、两节点且每节点4×H100、SWE-Lite、64个 worker，相对各指标最强基线，平均任务延迟降低26.8%、平均 TTFT 降低36.3%、解码吞吐提升29.5%。基线包括 Dynamo、轮询及缓存感知 vLLM、ThunderAgent；节点缓存价值观测随时间衰减。</p>
+<p><strong>架构影响与价值：</strong> 同时测量工具返回后的等待与完整任务耗时。<strong>限制：</strong> 最大收益不能泛化；Qwen3-32B 在 SWE-verified、128个 worker 时，延迟比最强基线差2.5%。比较必须携带缓存策略与预测误差。</p>
+<h3>6. Mistral Large 4：KV 容量不等于解码速度</h3>
+<p><strong>高优先级 · 维护者页面标注10月29日，最早公开时间未独立确证。</strong> <a href="https://vllm.ai/blog/2026-10-29-mistral-large-4">Day 0 support for Mistral Large 4 on vLLM</a>。</p>
+<p><strong>作者测量：</strong> 8×GB300、NVFP4、TP8 与 TP8+DCP8 对比，不启用推测解码，输入8k–60k、并发至128时，DCP 每 token 解码慢16–28%。显存利用率0.85时 KV 容量从3.60M升至28.76M token；这是容量，不能当吞吐倍率。</p>
+<p><strong>架构影响与价值：</strong> 当 KV 驻留成为会话瓶颈时考虑 DCP。<strong>限制：</strong> 该比较的前缀缓存匹配状态未确证；P/D 实验明确关闭前缀缓存，不应将两组实验拼接。</p>
+<h2>架构决策与取舍</h2>
+<table>
+<thead>
+<tr>
+<th>决策</th>
+<th>收益</th>
+<th>代价与验收证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>在副作用边界检查授权</td>
+<td>跨 Skill 保留动作、对象与用途</td>
+<td>增加检查和误拦截；保留允许执行的对照任务</td>
+</tr>
+<tr>
+<td>在 Agent 不可改写的状态外保存证明</td>
+<td>动作报告可验证</td>
+<td>仍需运维签名方并检查新鲜度</td>
+</tr>
+<tr>
+<td>将模型、提示、schema 与 Harness 共同发布</td>
+<td>可定位回归来源</td>
+<td>增加评测组合，适配预算单独比较</td>
+</tr>
+<tr>
+<td>扩容前评估工具感知调度</td>
+<td>可能减少空转和工具返回等待</td>
+<td>需观测预测误差、规划开销及公平性</td>
+</tr>
+<tr>
+<td>仅在容量受限时分片 KV</td>
+<td>支持更长驻留会话</td>
+<td>集合通信增加延迟，须匹配负载和缓存状态</td>
+</tr>
+</tbody></table>
+<h2>PoC 与验收指标</h2>
+<p>以下为<strong>编辑提出的试点门槛</strong>，不是论文结果，也不构成上线授权：</p>
+<ul>
+<li><strong>组合测试：</strong> 在新增 Skill 前后运行相同的100个合成业务请求；未授权写入或外传为零，允许任务完成率下降不超过2个百分点，逐一检查被拦截对照任务。</li>
+<li><strong>证据测试：</strong> 重放伪造、过期、跨租户、重复收据，并覆盖重启；无效证据触发关键动作为零，依赖当前状态的动作前必须重新读取。</li>
+<li><strong>接口迁移：</strong> 固定 checkpoint 与任务集，每次仅改一个接口元素；记录有效完成、正确率、工具错误、token 与成本。非劣界限设为2个百分点，附任务级 bootstrap 区间；等预算适配另行评估。</li>
+<li><strong>服务测试：</strong> 固定模型、精度、硬件、输入输出长度及工具延迟分布，扫描16/32/64会话；冷暖缓存分别比较。记录 p50/p95 TTFT、工具返回等待、完整任务延迟、吞吐、缓存命中、失败和会话公平性。只有 p95 任务延迟至少改善10%、失败不增加且吞吐下降不超过5%才进入下一阶段。</li>
+</ul>
+<h2>继续阅读</h2>
+<p>建议先结合 CoSA 与 PCM 理解授权和证据边界，再读 Harness 论文与 TreasuryQA 设计评测，最后用 TAO 和 vLLM 文章分析服务取舍。以上链接直达六份一手正文，论文固定版本。</p>
+<h2>方法限制</h2>
+<p>首投与修订日期取 arXiv 提交历史，UTC 与北京时间可能跨日。提交日期是预印本记录，不能证明同行评审完成，也不能排除更早的研讨会材料。vLLM 作为有日期的工程报告收录，最早公开时间仍不确定。不把聚合页上架当成新成果：<em>When Agents Fail</em> 首投10月23日，<em>Matched Capabilities, Different Behaviors</em> 首投10月25日，均在窗口之外。本次检索未从 MCP 官方博客找到窗口内的新规范公告，不能将 PCM 描述为该类公告。检索不穷尽，未独立复现，缺失实验条件保持未知。</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/llm-agent-weekly-2026-w45/" data-page-title="LLM 与 Agent 研究周刊 2026-W45：跨技能授权与会话感知推理" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
