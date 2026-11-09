@@ -1,0 +1,289 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>LLM 与 Agent 研究周刊 2026-W46：规则、能力与回放契约的保留 · LATENTX</title>
+    <meta name="description" content="六篇一手论文：压缩合规、Harness 回归、多 Agent 可靠性、MCP 溯源、推理模拟与确定性回放。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="LLM 与 Agent 研究周刊 2026-W46：规则、能力与回放契约的保留 · LATENTX">
+    <meta property="og:description" content="六篇一手论文：压缩合规、Harness 回归、多 Agent 可靠性、MCP 溯源、推理模拟与确定性回放。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/llm-agent-weekly-2026-w46/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w46/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/llm-agent-weekly-2026-w46/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w46/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/llm-agent-weekly-2026-w46/"
+    data-page-title="LLM 与 Agent 研究周刊 2026-W46：规则、能力与回放契约的保留"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/llm-agent-weekly-2026-w46/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/llm-agent-weekly-2026-w46/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat llm-agent-weekly-2026-w46.md</div>
+    <h1>LLM 与 Agent 研究周刊 2026-W46：规则、能力与回放契约的保留</h1>
+    <div class="article-meta">
+      <time datetime="2026-11-09">发布于 2026.11.09</time>
+      <span>9 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#Agents</span><span>#Evaluation</span><span>#Reliability</span><span>#MCP</span><span>#Inference</span><span>#Architecture</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/llm-agent-weekly-2026-w46/" data-page-title="LLM 与 Agent 研究周刊 2026-W46：规则、能力与回放契约的保留" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p><strong>2026-W46 · 发布于 2026 年 11 月 9 日 · Asia/Shanghai。</strong> 观察窗口为 <strong>[11 月 2 日 03:00, 11 月 9 日 03:00)</strong>，对应 UTC <strong>[11 月 1 日 19:00, 11 月 8 日 19:00)</strong>。本期独立双语综述核读六篇一手预印本及版本历史，不进入每日单来源队列。以下结果均为作者报告，LATENTX 未独立复现实验。</p>
+<h2>给平台架构师的四条判断</h2>
+<ol>
+<li><strong>保留规则不等于执行规则。</strong> 同时检查压缩摘要保留了什么，以及压缩后的实际行动。</li>
+<li><strong>改进需要回归台账。</strong> 新增成功、丢失成功、重复运行可靠性和成本应共同进入发布决策。</li>
+<li><strong>组合产生新的故障边界。</strong> 投票器和共享证据可能抵消多个模型的冗余收益。</li>
+<li><strong>推理预测需要部署契约。</strong> 固定内核、缓存行为和批处理条件，再信任配置排序或回放结果。</li>
+</ol>
+<p>这些是编辑判断，不是 LATENTX 独立验证的研究结论。</p>
+<h2>主题精选</h2>
+<h3>1. ARCBench：摘要之后，还要检查行动</h3>
+<p><strong>优先阅读 · v1，11 月 2 日。</strong> <a href="https://arxiv.org/html/2611.03223v1">Do Agents Still Follow the Rules?</a>。</p>
+<p><strong>作者报告：</strong> S1 在 pi harness 中以 Hermes 压缩测试 17 个案例，使用 OpenRouter 上的 DeepSeek-V4-Flash、GLM-5.3-Flash、Qwen3.7-Flash 和 GPT-Luna；同一模型承担压缩与行动。136 个案例/模型/渠道组合中，violation@3 从完整历史的 9.6% 升至压缩后的 37.8%；70.1% 的压缩运行保留规则。violation@3 表示三次运行中至少一次违规的案例比例，规则保留率则以运行次数为分母，两者不能混算。</p>
+<p><strong>架构影响与价值：</strong> 显式保存规则状态，测试压缩后的真实工具调用。<strong>限制：</strong> 诊断依赖 LLM 裁判、选定案例和特定 harness；仅保留规则不能证明合规。这不是生产故障概率。</p>
+<h3>2. Harness 演化：更高总分可能掩盖能力丢失</h3>
+<p><strong>优先阅读 · v1，11 月 5 日。</strong> <a href="https://arxiv.org/html/2611.07624v1">Beneath the Surface</a>。</p>
+<p><strong>作者报告：</strong> 四种演化方法使用 GPT-5.4，组合 MiniSWE 2.4.5 与 Codex 0.143.0，在 τ³-Banking 和 Terminal-Bench 2 上评估。十六个演化后 Agent 都同时获得和丢失任务覆盖。迁移与部署成本分析进一步限制了总分收益的解释；更严格的候选准入也可能丢弃有价值的替代方案。</p>
+<p><strong>架构影响与价值：</strong> 将提示、工具和编排作为一个发布单元，保留逐任务转移记录，避免只看最终平均分。<strong>限制：</strong> MiniSWE 可改内部源码，Codex 仅改外层，两者搜索空间不同。结果不能证明所有严格门禁都有害，也不能证明某方法适合所有企业负载。摘要与正文对后续算法的命名不同，本期不作具名算法性能结论。</p>
+<h3>3. 多 Agent 可靠性：把投票器和共因故障纳入模型</h3>
+<p><strong>高优先级 · v1，UTC 11 月 4 日 / 上海 11 月 5 日。</strong> <a href="https://arxiv.org/html/2611.07140v1">More Agents, More Reliable?</a>。</p>
+<p><strong>作者报告：</strong> LangGraph 化学危害信息抽取案例使用保存的 ECHA 页面，对比 GPT-5-mini、Gemini-2.5-Flash 与 Qwen2.5-VL-3B。九种物质，每模型各重复十次，排除三次基础设施失败。多数投票没有明确超过最强单模型。框架将投票器故障与相关错误显式列为敏感性参数。</p>
+<p><strong>架构影响与价值：</strong> 独立测试聚合器，以最强单模型为冗余方案基线。<strong>限制：</strong> 业务输入比例由作者声明，并非日志估计；九种物质上的重复运行不是独立生产请求。两个 API 模型未固定日期快照，不确定性区间可能过窄。这是结构化事实抽取证据，不是化学安全建议。</p>
+<h3>4. MCP-Eco：先核接口溯源，再看生态总量</h3>
+<p><strong>高优先级 · v1，UTC 11 月 4 日 / 上海 11 月 5 日。</strong> <a href="https://arxiv.org/html/2611.06897v1">MCP-Eco</a>。</p>
+<p><strong>作者数据集：</strong> 论文关联 78,302 个候选服务器项目和 16,165 个候选使用方仓库。9,200 条配置声明中，5,975 条解析为 5,138 个不同的仓库—服务器配对。能力记录区分实时探测与目录声明，保留匹配方法。</p>
+<p><strong>架构影响与价值：</strong> 用溯源字段建立可审查的配置依赖清单，再对选定部署重新探测。<strong>限制：</strong> 导出冻结于 <strong>2026-06-23</strong>。这是介绍旧快照的新论文，不能证明本周采用量或数据集刚刚首次发布。候选仓库和配置声明不证明安装活跃、安全或互操作。本项是研究数据集，不是 MCP 规范变更。</p>
+<h3>5. ROCm InferaSim：预测缩小候选集，实测决定上线</h3>
+<p><strong>高优先级 · v1，UTC 11 月 2 日 / 上海 11 月 3 日。</strong> <a href="https://arxiv.org/html/2611.04032v1">ROCm InferaSim</a>。</p>
+<p><strong>作者报告：</strong> 锚点测量内核配置，再以解析规律和流量模拟迁移预测。评估使用八卡 MI355X 节点、ROCm 7、图捕获及 vLLM/SGLang/ATOM，模型包括 DeepSeek-V4、GLM-5.2 和 Kimi-K3。六个模型、1–384 个会话的 95 个留出 AgentX 多轮配置中，锚定模式吞吐、token 间延迟和 TTFT 误差分别在 8%、14%、23% 以内；这里使用几何平均误差因子，不是逐请求误差上限。</p>
+<p><strong>架构影响与价值：</strong> 将物理搜索缩小为可测候选集，同时保留延迟余量。<strong>限制：</strong> 更换内核、引擎构建或 DCP 可能需要新锚点。缓存驻留和驱逐引入不确定性；吞吐预测准确不等于尾延迟达标。本期不推断跨厂商加速比。</p>
+<h3>6. BlockLock：在部署数值边界内定义可复现性</h3>
+<p><strong>按需优先 · v1，11 月 4 日。</strong> <a href="https://arxiv.org/html/2611.06977v1">BlockLock</a>。</p>
+<p><strong>作者报告：</strong> 固定受保护请求所见的批几何形状，稳定其数值路径。测试覆盖 A6000、A100、H100 上的 Qwen3-8B/14B、Llama-3.1-8B-Instruct 和 Gemma-3-4B/12B，使用 BF16、贪心解码、批大小 1、2、4、8、16，十次重复改变同批其他请求。两种模式在报告条件内保留目标序列与 Top-20 logits，另有范围有限的双 A6000 张量并行实验。</p>
+<p><strong>架构影响与价值：</strong> 回放测试加入同批请求扰动，固定硬件、后端与执行形状。<strong>限制：</strong> 契约逐部署成立，不保证跨 GPU 或软件版本逐位一致。Pack 只解码目标，Rows 还解码其他请求，墙钟时间对应的交付工作量不同。因此本期不引用混合加速比，也不外推至未经测试的 MoE。</p>
+<h2>架构决策与取舍</h2>
+<table>
+<thead>
+<tr>
+<th>决策</th>
+<th>收益</th>
+<th>成本或故障模式</th>
+<th>应保留的部署证据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>将行动授权放到外部执行边界</td>
+<td>在真实工具边界检查范围</td>
+<td>策略状态可能过期或错配</td>
+<td>授权版本、动作、目的地、执行检查结果</td>
+</tr>
+<tr>
+<td>Harness 变更加入能力保留检查</td>
+<td>发现平均收益隐藏的回归</td>
+<td>重复试验消耗预算；硬门禁可能拒绝有用候选</td>
+<td>新增/丢失矩阵、留出结果、成本</td>
+</tr>
+<tr>
+<td>引入多模型投票器</td>
+<td>显式处理分歧和聚合</td>
+<td>共因与投票器错误仍然存在</td>
+<td>组件结果、聚合器测试、业务输入比例</td>
+</tr>
+<tr>
+<td>用模拟筛选推理布局</td>
+<td>减少昂贵搜索</td>
+<td>模型误差可能改变延迟可行性</td>
+<td>锚点身份、引擎构建、缓存策略、候选实测</td>
+</tr>
+</tbody></table>
+<p>表格是编辑设计建议，没有任何一篇论文端到端验证这套组合架构。</p>
+<h2>PoC 与验收指标</h2>
+<p>上线前运行有界评估。以下为建议验收标准，不是论文结果。</p>
+<ul>
+<li><strong>授权与压缩：</strong> 固定策略、输入与工具目的地，重复完整历史/压缩试验，分别报告 violation@3、逐运行违规率，以及规则保留、正常任务完成率、授权检查延迟。选定关键用例集要求未授权写入为零，同时说明有限覆盖范围。</li>
+<li><strong>Harness 变更：</strong> 固定推理与优化预算，公布新增/丢失任务数、重复成功率、留出迁移和每个获准任务成本。指定关键案例回归即阻断该候选并审查，不静默删除被拒绝的替代方案。</li>
+<li><strong>组合：</strong> 在相同证据和预算下比较最强单模型与团队，注入聚合器故障和共享错误证据；报告相对外部真值的正确率、相关失败、升级人工比例、总延迟与成本。</li>
+<li><strong>推理：</strong> 重新探测选定 MCP 接口并固定能力溯源。在自己的模型/硬件/负载上实测模拟器排名靠前的候选，显式区分冷/热缓存。实测 P95/P99 TTFT 和 token 间延迟须满足既有服务 SLO。可复现回放在固定契约内要求改变同批请求后，目标 token 和 Top-20 完全一致，同时记录填充与同批其他工作量。</li>
+</ul>
+<h2>继续阅读</h2>
+<p>发布治理先读 ARCBench 与演化研究；组合假设读可靠性论文；清单溯源读 MCP-Eco；配置搜索和回放设计读两篇推理论文。上文链接均固定版本，借用指标前应核对方法和限制。</p>
+<h2>方法限制</h2>
+<p>六篇均为一手预印本，未经本刊独立复现。选择偏向可落地方法与限制，不是穷尽文献调查。首个 arXiv 提交时间均在窗口内，但无法普遍排除 arXiv 之外更早的公开版本。MCP-Eco 的旧快照已明确标注。搜索摘要仅用于发现线索。RECEIPT 首次提交于 11 月 1 日 14:06 UTC，早于窗口，予以剔除。本期不声称出现新 MCP 规范要求、生产事故概率、跨硬件确定性或通用推理加速比。可选周刊音频缺席。</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/llm-agent-weekly-2026-w46/" data-page-title="LLM 与 Agent 研究周刊 2026-W46：规则、能力与回放契约的保留" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

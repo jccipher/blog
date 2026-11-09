@@ -1,0 +1,278 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>LLM & Agent Weekly 2026-W46: Preserving Rules, Capabilities and Replay Contracts · LATENTX</title>
+    <meta name="description" content="Six primary papers on compaction compliance, harness regressions, multi-agent reliability, MCP provenance, serving simulation and deterministic replay.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="LLM & Agent Weekly 2026-W46: Preserving Rules, Capabilities and Replay Contracts · LATENTX">
+    <meta property="og:description" content="Six primary papers on compaction compliance, harness regressions, multi-agent reliability, MCP provenance, serving simulation and deterministic replay.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w46/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w46/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/llm-agent-weekly-2026-w46/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w46/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/llm-agent-weekly-2026-w46/"
+    data-page-title="LLM &amp; Agent Weekly 2026-W46: Preserving Rules, Capabilities and Replay Contracts"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/llm-agent-weekly-2026-w46/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/llm-agent-weekly-2026-w46/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat llm-agent-weekly-2026-w46.md</div>
+    <h1>LLM & Agent Weekly 2026-W46: Preserving Rules, Capabilities and Replay Contracts</h1>
+    <div class="article-meta">
+      <time datetime="2026-11-09">PUBLISHED 2026.11.09</time>
+      <span>9 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#Agents</span><span>#Evaluation</span><span>#Reliability</span><span>#MCP</span><span>#Inference</span><span>#Architecture</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/llm-agent-weekly-2026-w46/" data-page-title="LLM &amp; Agent Weekly 2026-W46: Preserving Rules, Capabilities and Replay Contracts" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p><strong>Issue 2026-W46 · Published November 9, 2026 · Asia/Shanghai.</strong> Observation window: <strong>[November 2, 03:00, November 9, 03:00)</strong>, equivalent to <strong>[November 1, 19:00, November 8, 19:00) UTC</strong>. This independent bilingual review reads six primary preprints and their version histories. It does not enter the daily single-source queue. Results below are author reports; LATENTX has not independently reproduced them.</p>
+<h2>Four judgments for platform architects</h2>
+<ol>
+<li><strong>A preserved rule is not an enforced rule.</strong> Evaluate the actions after compaction, alongside what the summary retained.</li>
+<li><strong>Improvement needs a regression ledger.</strong> New successes, lost successes, repeated-run reliability and cost belong in the same release decision.</li>
+<li><strong>Composition creates its own failure boundary.</strong> A voter and shared evidence can defeat the redundancy of several models.</li>
+<li><strong>Serving predictions need a deployment contract.</strong> Pin kernels, cache behavior and batching conditions before trusting rankings or replay results.</li>
+</ol>
+<p>These are editorial judgments, not independently established LATENTX findings.</p>
+<h2>Theme selections</h2>
+<h3>1. ARCBench: inspect the action after the summary</h3>
+<p><strong>Read first · v1, November 2.</strong> <a href="https://arxiv.org/html/2611.03223v1">Do Agents Still Follow the Rules?</a>.</p>
+<p><strong>Author report:</strong> In the pi harness, S1 evaluates 17 cases across four OpenRouter models—DeepSeek-V4-Flash, GLM-5.3-Flash, Qwen3.7-Flash and GPT-Luna—with Hermes compaction. The same model compacts and acts. Across 136 case/model/channel combinations, violation@3 rises from 9.6% with full history to 37.8% after compaction; 70.1% of compacted runs retain the rule. Violation@3 counts a case if any of three runs violates; rule retention is a run-level diagnostic, with a different denominator.</p>
+<p><strong>Architecture/value:</strong> Keep explicit rule state and test actual tool calls after compaction. <strong>Limit:</strong> LLM-based diagnostic judges, selected cases and a particular harness constrain generalization; rule retention alone cannot certify compliance. This is not a production failure probability.</p>
+<h3>2. Harness evolution: a higher score can hide lost capabilities</h3>
+<p><strong>Read first · v1, November 5.</strong> <a href="https://arxiv.org/html/2611.07624v1">Beneath the Surface</a>.</p>
+<p><strong>Author report:</strong> Four evolution recipes use GPT-5.4 with MiniSWE 2.4.5 and Codex 0.143.0 on τ³-Banking and Terminal-Bench 2. All sixteen evolved agents gain and lose task coverage. Transfer and deployment-cost analyses also qualify aggregate gains; stricter candidate admission can discard useful alternatives.</p>
+<p><strong>Architecture/value:</strong> Version prompts, tools and orchestration as a release unit; preserve per-task transition histories instead of selecting solely on the final average. <strong>Limit:</strong> Inner-source edits in MiniSWE and outer-layer edits in Codex expose different search spaces. The results do not establish that every stricter gate is harmful or that one recipe transfers to every enterprise workload. The abstract and body name the constructive follow-up differently, so this review makes no named-algorithm performance claim.</p>
+<h3>3. Multi-agent reliability: include the voter and common causes</h3>
+<p><strong>High priority · v1, November 4 UTC / November 5 Shanghai.</strong> <a href="https://arxiv.org/html/2611.07140v1">More Agents, More Reliable?</a>.</p>
+<p><strong>Author report:</strong> A LangGraph chemical-hazard extraction case compares GPT-5-mini, Gemini-2.5-Flash and Qwen2.5-VL-3B against saved ECHA pages. Nine substances receive ten trials per model; three infrastructure failures are excluded. Majority voting does not clearly beat the best individual agent. The framework exposes voter failure and correlated errors as explicit sensitivity parameters.</p>
+<p><strong>Architecture/value:</strong> Test the merger as a component and compare redundancy against the strongest single-model baseline. <strong>Limit:</strong> The operational mix is declared, not estimated from logs; repeated trials on nine substances are not independent production demands. API snapshots are not pinned for two models, and uncertainty envelopes may be too narrow. This is structured-fact extraction evidence, not chemical safety advice.</p>
+<h3>4. MCP-Eco: interface provenance before ecosystem totals</h3>
+<p><strong>High priority · v1, November 4 UTC / November 5 Shanghai.</strong> <a href="https://arxiv.org/html/2611.06897v1">MCP-Eco</a>.</p>
+<p><strong>Author dataset:</strong> The paper links 78,302 candidate server projects and 16,165 candidate consumer repositories. Of 9,200 configuration declarations, 5,975 resolve to 5,138 distinct repository–server pairs. Capability records distinguish live probes from directory claims and retain matching methods.</p>
+<p><strong>Architecture/value:</strong> Use provenance fields to build a reviewable inventory of configured dependencies, then re-probe the selected deployment. <strong>Limit:</strong> The export froze on <strong>2026-06-23</strong>. This is a new paper describing an older snapshot, not evidence of this week&#39;s adoption or a newly verified dataset launch. Candidate repositories and configuration declarations do not prove active, safe or interoperable installations. It is a research dataset, not an MCP normative change.</p>
+<h3>5. ROCm InferaSim: shortlist configurations, then measure the finalists</h3>
+<p><strong>High priority · v1, November 2 UTC / November 3 Shanghai.</strong> <a href="https://arxiv.org/html/2611.04032v1">ROCm InferaSim</a>.</p>
+<p><strong>Author report:</strong> Anchors measure a kernel configuration, then analytical laws and traffic simulation transfer its predictions. Evaluation uses eight-GPU MI355X nodes, ROCm 7, graph capture, vLLM/SGLang/ATOM, and models including DeepSeek-V4, GLM-5.2 and Kimi-K3. On 95 held-out AgentX multi-turn runs across six models and 1–384 sessions, anchored throughput, inter-token latency and TTFT are within 8%, 14% and 23%, respectively, using geometric-mean error factors—not per-request error guarantees.</p>
+<p><strong>Architecture/value:</strong> Reduce the physical search to a measurable shortlist while preserving latency headroom. <strong>Limit:</strong> Changing kernels, engine builds or DCP can require new anchors. Cache residency and eviction add uncertainty; throughput accuracy does not establish tail-latency compliance. No cross-vendor speedup is inferred.</p>
+<h3>6. BlockLock: define reproducibility at the deployed numerical boundary</h3>
+<p><strong>Targeted priority · v1, November 4.</strong> <a href="https://arxiv.org/html/2611.06977v1">BlockLock</a>.</p>
+<p><strong>Author report:</strong> Fixing the protected request&#39;s batch geometry stabilizes its numerical path. Tests cover Qwen3-8B/14B, Llama-3.1-8B-Instruct and Gemma-3-4B/12B on A6000, A100 and H100, using BF16, greedy decoding and batch sizes 1, 2, 4, 8 and 16. Companion requests change across ten repetitions. Both modes preserve target sequences and Top-20 logits in reported conditions, including a limited two-A6000 tensor-parallel experiment.</p>
+<p><strong>Architecture/value:</strong> Add companion perturbation to replay tests; pin hardware, backend and execution geometry. <strong>Limit:</strong> The contract is per deployment, not bitwise portability across GPUs or software versions. Pack decodes only the target, while Rows decodes companions too; their wall times represent different delivered work. This review therefore avoids a pooled speedup claim or an untested MoE extrapolation.</p>
+<h2>Architecture decisions and trade-offs</h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Benefit</th>
+<th>Cost or failure mode</th>
+<th>Deployment evidence to retain</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Externalize action authorization</td>
+<td>Checks scope at the actual tool boundary</td>
+<td>Policy state can be stale or mismatched</td>
+<td>Grant version, action, destination and enforcement result</td>
+</tr>
+<tr>
+<td>Admit harness changes with preservation checks</td>
+<td>Reveals lost capabilities hidden by average gains</td>
+<td>Repeated trials consume budget; hard gates can reject useful candidates</td>
+<td>Gained/lost task matrix, held-out results and cost</td>
+</tr>
+<tr>
+<td>Introduce a multi-model voter</td>
+<td>Makes disagreement and aggregation explicit</td>
+<td>Shared causes and voter errors remain</td>
+<td>Component results, merger tests and operational mix</td>
+</tr>
+<tr>
+<td>Use simulation to shortlist serving layouts</td>
+<td>Reduces expensive search</td>
+<td>Model errors can change latency feasibility</td>
+<td>Anchor identity, engine build, cache policy and measured finalists</td>
+</tr>
+</tbody></table>
+<p>The table is editorial design guidance. None of the papers validates this combined architecture end to end.</p>
+<h2>PoC and acceptance metrics</h2>
+<p>Run a bounded evaluation before rollout; these are proposed acceptance criteria, not paper results.</p>
+<ul>
+<li><strong>Authorization and compaction:</strong> Freeze policy, inputs and tool destinations. Repeat full-history and compacted trials; report violation@3 and per-run violations separately, plus rule retention, benign completion and authorization-check latency. Require zero unauthorized writes in the selected critical suite; state its finite coverage.</li>
+<li><strong>Harness changes:</strong> Freeze inference and optimization budgets. Publish gained/lost task counts, repeated success, held-out transfer and cost per accepted task. Any regression on a designated critical case blocks that candidate pending review; do not quietly erase rejected alternatives.</li>
+<li><strong>Composition:</strong> Compare the best single model with the team under the same evidence and budget. Inject merger faults and shared bad evidence; report correctness against an external oracle, correlated failures, escalation rate and total latency/cost.</li>
+<li><strong>Serving:</strong> Re-probe chosen MCP interfaces and pin capability provenance. Measure the simulator&#39;s top candidates on your model/hardware/load, with explicit cold/warm cache conditions. Require measured P95/P99 TTFT and inter-token latency to meet the existing service SLO. For reproducible replay, require exact target token and Top-20 agreement across changed companions within the pinned contract, recording padding and companion work.</li>
+</ul>
+<h2>Continue reading</h2>
+<p>Read ARCBench and the harness-evolution study for release governance, the reliability paper for composition assumptions, MCP-Eco for inventory provenance, and the two inference papers for configuration search and replay design. Each linked body above is version-pinned; inspect its methods and limitations before borrowing metrics.</p>
+<h2>Method limits</h2>
+<p>All six are primary preprints, not independently reproduced results. Selection favors actionable methods and limitations over headline gains; it is not an exhaustive literature survey. First arXiv submission histories fall inside the window, but an earlier public release outside arXiv cannot be ruled out universally. MCP-Eco&#39;s older freeze is explicit. Search summaries served only as discovery leads. RECEIPT, first submitted November 1 at 14:06 UTC, falls before this window and is excluded. No claim is made about new MCP specification requirements, production incident rates, cross-hardware determinism or a universal serving speedup. Optional weekly audio is absent.</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/llm-agent-weekly-2026-w46/" data-page-title="LLM &amp; Agent Weekly 2026-W46: Preserving Rules, Capabilities and Replay Contracts" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
