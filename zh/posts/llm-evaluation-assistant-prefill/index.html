@@ -1,0 +1,578 @@
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>从 Assistant 到大海捞针：如何读懂大模型评测 PPT · LATENTX</title>
+    <meta name="description" content="解读李宏毅生成式 AI 导论中的模型评测案例，串联 Assistant 角色、回答预填、Claude 2.1 大海捞针、MMLU、模型裁判与价格速度，并整理原始资料链接。">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="从 Assistant 到大海捞针：如何读懂大模型评测 PPT · LATENTX">
+    <meta property="og:description" content="解读李宏毅生成式 AI 导论中的模型评测案例，串联 Assistant 角色、回答预填、Claude 2.1 大海捞针、MMLU、模型裁判与价格速度，并整理原始资料链接。">
+    <meta property="og:locale" content="zh_CN">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/zh/posts/llm-evaluation-assistant-prefill/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/llm-evaluation-assistant-prefill/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/llm-evaluation-assistant-prefill/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/llm-evaluation-assistant-prefill/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/zh/posts/llm-evaluation-assistant-prefill/"
+    data-page-title="从 Assistant 到大海捞针：如何读懂大模型评测 PPT"
+    data-page-kind="post"
+    data-page-lang="zh"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/zh/" aria-label="LATENTX 首页">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="主导航">
+          <a href="/blog/zh/">./home</a>
+          <a href="/blog/zh/archives/">./archive</a>
+          <a href="/blog/zh/favorites/">./favorites</a>
+          <a href="/blog/zh/about/">./about</a>
+          <span class="language-switch" aria-label="选择语言">
+            <a href="/blog/posts/llm-evaluation-assistant-prefill/" lang="en">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/llm-evaluation-assistant-prefill/" lang="zh-CN" aria-current="page">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+  
+  
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/zh/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat llm-evaluation-assistant-prefill.md</div>
+    <h1>从 Assistant 到大海捞针：如何读懂大模型评测 PPT</h1>
+    <div class="article-meta">
+      <time datetime="2026-11-09">发布于 2026.11.09</time>
+      <span>18 分钟阅读</span>
+      <span><b data-inline-page-views>—</b> 次浏览</span>
+      <span>#Assistant</span><span>#Prompt Engineering</span><span>#Long Context</span><span>#MMLU</span><span>#AlpacaEval</span><span>#Arena Hard</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/llm-evaluation-assistant-prefill/" data-page-title="从 Assistant 到大海捞针：如何读懂大模型评测 PPT" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>收藏本文</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> 打赏</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p>📚 一张讲长文阅读的 PPT，在 <code>Assistant:</code> 后面加了一句话：</p>
+<pre><code class="language-text">Here is the most relevant sentence in the context:
+</code></pre>
+<p>它为什么能影响回答？Assistant 到底是谁？为什么同一讲里还要讨论选择题、模型当裁判，以及价格与速度？</p>
+<p>这些问题来自李宏毅老师的**《生成式 AI 导论 2024》第 12 讲《浅谈检定大型语言模型能力的各种方式》**。把几张投影片连起来看，会发现它们都在提醒我们：<strong>模型得分需要和题目、提示、判分方法及运行条件一起解读。</strong></p>
+<p>本文从 Assistant 角色与回答预填切入，串联解读 MMLU、自动裁判、大海捞针和价格图，并整理课程原始资料。文中的图上数字属于 <strong>2024 年课程的历史快照</strong>；API 兼容性核对日期为 <strong>2026 年 11 月 9 日</strong>。</p>
+<h2>一 先看清这组 PPT 在讨论什么</h2>
+<table>
+<thead>
+<tr>
+<th>投影片主题</th>
+<th>要测什么</th>
+<th>阅读时最容易混淆的地方</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MMLU 选择题</td>
+<td>跨学科知识与解题表现</td>
+<td>选择题正确率与实际任务交付能力</td>
+</tr>
+<tr>
+<td>用强模型评估回答</td>
+<td>自动评测与人类偏好的接近程度</td>
+<td>排名相关性与单条回答准确率</td>
+</tr>
+<tr>
+<td>大海捞针</td>
+<td>长上下文中的目标信息提取</td>
+<td>能输入多少内容与能有效使用多少内容</td>
+</tr>
+<tr>
+<td>Assistant 回答前缀</td>
+<td>提示方式对输出的影响</td>
+<td>用户消息中的文字与真正的回答预填</td>
+</tr>
+<tr>
+<td>价格与速度</td>
+<td>能力之外的部署取舍</td>
+<td>历史价格、综合指标与当前实际成本</td>
+</tr>
+</tbody></table>
+<p>课程原始入口是<a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php">老师的课程官网</a>。第 12 讲的<a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4">视频</a>、<a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_evaluation.pdf">PDF</a>和<a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_evaluation.pptx">PPTX</a>都能从课程表找到。</p>
+<h2>二 Assistant 是谁</h2>
+<p><strong>Assistant 是对话中负责回答的 AI 助手这个角色。</strong> 在这张 Claude 实验的 PPT 中，它指模型回答的一侧。</p>
+<p>可以把三个常见概念分开：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>含义</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>模型</td>
+<td>生成内容的具体模型版本</td>
+<td>Claude 2.1</td>
+</tr>
+<tr>
+<td>assistant</td>
+<td>对话消息的角色</td>
+<td><code>{&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: &quot;……&quot;}</code></td>
+</tr>
+<tr>
+<td>回答内容</td>
+<td>这个角色说出的文字</td>
+<td>对问题的解释、引用或结论</td>
+</tr>
+</tbody></table>
+<p>因此，截图中的 <code>Assistant:</code> 并不是另一位参与者的姓名，也不是额外启动的 Agent。它是在标识：接下来是 AI 的回答。<code>User:</code> 或历史模板中的 <code>Human:</code> 则标识提问的一侧。</p>
+<p>在 API 中，角色通常由结构化字段传递。把 <code>Assistant:</code> 几个字打进普通输入框，<strong>不会因此把那条用户消息改成 assistant 消息</strong>。具体消息字段与允许的排列方式，要按所用接口的文档处理。<a href="https://platform.claude.com/docs/en/build-with-claude/working-with-messages">Claude Messages API 文档</a>展示了 user 与 assistant 消息的组织方式。</p>
+<h2>三 如何提前给 Assistant 的回答只加一句引导</h2>
+<p>历史实验使用的回答前缀只有下面这一句，包含末尾的冒号：</p>
+<pre><code class="language-text">Here is the most relevant sentence in the context:
+</code></pre>
+<p>中文意思是：“以下是上下文中最相关的句子：”。它不包含具体答案，而是先规定回答从哪里开始。</p>
+<h3>在支持预填的接口中放在哪里</h3>
+<p><strong>Assistant prefill，也就是回答预填，是先给模型一段回答开头，让模型从这个开头继续生成。</strong> 在支持这一功能的 Messages API 模式中，可把它放在消息列表末尾的 assistant 消息里。下面只展示消息结构；上下文和问题是占位内容：</p>
+<pre><code class="language-json">[
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;[上下文与问题]&quot;
+  },
+  {
+    &quot;role&quot;: &quot;assistant&quot;,
+    &quot;content&quot;: &quot;Here is the most relevant sentence in the context:&quot;
+  }
+]
+</code></pre>
+<p>最后一条 <code>content</code> <strong>只放这句引导</strong>。不在后面代填证据，不额外改写用户问题，也不加一串新的提示要求。</p>
+<p>在这种续写语义下，API 返回的生成内容可能只是后续文本。如果应用要展示完整回答，应按接口语义把已提供的前缀与新生成的文本拼接起来，避免漏掉开头或重复显示。</p>
+<h3>普通聊天输入与预填有什么区别</h3>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>实际提供给模型的内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>在用户消息里写“请以这句话开头”</td>
+<td>一条要求模型遵守的指令</td>
+</tr>
+<tr>
+<td>在用户消息里写 <code>Assistant: …</code></td>
+<td>用户消息中的普通文本，可能被理解为示例</td>
+</tr>
+<tr>
+<td>通过支持的接口提交末尾 assistant 前缀</td>
+<td>模型即将继续生成的回答开头</td>
+</tr>
+</tbody></table>
+<p>它们都可能影响输出，但不能据此认定它们是同一个实验条件。</p>
+<p><strong>当前兼容性需要单独检查。</strong> 截至核对日，Anthropic 文档明确写明 Claude 4.6 及后续模型、Claude Mythos Preview 不支持末尾 assistant prefill，使用这种请求会返回 400 错误。历史示例适合解释机制，不能直接当成所有当前模型的通用调用方式。对不支持的模型，应使用其支持的指令方式表达输出要求，或在需要机器可解析结构时使用受支持的结构化输出功能。<a href="https://platform.claude.com/docs/en/build-with-claude/working-with-messages#prefilling-claudes-response">官方预填说明</a></p>
+<h2>四 这句引导背后的 Claude 2.1 故事</h2>
+<p>故事的起点是长上下文能力：<strong>2023 年 11 月 21 日，Anthropic 发布 Claude 2.1，提供 200K token 上下文窗口</strong>。Token 是模型处理文本的计量单位，不能直接等同于中文字数。<a href="https://www.anthropic.com/news/claude-2-1">发布公告</a></p>
+<p>随后，Greg Kamradt 的 Needle in a Haystack 测试受到关注：在很长的背景文本中插入一条目标事实，再问一个必须依靠这条事实才能回答的问题。</p>
+<p>Anthropic 在 <strong>2023 年 12 月 6 日</strong>的解释文章中报告，Claude 2.1 有时会对一条与全文主题不协调的插入句保持谨慎，倾向于认为依据不足。官方将这种现象解释为回答意愿与训练方式有关，而不是简单归因于完全没读到目标内容。给回答开头加上本文这句引导后，<strong>同一原始评测的得分由 27% 提升至 98%</strong>。<a href="https://claude.com/resources/articles/claude-2-1-prompting">官方实验说明</a></p>
+<p>这个结果属于<strong>特定历史模型、特定测试与特定提示条件</strong>。它支持的经验是：提示方式会改变测试表现；它没有证明所有长文任务或所有模型都能获得同样幅度的提升。</p>
+<p>从使用角度看，这句引导把回答的起点收窄为“先找相关证据句”。这是理解它的一个直观方式，并不意味着一句前缀改变了模型的参数或增加了上下文容量。</p>
+<h2>五 逐张解读大海捞针的示意图</h2>
+<p>截图中，连续排列的黑色文档图标代表背景材料，黄色图标代表藏有目标句的位置。关于旧金山活动的句子是“针”，大量其他文字是“草堆”。问题要求从材料中把目标信息找回来。</p>
+<p>图中黄色文档先出现在中间，又出现在开头和末尾，表达的是<strong>移动同一条证据的位置，再重复测试</strong>。这能检查模型是否只在某些位置更容易找到答案。</p>
+<p>通常会同时改变两项条件：</p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+<th>想排查的问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上下文长度</td>
+<td>输入有多少 token</td>
+<td>文本变长后是否更容易漏掉证据</td>
+</tr>
+<tr>
+<td>目标插入深度</td>
+<td>证据位于全文的哪个百分比位置</td>
+<td>开头、中间、结尾的表现是否一致</td>
+</tr>
+</tbody></table>
+<p>对应热力图时，常见横轴是长度、纵轴是插入深度，颜色编码表现；<strong>具体颜色与分数必须按原图图例读取</strong>。复现也要保存实际输入、提示模板、模型版本和判分规则。<a href="https://github.com/gkamradt/needle-in-a-haystack">Greg Kamradt 的项目</a>提供了这类长度与深度扫描的实现。</p>
+<p>还要区分三种能力：找到一句原文、把分散在多个位置的事实组合起来、判断事实是否可信。单针测试主要覆盖第一种；实际知识库或文档审阅还需要多证据、冲突证据和无答案样本。</p>
+<h2>六 逐张解读 MMLU 选择题</h2>
+<p>“考选择题总不会有问题吧”这页展示了抽象代数、物理和化学三种题。MMLU 全称为 <strong>Massive Multitask Language Understanding</strong>；原论文覆盖 57 个学科任务，用于观察模型的跨学科知识与解题表现。<a href="https://arxiv.org/abs/2009.03300">原论文</a></p>
+<h3>三道题分别在考什么</h3>
+<table>
+<thead>
+<tr>
+<th>图中题目</th>
+<th>PPT 标出的答案</th>
+<th>需要的能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>在模 3 的多项式商结构中判断何时得到域</td>
+<td>B，<code>c = 1</code></td>
+<td>抽象代数概念与推导</td>
+</tr>
+<tr>
+<td>根据题设计算两个点磁极间的力</td>
+<td>A，15 N</td>
+<td>物理公式、单位与数值计算</td>
+</tr>
+<tr>
+<td>判断给定溶解性规则中哪项成立</td>
+<td>D，含铵根的化合物可溶这一考试规则</td>
+<td>化学规则的识别</td>
+</tr>
+</tbody></table>
+<p>第一题可以自己验证：在三元素域中，<code>x² + 1</code> 对三个可能取值都不为零，所以这个二次多项式不可约，所对应的商结构是域。第二、三题这里保留的是投影片的题设与标答，不把考试中的简化条件扩展成没有前提的自然科学结论。</p>
+<h3>为什么有标准答案仍然需要评测协议</h3>
+<p>选择题容易自动判分，但要先确定“怎么答”：是只输出选项字母、先写解释再提取字母，还是比较候选答案的条件概率？这些做法测到的输出行为不同。</p>
+<p>举例说，答案在语义上正确却没有按要求输出字母，可能是格式错误；字母正确但解释完全错误，则提示我们需要进一步检查解题可靠性。选项顺序、示例数量和是否允许工具也应固定。</p>
+<p>对于应用开发，MMLU 可以帮助了解模型的通用基础。代码修改是否通过测试、文档引用是否正确、工具调用是否完成，还需要各自的任务样本。原作者提供了<a href="https://github.com/hendrycks/test">评测代码与数据入口</a>，阅读论文时应把协议一起看。</p>
+<h2>七 逐张解读用大模型当裁判</h2>
+<p>开放问答通常没有一个唯一的字符串标准答案。LLM-as-a-Judge 的思路是让一个较强模型，依据要求对回答打分，或比较两份回答哪份更好。</p>
+<p>这页 PPT 的标题是 <strong>Chat Arena Spearman correlation</strong>。它比较的是不同指标形成的模型排名，与参照排名有多接近。</p>
+<h3>图中数字完整转录</h3>
+<table>
+<thead>
+<tr>
+<th>指标或基准</th>
+<th align="right">图中的 Spearman 相关系数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Output Length</td>
+<td align="right">0.35</td>
+</tr>
+<tr>
+<td>TruthfulQA</td>
+<td align="right">0.51</td>
+</tr>
+<tr>
+<td>HellaSwag</td>
+<td align="right">0.59</td>
+</tr>
+<tr>
+<td>GSM-8K</td>
+<td align="right">0.63</td>
+</tr>
+<tr>
+<td>Open LLM</td>
+<td align="right">0.66</td>
+</tr>
+<tr>
+<td>WinoGrande</td>
+<td align="right">0.69</td>
+</tr>
+<tr>
+<td>ARC-C</td>
+<td align="right">0.83</td>
+</tr>
+<tr>
+<td>MMLU</td>
+<td align="right">0.87</td>
+</tr>
+<tr>
+<td>AlpacaEval 2.0</td>
+<td align="right">0.94</td>
+</tr>
+<tr>
+<td>MT-bench</td>
+<td align="right">0.94</td>
+</tr>
+<tr>
+<td>LC AlpacaEval 2.0</td>
+<td align="right">0.98</td>
+</tr>
+</tbody></table>
+<p>以上按截图标注转录，不把不同时间的在线榜单数值覆盖到这张历史图上。</p>
+<p><strong>0.98 表示模型排名的高度相关，不表示裁判对每道题有 98% 的正确率。</strong> 排名相近也不能保证两模型之间的细小差距具有统计意义。图中的 Output Length 同样值得留意：单是长度就与偏好排名存在一定关联，提示评测需要排查风格因素。</p>
+<h3>LC 为什么要控制长度</h3>
+<p>LC 是 Length-Controlled。模型裁判可能偏好更长的回答，即使新增文字没有增加有效信息。LC AlpacaEval 使用统计方法估计在长度差异得到控制时的偏好，<strong>不是把所有回答剪成相同长度后重新打分</strong>。<a href="https://arxiv.org/abs/2404.04475">论文</a>解释了这一方法；<a href="https://github.com/tatsu-lab/alpaca_eval">AlpacaEval 项目</a>提供实现与使用说明。</p>
+<h3>裁判也需要接受检查</h3>
+<p>MT-Bench 与 Chatbot Arena 的研究讨论了位置、冗长、自我偏好等偏差，以及裁判推理能力的限制。<a href="https://arxiv.org/abs/2306.05685">原论文</a></p>
+<p>工程上可以据此安排检查：交换 A/B 答案位置后重评、统一评分标准、保留人工复核样本，并分别记录事实错误和表达偏好。这些是评测设计建议，不能把它们当作消除全部偏差的保证。</p>
+<p>PPT 还给出了 <strong>Arena-Hard</strong>。其 2024 年方案从真实交互中筛选更有区分力的问题，并通过自动裁判评估回答。作者强调，除了排名相关性，还要看置信区间及能否可靠区分模型。<a href="https://lmsys.org/blog/2024-04-19-arena-hard/">项目说明</a>提供了背景，代码旧入口目前重定向至 <a href="https://github.com/Arena-OSS/arena-hard-auto">Arena-OSS/arena-hard-auto</a>。</p>
+<h2>八 逐张解读价格与速度的散点图</h2>
+<p>这张图来源于 <a href="https://artificialanalysis.ai/">Artificial Analysis</a>，横轴标为 <strong>Price，USD per M Tokens</strong>，纵轴标为 <strong>Quality，General ability index</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>图表元素</th>
+<th>应该怎样读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>向左移动</td>
+<td>在图中采用的计价口径下更便宜</td>
+</tr>
+<tr>
+<td>向上移动</td>
+<td>在图中采用的综合质量口径下更高</td>
+</tr>
+<tr>
+<td>左上区域</td>
+<td>同时兼顾图中质量与价格的候选区域</td>
+</tr>
+<tr>
+<td>某个模型在更贵的位置</td>
+<td>需要进一步判断额外成本是否换来任务收益</td>
+</tr>
+</tbody></table>
+<p>截图里有 GPT-4 Turbo、Claude 3、Gemini 1.5 Pro、Llama 3 等名称，说明这是课程当时的模型与报价快照。<strong>纵轴的 100 不是“所有问题都答对”，横轴也不能直接拆解为输入价或输出价。</strong> 截图没有说明组合价格的权重，不能自行补上一个比例。</p>
+<p>标题提到速度，但这张散点图直接展示的是价格与质量，不能从点的位置推断生成速度。</p>
+<p>部署评估还应分别测量首个可见答案的等待时间、输出吞吐量、完整任务耗时以及并发时的失败率。比较时要固定输入长度、输出长度、推理设置、缓存和服务端点。<a href="https://artificialanalysis.ai/methodology/performance-benchmarking">Artificial Analysis 的方法说明</a>可以帮助理解这些测量口径；其当前方法也不应反套成 2024 年图片的计价公式。</p>
+<h2>九 把这几页转成一套自己的评测</h2>
+<p>下面是基于这些案例整理的实践方案，不是课程图中已有的实验结果。</p>
+<table>
+<thead>
+<tr>
+<th>工作</th>
+<th>测试样本</th>
+<th>主要记录</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>建立任务基线</td>
+<td>自己会遇到的问答、检索、代码或工具任务</td>
+<td>输入、标准、模型版本、配置</td>
+</tr>
+<tr>
+<td>检查证据利用</td>
+<td>单针、多针、冲突证据、没有答案</td>
+<td>证据位置、引用准确性、拒答表现</td>
+</tr>
+<tr>
+<td>比较提示方式</td>
+<td>无前缀、支持的 prefill、明确的用户指令</td>
+<td>每种条件独立的成功率与错误类型</td>
+</tr>
+<tr>
+<td>检查自动裁判</td>
+<td>A/B 互换、长度变化、人工复核</td>
+<td>位置敏感性、偏好偏差、排名区间</td>
+</tr>
+<tr>
+<td>衡量交付代价</td>
+<td>相同真实工作负载</td>
+<td>单任务总成本、完成时间、重试次数</td>
+</tr>
+</tbody></table>
+<p>在报告中保留完整条件尤其重要。同一个模型，换一条提示就可能得到不同表现；同一个分数，换一种判分方法又可能代表不同含义。</p>
+<h2>十 图中的 GitHub 与重要资料链接</h2>
+<p>下表提取投影片可见的链接，并注明现在的入口。视频链接去掉了不影响资源定位的分享参数。</p>
+<table>
+<thead>
+<tr>
+<th>图中资料</th>
+<th>原始或规范化链接</th>
+<th>当前入口与用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Greg Kamradt 大海捞针代码</td>
+<td><a href="https://github.com/gkamradt/LLMTest_NeedleInAHaystack">gkamradt/LLMTest_NeedleInAHaystack</a></td>
+<td>重定向至 <a href="https://github.com/gkamradt/needle-in-a-haystack">needle-in-a-haystack</a>，查看上下文长度与插入深度测试</td>
+</tr>
+<tr>
+<td>Greg Kamradt 视频</td>
+<td><a href="https://youtu.be/KwRRuiCCdmc">youtu.be/KwRRuiCCdmc</a></td>
+<td>视频题为 Needle In A Haystack (GPT-4 128K)，是测试背景资料，不是 Claude 2.1 专属视频</td>
+</tr>
+<tr>
+<td>AlpacaEval</td>
+<td><a href="https://github.com/tatsu-lab/alpaca_eval">tatsu-lab/alpaca_eval</a></td>
+<td>自动裁判、长度控制及排行榜说明</td>
+</tr>
+<tr>
+<td>Arena-Hard 介绍</td>
+<td><a href="https://lmsys.org/blog/2024-04-19-arena-hard/">2024-04-19-arena-hard</a></td>
+<td>真实问题筛选、区分力与统计评估</td>
+</tr>
+<tr>
+<td>长度控制论文</td>
+<td><a href="https://arxiv.org/abs/2404.04475">arXiv:2404.04475</a></td>
+<td>Length-Controlled AlpacaEval</td>
+</tr>
+<tr>
+<td>MMLU 论文</td>
+<td><a href="https://arxiv.org/abs/2009.03300">arXiv:2009.03300</a></td>
+<td>跨学科知识和解题测试</td>
+</tr>
+<tr>
+<td>模型价格与性能分析</td>
+<td><a href="https://artificialanalysis.ai/">artificialanalysis.ai</a></td>
+<td>查看当前榜单，并核对方法与日期</td>
+</tr>
+<tr>
+<td>Claude 2.1 提示实验</td>
+<td><a href="https://www.anthropic.com/news/claude-2-1-prompting">投影片中的 Anthropic 旧链接</a></td>
+<td>重定向至<a href="https://claude.com/resources/articles/claude-2-1-prompting">当前官方文章</a></td>
+</tr>
+</tbody></table>
+<p>进一步学习的原始资料：</p>
+<ul>
+<li><a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php">课程官网与完整课程表</a></li>
+<li><a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4">第 12 讲视频</a>：截图位置包括约 <a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4&t=173s">02:53 的 MMLU</a>、<a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4&t=1008s">16:48 的自动裁判</a>、<a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4&t=1514s">25:14 的大海捞针</a>和<a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4&t=1731s">28:51 的回答前缀</a>。这些是截图显示的位置，便于回看。</li>
+<li><a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_evaluation.pdf">官方 PDF 讲义</a>与<a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_evaluation.pptx">官方 PPTX 文件</a></li>
+<li><a href="https://www.anthropic.com/news/claude-2-1">Claude 2.1 发布公告</a></li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/working-with-messages#prefilling-claudes-response">Claude Messages API 与 prefill 支持范围</a></li>
+<li><a href="https://github.com/hendrycks/test">MMLU 作者代码</a></li>
+<li><a href="https://arxiv.org/abs/2306.05685">MT-Bench 与 Chatbot Arena 原论文</a></li>
+<li><a href="https://github.com/Arena-OSS/arena-hard-auto">Arena-Hard 当前代码</a></li>
+<li><a href="https://artificialanalysis.ai/methodology/performance-benchmarking">Artificial Analysis 性能测量方法</a></li>
+</ul>
+<p>读完这些资料后，再回到最初那一句引导，真正值得复用的是一个可验证的习惯：<strong>让模型先定位证据，记录完整实验条件，再检查答案是否得到证据支持。</strong></p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">文件信息</div>
+      <dl>
+        <div><dt>作者</dt><dd>James Chen</dd></div>
+        <div><dt>格式</dt><dd>markdown</dd></div>
+        <div><dt>状态</dt><dd class="online">已发布</dd></div>
+        <div><dt>浏览</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">访客动态<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>最新访客</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>本页浏览</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>全站浏览</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>独立访客</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>已收藏文章</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/zh/posts/llm-evaluation-assistant-prefill/" data-page-title="从 Assistant 到大海捞针：如何读懂大模型评测 PPT" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>收藏本文</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> 支持创作
+          </button>
+          <a class="console-link" href="/blog/zh/favorites/">查看收藏 →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          正在建立匿名访客会话……
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">支持这份工程日志<span>.</span></h2>
+        <p>如果这里的文章帮你解决了问题，可以用下面的方式支持持续创作。</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>收款渠道尚未配置，当前不会跳转到任何未经确认的支付页面。</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ 为仓库加星</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ 联系作者</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "感谢阅读"</div>
+          <p>持续构建，保持好奇。</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>

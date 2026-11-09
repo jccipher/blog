@@ -1,0 +1,551 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>Reading LLM Evaluation Slides from Assistant Prefill to Needle in a Haystack · LATENTX</title>
+    <meta name="description" content="Read Hung-yi Lee&#39;s evaluation slides through assistant roles, response prefilling, Claude 2.1 retrieval, MMLU, model judges, and price versus quality, with original resource links.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Reading LLM Evaluation Slides from Assistant Prefill to Needle in a Haystack · LATENTX">
+    <meta property="og:description" content="Read Hung-yi Lee&#39;s evaluation slides through assistant roles, response prefilling, Claude 2.1 retrieval, MMLU, model judges, and price versus quality, with original resource links.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/llm-evaluation-assistant-prefill/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/llm-evaluation-assistant-prefill/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/llm-evaluation-assistant-prefill/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/llm-evaluation-assistant-prefill/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/llm-evaluation-assistant-prefill/"
+    data-page-title="Reading LLM Evaluation Slides from Assistant Prefill to Needle in a Haystack"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/llm-evaluation-assistant-prefill/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/llm-evaluation-assistant-prefill/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat llm-evaluation-assistant-prefill.md</div>
+    <h1>Reading LLM Evaluation Slides from Assistant Prefill to Needle in a Haystack</h1>
+    <div class="article-meta">
+      <time datetime="2026-11-09">PUBLISHED 2026.11.09</time>
+      <span>13 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#Assistant</span><span>#Prompt Engineering</span><span>#Long Context</span><span>#MMLU</span><span>#AlpacaEval</span><span>#Arena Hard</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/llm-evaluation-assistant-prefill/" data-page-title="Reading LLM Evaluation Slides from Assistant Prefill to Needle in a Haystack" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p>📚 A long-context evaluation slide adds one line after <code>Assistant:</code>:</p>
+<pre><code class="language-text">Here is the most relevant sentence in the context:
+</code></pre>
+<p>Who is the assistant? How can an application supply part of its answer in advance? What does that have to do with multiple-choice tests, model judges, and price charts?</p>
+<p>These questions connect several slides from <strong>Hung-yi Lee&#39;s Introduction to Generative AI 2024, Lecture 12 on evaluating large language models</strong>. Together, they show why a model score needs its task, prompt, scoring method, and operating conditions.</p>
+<p>This guide reads the MMLU, automatic judging, retrieval, and price slides together. <strong>Slide figures describe a historical 2024 snapshot. API compatibility was checked on November 9, 2026.</strong></p>
+<h2>1 What each slide measures</h2>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Intended measurement</th>
+<th>Important distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MMLU</td>
+<td>Knowledge and problem solving across subjects</td>
+<td>Multiple-choice performance and application success</td>
+</tr>
+<tr>
+<td>Model judges</td>
+<td>How automatic evaluation relates to human preferences</td>
+<td>Ranking correlation and answer accuracy</td>
+</tr>
+<tr>
+<td>Needle in a Haystack</td>
+<td>Finding a target fact in long input</td>
+<td>Accepted input length and effective evidence use</td>
+</tr>
+<tr>
+<td>Assistant prefill</td>
+<td>How an answer prefix affects generation</td>
+<td>A user instruction and a supplied assistant prefix</td>
+</tr>
+<tr>
+<td>Price and speed</td>
+<td>Practical deployment tradeoffs</td>
+<td>Historical chart values and current operating costs</td>
+</tr>
+</tbody></table>
+<p>The <a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php">official course page</a> links the <a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4">lecture video</a>, <a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_evaluation.pdf">PDF</a>, and <a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_evaluation.pptx">PPTX</a>.</p>
+<h2>2 Who is Assistant</h2>
+<p><strong>Assistant is the conversation role assigned to the AI that answers.</strong> On the Claude slide, it identifies the model&#39;s side of the exchange.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Model</td>
+<td>A particular model version</td>
+<td>Claude 2.1</td>
+</tr>
+<tr>
+<td>Assistant</td>
+<td>A message role</td>
+<td><code>{&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: &quot;…&quot;}</code></td>
+</tr>
+<tr>
+<td>Response content</td>
+<td>What that role says</td>
+<td>An explanation, quotation, or conclusion</td>
+</tr>
+</tbody></table>
+<p><code>Assistant:</code> is not another person&#39;s name or a separately launched agent. It labels the answer side; <code>User:</code> or the historical <code>Human:</code> label identifies the question side.</p>
+<p>APIs normally carry roles in structured fields. Typing <code>Assistant:</code> inside an ordinary user message does not change that message&#39;s role. The <a href="https://platform.claude.com/docs/en/build-with-claude/working-with-messages">Claude Messages API guide</a> illustrates structured user and assistant messages; exact placement rules depend on the interface.</p>
+<h2>3 Adding exactly one answer prefix</h2>
+<p>The response prefix used in the historical experiment, including its final colon, is:</p>
+<pre><code class="language-text">Here is the most relevant sentence in the context:
+</code></pre>
+<p><strong>Assistant prefill supplies an opening for the model to continue.</strong> On an interface that supports this behavior, the message structure can end with:</p>
+<pre><code class="language-json">[
+  {
+    &quot;role&quot;: &quot;user&quot;,
+    &quot;content&quot;: &quot;[Context and question]&quot;
+  },
+  {
+    &quot;role&quot;: &quot;assistant&quot;,
+    &quot;content&quot;: &quot;Here is the most relevant sentence in the context:&quot;
+  }
+]
+</code></pre>
+<p>The last <code>content</code> contains only this sentence. It supplies no evidence or answer, adds no extra instructions, and leaves the user&#39;s question unchanged. This is a structural example for a supporting interface, not a runnable request for every model.</p>
+<p>Under continuation semantics, returned text can contain only the newly generated continuation. An application displaying the full answer should combine the supplied prefix and continuation according to the API contract, without omitting or duplicating the prefix.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>What the model receives</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ask it to start with the sentence</td>
+<td>An instruction in a user message</td>
+</tr>
+<tr>
+<td>Type <code>Assistant: …</code> inside the user message</td>
+<td>Text that may be interpreted as an example</td>
+</tr>
+<tr>
+<td>Submit a supported final assistant prefill</td>
+<td>The opening of the answer it will continue</td>
+</tr>
+</tbody></table>
+<p>These conditions should remain separate in an experiment.</p>
+<p><strong>Check compatibility before using the historical pattern.</strong> Current Anthropic documentation says final-turn assistant prefill is unsupported on Claude 4.6 and later models and Claude Mythos Preview; those requests return a 400 error. Use supported instructions for output behavior, or supported structured outputs when a machine-readable structure is required. See the <a href="https://platform.claude.com/docs/en/build-with-claude/working-with-messages#prefilling-claudes-response">official prefill section</a>.</p>
+<h2>4 The historical Claude 2.1 experiment</h2>
+<p>Anthropic <a href="https://www.anthropic.com/news/claude-2-1">introduced Claude 2.1 on November 21, 2023</a>, with a 200K-token context window. Tokens are model processing units, not a fixed count of words or Chinese characters.</p>
+<p>Greg Kamradt&#39;s Needle in a Haystack experiment placed a target fact inside a long background text and asked a question requiring that fact. Anthropic&#39;s <a href="https://claude.com/resources/articles/claude-2-1-prompting">December 6, 2023 explanation</a> attributed some failures to reluctance to answer from an incongruous inserted sentence. Adding the prefix raised Claude 2.1&#39;s score on the original evaluation <strong>from 27% to 98%</strong>.</p>
+<p>That finding has a specific model, task, and prompt. It does not establish the same gain for other models or all long-document work. A practical interpretation is that the prefix starts the response with evidence selection. It changes the supplied context for generation; it does not add model parameters or context capacity.</p>
+<h2>5 Reading the Needle in a Haystack diagram</h2>
+<p>Black document icons represent background text. The yellow icon marks the location of a target sentence about an activity in San Francisco. Moving it through the middle, beginning, and end tests whether retrieval depends on position.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Meaning</th>
+<th>Question it probes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Context length</td>
+<td>Number of input tokens</td>
+<td>Does retrieval deteriorate as input grows?</td>
+</tr>
+<tr>
+<td>Insertion depth</td>
+<td>Relative position of the target</td>
+<td>Are some positions harder than others?</td>
+</tr>
+</tbody></table>
+<p>Heatmaps commonly place length on one axis and depth on the other, with color encoding performance. Always read the actual legend. Keep the input, prompt, model version, and scoring rule when reproducing a result. <a href="https://github.com/gkamradt/needle-in-a-haystack">Kamradt&#39;s repository</a> implements length and depth sweeps.</p>
+<p>Single-fact lookup, combining several distributed facts, and judging source reliability are distinct tasks. A useful application evaluation adds multiple facts, conflicting evidence, and questions whose answers are absent.</p>
+<h2>6 Reading the MMLU slide</h2>
+<p>MMLU stands for <strong>Massive Multitask Language Understanding</strong>. The <a href="https://arxiv.org/abs/2009.03300">original paper</a> introduces 57 subject tasks covering academic and professional knowledge.</p>
+<table>
+<thead>
+<tr>
+<th>Slide example</th>
+<th>Answer highlighted on the slide</th>
+<th>Ability involved</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A polynomial quotient over the three-element field</td>
+<td>B, <code>c = 1</code></td>
+<td>Abstract algebra and deduction</td>
+</tr>
+<tr>
+<td>Force between two point magnetic poles</td>
+<td>A, 15 N</td>
+<td>Physical assumptions, units, and calculation</td>
+</tr>
+<tr>
+<td>A solubility-rule question</td>
+<td>D, the stated ammonium-compound rule</td>
+<td>Recognition of chemistry rules</td>
+</tr>
+</tbody></table>
+<p>For the algebra example, <code>x² + 1</code> has no root among the three field elements, making the quadratic irreducible and its quotient a field. The physics and chemistry entries above preserve the slide&#39;s assumptions and highlighted answers; simplified exam rules should retain their conditions.</p>
+<p>Even a multiple-choice test needs a scoring protocol. Selecting a letter, extracting a letter from an explanation, and comparing conditional probabilities are different procedures. Fix the option order, examples, output format, and permitted tools. A correct idea with an invalid output format and a correct letter with a false explanation warrant different follow-up checks.</p>
+<p>MMLU provides evidence about general foundations. Whether a code change passes tests, a citation supports a claim, or a tool completes a task needs application-specific examples. The <a href="https://github.com/hendrycks/test">authors&#39; repository</a> supplies evaluation code and a dataset entry point.</p>
+<h2>7 Reading the model-judge slide</h2>
+<p>Open questions often lack a unique reference string. LLM-as-a-Judge uses a stronger model to score an answer or compare two answers against a rubric.</p>
+<p>The slide&#39;s <strong>Chat Arena Spearman correlation</strong> chart compares model rankings, rather than correctness on individual answers. Its displayed historical values are:</p>
+<table>
+<thead>
+<tr>
+<th>Metric or benchmark</th>
+<th align="right">Spearman correlation on the slide</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Output Length</td>
+<td align="right">0.35</td>
+</tr>
+<tr>
+<td>TruthfulQA</td>
+<td align="right">0.51</td>
+</tr>
+<tr>
+<td>HellaSwag</td>
+<td align="right">0.59</td>
+</tr>
+<tr>
+<td>GSM-8K</td>
+<td align="right">0.63</td>
+</tr>
+<tr>
+<td>Open LLM</td>
+<td align="right">0.66</td>
+</tr>
+<tr>
+<td>WinoGrande</td>
+<td align="right">0.69</td>
+</tr>
+<tr>
+<td>ARC-C</td>
+<td align="right">0.83</td>
+</tr>
+<tr>
+<td>MMLU</td>
+<td align="right">0.87</td>
+</tr>
+<tr>
+<td>AlpacaEval 2.0</td>
+<td align="right">0.94</td>
+</tr>
+<tr>
+<td>MT-bench</td>
+<td align="right">0.94</td>
+</tr>
+<tr>
+<td>LC AlpacaEval 2.0</td>
+<td align="right">0.98</td>
+</tr>
+</tbody></table>
+<p><strong>A correlation of 0.98 is not 98% answer accuracy.</strong> Similar rankings also do not prove that a small difference between two models is statistically reliable. The Output Length row is a useful reason to investigate style as a confounder.</p>
+<p>LC means length-controlled. The <a href="https://arxiv.org/abs/2404.04475">Length-Controlled AlpacaEval paper</a> uses a statistical model to estimate preferences with length differences controlled. It does not simply trim answers to equal length. The <a href="https://github.com/tatsu-lab/alpaca_eval">AlpacaEval repository</a> supplies implementation and interpretation guidance.</p>
+<p>The <a href="https://arxiv.org/abs/2306.05685">MT-Bench and Chatbot Arena paper</a> examines position, verbosity, self-enhancement biases, and reasoning limitations. Practical checks include swapping answer positions, fixing the rubric, retaining human review samples, and separating factual errors from style preferences. These checks reduce uncertainty rather than guarantee an unbiased judge.</p>
+<p>The slide also links <strong>Arena-Hard</strong>. Its <a href="https://lmsys.org/blog/2024-04-19-arena-hard/">2024 introduction</a> describes selecting challenging real interaction prompts and evaluating responses automatically, with attention to confidence intervals and model separability. Its older repository URL now redirects to <a href="https://github.com/Arena-OSS/arena-hard-auto">Arena-OSS/arena-hard-auto</a>.</p>
+<h2>8 Reading the price and speed slide</h2>
+<p>The scatterplot comes from <a href="https://artificialanalysis.ai/">Artificial Analysis</a>. Its horizontal axis is <strong>Price, USD per M Tokens</strong>; its vertical axis is <strong>Quality, General ability index</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Farther left</td>
+<td>Lower price under the chart&#39;s pricing definition</td>
+</tr>
+<tr>
+<td>Higher up</td>
+<td>Higher score under its quality definition</td>
+</tr>
+<tr>
+<td>Upper-left region</td>
+<td>Candidates combining the two attributes</td>
+</tr>
+<tr>
+<td>A more expensive point</td>
+<td>A reason to test whether extra cost buys useful task performance</td>
+</tr>
+</tbody></table>
+<p>Names such as GPT-4 Turbo, Claude 3, Gemini 1.5 Pro, and Llama 3 place the chart in its historical setting. A quality value of 100 does not mean perfect accuracy. The screenshot does not explain the weighting behind the price, so it cannot establish separate input and output prices or their mixture.</p>
+<p>Although the slide title mentions speed, this plot directly encodes <strong>price and quality</strong>. A point&#39;s location does not tell us generation speed.</p>
+<p>For deployment, measure the wait for a visible answer, output throughput, full task completion time, and failure rates under concurrency. Fix workload lengths, reasoning settings, caching, and endpoint. The <a href="https://artificialanalysis.ai/methodology/performance-benchmarking">current performance methodology</a> helps explain measurements; it should not be retroactively treated as the 2024 chart&#39;s formula.</p>
+<h2>9 Turning the slides into an evaluation plan</h2>
+<p>The following is a practical synthesis, rather than a result reported in the slides.</p>
+<table>
+<thead>
+<tr>
+<th>Work</th>
+<th>Test cases</th>
+<th>Record</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Establish a baseline</td>
+<td>Your actual questions, retrieval, code, or tool tasks</td>
+<td>Inputs, rubric, model, configuration</td>
+</tr>
+<tr>
+<td>Test evidence use</td>
+<td>Single facts, multiple facts, conflicts, missing answers</td>
+<td>Evidence positions, citation accuracy, abstention</td>
+</tr>
+<tr>
+<td>Compare prompting</td>
+<td>No prefix, supported prefill, explicit user instruction</td>
+<td>Success and failure types for each condition</td>
+</tr>
+<tr>
+<td>Audit the judge</td>
+<td>Swapped answers, changed lengths, human review</td>
+<td>Sensitivity, bias, ranking uncertainty</td>
+</tr>
+<tr>
+<td>Measure delivery cost</td>
+<td>The same real workloads</td>
+<td>Total task cost, completion time, retries</td>
+</tr>
+</tbody></table>
+<p>Keep conditions with the scores. Prompt changes can affect a model&#39;s measured performance, while a scoring change can alter what a reported number means.</p>
+<h2>10 Links extracted from the slides</h2>
+<p>The table preserves the visible resource targets and notes current redirects. Nonessential video sharing parameters are omitted.</p>
+<table>
+<thead>
+<tr>
+<th>Slide resource</th>
+<th>Original or normalized link</th>
+<th>Current destination and purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Needle in a Haystack code</td>
+<td><a href="https://github.com/gkamradt/LLMTest_NeedleInAHaystack">gkamradt/LLMTest_NeedleInAHaystack</a></td>
+<td>Redirects to <a href="https://github.com/gkamradt/needle-in-a-haystack">needle-in-a-haystack</a></td>
+</tr>
+<tr>
+<td>Greg Kamradt video</td>
+<td><a href="https://youtu.be/KwRRuiCCdmc">youtu.be/KwRRuiCCdmc</a></td>
+<td>Titled Needle In A Haystack (GPT-4 128K); background on the test, not a Claude-only video</td>
+</tr>
+<tr>
+<td>AlpacaEval</td>
+<td><a href="https://github.com/tatsu-lab/alpaca_eval">tatsu-lab/alpaca_eval</a></td>
+<td>Automatic evaluation and length control</td>
+</tr>
+<tr>
+<td>Arena-Hard introduction</td>
+<td><a href="https://lmsys.org/blog/2024-04-19-arena-hard/">2024-04-19-arena-hard</a></td>
+<td>Prompt selection, separability, and statistics</td>
+</tr>
+<tr>
+<td>Length-control paper</td>
+<td><a href="https://arxiv.org/abs/2404.04475">arXiv:2404.04475</a></td>
+<td>Length-Controlled AlpacaEval</td>
+</tr>
+<tr>
+<td>MMLU paper</td>
+<td><a href="https://arxiv.org/abs/2009.03300">arXiv:2009.03300</a></td>
+<td>Multisubject knowledge and problem solving</td>
+</tr>
+<tr>
+<td>Price and performance</td>
+<td><a href="https://artificialanalysis.ai/">artificialanalysis.ai</a></td>
+<td>Current analysis with dates and methodology</td>
+</tr>
+<tr>
+<td>Claude 2.1 prompting</td>
+<td><a href="https://www.anthropic.com/news/claude-2-1-prompting">Original Anthropic URL</a></td>
+<td>Redirects to the <a href="https://claude.com/resources/articles/claude-2-1-prompting">current official article</a></td>
+</tr>
+</tbody></table>
+<p>Additional primary resources:</p>
+<ul>
+<li><a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php">Official course page</a></li>
+<li><a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4">Lecture 12</a>, with screenshot positions around <a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4&t=173s">02:53 for MMLU</a>, <a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4&t=1008s">16:48 for model judges</a>, <a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4&t=1514s">25:14 for retrieval</a>, and <a href="https://www.youtube.com/watch?v=Hk8Z0uhmWg4&t=1731s">28:51 for the prefix</a>. These are positions displayed in the screenshots.</li>
+<li><a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_evaluation.pdf">Official PDF</a> and <a href="https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring-course-data/0510/0510_evaluation.pptx">PPTX</a></li>
+<li><a href="https://www.anthropic.com/news/claude-2-1">Claude 2.1 launch</a></li>
+<li><a href="https://platform.claude.com/docs/en/build-with-claude/working-with-messages#prefilling-claudes-response">Messages API and prefill support</a></li>
+<li><a href="https://github.com/hendrycks/test">MMLU authors&#39; code</a></li>
+<li><a href="https://arxiv.org/abs/2306.05685">MT-Bench and Chatbot Arena paper</a></li>
+<li><a href="https://github.com/Arena-OSS/arena-hard-auto">Current Arena-Hard code</a></li>
+<li><a href="https://artificialanalysis.ai/methodology/performance-benchmarking">Artificial Analysis performance methodology</a></li>
+</ul>
+<p>The reusable habit behind that single prefix is straightforward: <strong>locate evidence, preserve experimental conditions, and check whether the answer is supported.</strong></p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/llm-evaluation-assistant-prefill/" data-page-title="Reading LLM Evaluation Slides from Assistant Prefill to Needle in a Haystack" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
