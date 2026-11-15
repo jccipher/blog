@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "build_id": "20261109T095206+0800-0d1346df",
-  "built_at": "2026-11-09T09:52:06+08:00",
+  "build_id": "20261116T031105+0800-b471e313",
+  "built_at": "2026-11-16T03:11:05+08:00",
   "files": [
     {
       "path": ".github/workflows/pages.yml",
@@ -25,8 +25,8 @@
     },
     {
       "path": "archives/index.html",
-      "bytes": 23923,
-      "sha256": "ed5412db7c8e1215fc3601e7ca74591290e91909c26d60587d752783a052b21f"
+      "bytes": 24155,
+      "sha256": "8c42e46d3d0761d40bdd993be1f29d93afe71a8ffe836f066c3242efd5a5aad3"
     },
     {
       "path": "assets/audio-manifest.json",
@@ -425,13 +425,13 @@
     },
     {
       "path": "favorites/index.html",
-      "bytes": 68473,
-      "sha256": "30d20e1c5cb9fce1f1e335bdb669d176c5e3c75d08875db4ff7e5fe531ddb867"
+      "bytes": 69319,
+      "sha256": "cb63f06573878205fc96535d8a0066fb8e3a819ed462e9668b02aff1e25c4273"
     },
     {
       "path": "index.html",
-      "bytes": 15249,
-      "sha256": "533950b322df2cabfd8a8359ab5e4fa0b99b683d23cb6c57cbee1872eea706d3"
+      "bytes": 15182,
+      "sha256": "9cf7f66554bba0f26f33433e795cebc3609c4f08c714625077fef364b0501548"
     },
     {
       "path": "posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -734,6 +734,11 @@
       "sha256": "0593cdfbbc0a8fac4185960bc1c607e2b84d66a37e26eb0eae91a095abcba623"
     },
     {
+      "path": "posts/llm-agent-weekly-2026-w47/index.html",
+      "bytes": 20078,
+      "sha256": "cf7c37a9b4bc9c4b2734cea01f6eefa8e93a3752d3325685723197416e3f7586"
+    },
+    {
       "path": "posts/llm-evaluation-assistant-prefill/index.html",
       "bytes": 27956,
       "sha256": "eac4ebfe6e20d679c437579d3decbd60d41d1f57ffd42893dd22e65a74bba9d3"
@@ -790,18 +795,18 @@
     },
     {
       "path": "zh/archives/index.html",
-      "bytes": 24177,
-      "sha256": "409382232d6f89fbb899f085cb2d8aaa6bffa354ce8342009eb945f060d2a6ba"
+      "bytes": 24415,
+      "sha256": "99d8f303870d786a57571c1c6187f1d819dcee12dc7d27b1b0462a05b97a1380"
     },
     {
       "path": "zh/favorites/index.html",
-      "bytes": 75473,
-      "sha256": "676bca34dd98e85a68dfa438f2b915169590dfaceced9b06c19e5e80200ddf68"
+      "bytes": 76390,
+      "sha256": "89d1b012d8f0a73e7254f0afe6f4c1ce0fa8c7dfde2c4543a644ab920fb3bdc6"
     },
     {
       "path": "zh/index.html",
-      "bytes": 15512,
-      "sha256": "82a52a2d48a0c757868bca4c5ec9229a364f11aefc797bacbb2feb2d6f9adf2e"
+      "bytes": 15461,
+      "sha256": "3d564a4b98b27f96a715d34fa51aaf7248611d66316d9d4d53c85e0fd41ce416"
     },
     {
       "path": "zh/posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -1102,6 +1107,11 @@
       "path": "zh/posts/llm-agent-weekly-2026-w46/index.html",
       "bytes": 19185,
       "sha256": "47ce7e52ead68e1553ae740bcb96174698a0bc8768743659a5ed8e6eef293c91"
+    },
+    {
+      "path": "zh/posts/llm-agent-weekly-2026-w47/index.html",
+      "bytes": 18756,
+      "sha256": "aa6f02add564ef6b98cd69cc5d94a4507ccefc223d117fce737966d4264bacc0"
     },
     {
       "path": "zh/posts/llm-evaluation-assistant-prefill/index.html",

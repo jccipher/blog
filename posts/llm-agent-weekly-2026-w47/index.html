@@ -1,0 +1,275 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>LLM & Agent Weekly 2026-W47: State-Aware Advice and Decode Ownership · LATENTX</title>
+    <meta name="description" content="Six primary papers on applicable advice, tool restraint, memory provenance, shared-document decoding and GPU communication.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="LLM & Agent Weekly 2026-W47: State-Aware Advice and Decode Ownership · LATENTX">
+    <meta property="og:description" content="Six primary papers on applicable advice, tool restraint, memory provenance, shared-document decoding and GPU communication.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w47/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w47/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/llm-agent-weekly-2026-w47/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/llm-agent-weekly-2026-w47/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/llm-agent-weekly-2026-w47/"
+    data-page-title="LLM &amp; Agent Weekly 2026-W47: State-Aware Advice and Decode Ownership"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/llm-agent-weekly-2026-w47/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/llm-agent-weekly-2026-w47/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat llm-agent-weekly-2026-w47.md</div>
+    <h1>LLM & Agent Weekly 2026-W47: State-Aware Advice and Decode Ownership</h1>
+    <div class="article-meta">
+      <time datetime="2026-11-16">PUBLISHED 2026.11.16</time>
+      <span>9 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#Agents</span><span>#Evaluation</span><span>#Reliability</span><span>#MCP</span><span>#Inference</span><span>#Architecture</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/llm-agent-weekly-2026-w47/" data-page-title="LLM &amp; Agent Weekly 2026-W47: State-Aware Advice and Decode Ownership" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><p><strong>Issue 2026-W47 · Published November 16, 2026 · Asia/Shanghai.</strong> Observation window: <strong>[November 9, 03:00, November 16, 03:00)</strong>, or <strong>[November 8, 19:00, November 15, 19:00) UTC</strong>. Six primary preprints, pinned to v1, inform this independent review. All experimental findings are author reports; LATENTX performed no independent reproduction.</p>
+<h2>Four judgments for platform architects</h2>
+<ol>
+<li><strong>Retrieved experience needs an applicability check.</strong> A relevant memory can still prescribe the wrong action in the current state. Keep the evidence needed to inspect it.</li>
+<li><strong>Completion and restraint need separate evaluation.</strong> A higher tool-use score can coexist with hallucinated calls or regressions in a particular model.</li>
+<li><strong>Cache reuse has several layers.</strong> Avoiding repeated prefill does not necessarily avoid repeated decode-time reads of a shared document.</li>
+<li><strong>Capacity and latency require different denominators.</strong> Measure waiting requests as well as admitted requests; a fast active stream can hide a slow service.</li>
+</ol>
+<p>These are editorial judgments. They motivate bounded experiments, not production adoption on the strength of a paper.</p>
+<h2>Theme selections</h2>
+<h3>1. Synapse-Control: govern when advice enters the actor</h3>
+<p><strong>Read first · v1, November 10.</strong> <a href="https://arxiv.org/html/2611.13615v1">Synapse-Control</a>.</p>
+<p><strong>Author report:</strong> Rules shortlist micro-contracts; a Qwen3-1.7B classifier scores applicability and a Prompt Value Table bounds repeated hints. With Qwen3.5-9B and the classifier colocated on one H20, BF16 actor, TP=1, one active sequence, temperature 0.7 and 60-action limit, auxiliary control time falls 50.2% on AppWorld and 51.0% on WebShop versus the integrated Sentry baseline. Each method has 1,308 attempts across both environments. These are control-time savings, not equivalent end-to-end speedups.</p>
+<p><strong>Architecture/value:</strong> Separate suggestion selection from delivery budgets. <strong>Limit:</strong> Teacher labels and environment-specific adapters need recalibration; retained verification remains essential.</p>
+<h3>2. StateAlign: train decisions against paired task states</h3>
+<p><strong>Read first · v1, November 12.</strong> <a href="https://arxiv.org/html/2611.16304v1">StateAlign</a>.</p>
+<p><strong>Author report:</strong> State-contrastive reinforcement learning pairs conditions requiring execution, clarification, retrieval or declining infeasible requests. Qwen3-8B BFCL v4 multi-turn overall rises from 45.5 to 55.2; SimpleToolHalluBench DT falls from 28.2 to 25.0. Yet Qwen3-14B DT worsens from 20.7 to 22.6 despite improved task scores; lower DT is better.</p>
+<p><strong>Architecture/value:</strong> Test action choice when required information disappears, not just valid argument syntax. <strong>Limit:</strong> Constructed short interactions and five 4B–14B text models do not establish reliability for long enterprise workflows. Scores are benchmark quality measurements, not serving-speed claims.</p>
+<h3>3. WikiTrace: let an agent inspect the run behind a lesson</h3>
+<p><strong>Read first · v1, November 10.</strong> <a href="https://arxiv.org/html/2611.14320v1">Don&#39;t Just Trust Your Memory</a>.</p>
+<p><strong>Author report:</strong> WikiTrace connects an insight to its compilation and unchanged source trajectory. Agents inspect evidence after failures, conflicts or missing detail. Across five benchmarks, the paper separates new successes from previously solved tasks lost after memory is added.</p>
+<p><strong>Architecture/value:</strong> Preserve provenance, applicability and failure context alongside a lesson; measure regressions against memory-off repeated runs. <strong>Limit:</strong> A linked trajectory does not validate its inferred explanation. All insights enter the initial message, leaving large-memory retrieval unresolved; LLM-judge diagnoses are interpretations, not causal proof.</p>
+<h3>4. Parallel Prompting: reuse document reads during decoding</h3>
+<p><strong>Read next · v1, November 11.</strong> <a href="https://arxiv.org/html/2611.15130v1">Read Once, Answer Many</a>.</p>
+<p><strong>Author report:</strong> Stream masks isolate answers while sharing document KV reads. With CodeLlama-7B-Instruct, BF16, greedy decoding, 8k–16k documents and 64–256 questions, the authors report 3.7× on A100-SXM4-80GB and 5.9–6.0× on RTX A6000 versus stock SGLang/FlashInfer across versions v0.4.2.post3 and v0.5.22. Prefix caching alone leaves repeated decode reads.</p>
+<p><strong>Architecture/value:</strong> Group independent document questions for offline evaluation. <strong>Limit:</strong> One GPU, selected backend and known question groups; benefits shrink for long or uneven answers. These are workload-specific speedups, not interactive service SLO guarantees.</p>
+<h3>5. NVLinkOneSided: remove fixed costs before chasing bandwidth</h3>
+<p><strong>Read next · v1, November 9 UTC / November 10 Shanghai.</strong> <a href="https://arxiv.org/html/2611.13188v1">One-Sided Expert-Parallel All-to-All</a>.</p>
+<p><strong>Author report:</strong> Rank-major landing buffers remove an initial metadata exchange and per-expert copies; Fence and Sentinel offer different synchronization tradeoffs. The evaluation covers routed layers of DeepSeek-V4.1-Flash and Kimi-K3 on eight B300 GPUs, plus large expert parallelism on GB200 NVL72, with batch and routing sweeps.</p>
+<p><strong>Architecture/value:</strong> Profile dispatch, combine, launch and synchronization separately at decode-sized batches. <strong>Limit:</strong> This is a single NVLink-domain design with layout and workspace costs. Layer microbenchmarks do not establish whole-model or cross-datacenter gains.</p>
+<h3>6. TKNP: separate weight placement from request-owned attention</h3>
+<p><strong>Read next · v1, November 9 UTC / November 10 Shanghai.</strong> <a href="https://arxiv.org/html/2611.13293v1">Decode Token Parallelism</a>.</p>
+<p><strong>Author report:</strong> TKNP distributes weights in layer blocks while requests retain local KV; current activations cross nodes. Tests use Llama 3.1 405B and Nemotron-4 340B, 32/64 H100 decode GPUs, vLLM, FP8 weights with selected BF16 parameters, BF16 KV and no prefix sharing. Low concurrency favors independent replicas; long contexts and capacity pressure favor TKNP.</p>
+<p><strong>Architecture/value:</strong> Include admission waves in capacity planning. <strong>Limit:</strong> H100/InfiniBand topology matters; Nemotron&#39;s extended RoPE measures decode performance, not validated long-context accuracy. No throughput multiplier should be transferred to a different arrival trace.</p>
+<h2>Architecture decisions and tradeoffs</h2>
+<p>The most immediate enterprise experiment is an evidence-bearing advisory layer. Keep immutable source runs behind concise lessons, but distinguish advisory text from authorization. Gate tool side effects with current application state and permissions. A learned applicability scorer may reduce control work; it cannot replace a server-side permission check. For MCP integrations, this is an editorial application of the agent findings, not a new MCP requirement or demonstrated protocol defense. No new MCP specification is claimed this week.</p>
+<p>Two serving paths deserve different queues. Offline document evaluation can group questions and exploit shared reads; interactive tasks have arrival variability and deadlines that can erase the grouping advantage. Keep tenant and document access boundaries in the grouping key. For MoE and distributed dense models, profile communication at actual resident batch sizes before changing ownership or layouts. A layer speedup and an admission-capacity improvement answer different questions; do not add their reported multipliers.</p>
+<h2>PoCs and acceptance metrics</h2>
+<p>The following are proposed local acceptance criteria, not results from this weekly:</p>
+<table>
+<thead>
+<tr>
+<th>Experiment</th>
+<th>Fixed comparison</th>
+<th>Measurements and decision rule</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Evidence-linked memory</td>
+<td>Same actor, tasks, tools, seeds and action budget; memory off, insights only, linked evidence</td>
+<td>Report gain, regression and repeated-run variance with paired confidence intervals; reject rollout if previously solved critical tasks regress</td>
+</tr>
+<tr>
+<td>Advice controller</td>
+<td>Same knowledge bank and verification; generative diagnosis versus classifier plus delivery budget</td>
+<td>Record control and total p50/p95, success, bad interventions and repeats; accept only when total cost improves without a critical-action regression</td>
+</tr>
+<tr>
+<td>State-sensitive tool use</td>
+<td>Paired executable / missing-value / unavailable-tool / infeasible states</td>
+<td>Score execute, ask, retrieve and decline separately; zero unauthorized side effects on the fixed critical suite is a necessary gate, not proof of zero population risk</td>
+</tr>
+<tr>
+<td>Shared-document decode</td>
+<td>Same model, precision, inputs, cached prefix and answers; independent requests versus grouped streams</td>
+<td>Sweep question count, context and answer-length skew; check answer isolation and quality, GPU memory and total completion time</td>
+</tr>
+<tr>
+<td>Decode pool / MoE kernels</td>
+<td>Same GPUs, precision, routes, arrival trace, cache policy and SLO</td>
+<td>Record queue wait, active-token latency, completion p95, resident KV and OOMs; accept only at target load without tail-latency regression</td>
+</tr>
+</tbody></table>
+<p>Freeze workload and stopping rules before the run. Include low-load cases where extra coordination loses, and preserve negative cases instead of publishing only peak gains. None of these experiments was executed for this issue.</p>
+<h2>Continue reading</h2>
+<p>Start with Synapse-Control and StateAlign for action policy; pair them with WikiTrace before expanding persistent agent memory. Read Parallel Prompting for offline document workloads, then NVLinkOneSided for MoE kernels and TKNP for dense decode-pool ownership. The version-pinned links above are the six primary readings, rather than daily single-source queue entries.</p>
+<h2>Method and limits</h2>
+<p>We searched public research listings, opened each arXiv version page and full HTML, and read architecture, experimental setup, results and limitations. The earliest arXiv submissions, rather than indexing/repost dates, determine inclusion. All six have only v1 in the checked histories; earlier public dissemination outside arXiv is not exhaustively ruled out. No independent replication, production measurement or standard-conformance test was performed.</p>
+<p>Excluded as outside the window: Tracing MCP Security Vulnerabilities (2611.11104, first submitted November 8 UTC before 19:00), Where Does MCP Security End (2611.02611, November 2), and AgingBench (2605.26302, first submitted in May; a November revision does not make it new). This narrower selection is deliberate. Source/version/deduplication and delivery evidence are retained privately; optional narration is absent. Publication date is the actual Shanghai date, separate from source dates.</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/llm-agent-weekly-2026-w47/" data-page-title="LLM &amp; Agent Weekly 2026-W47: State-Aware Advice and Decode Ownership" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
