@@ -97,51 +97,71 @@
     </div>
   </header>
   
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-10-20_llm-agent-weekly-2026-w43-trial.zh.6cc0d613e4816b9e.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
   <div class="article-grid">
-    <div class="article-copy prose"><p>本期为 <strong>2026-W43 特例</strong>，资料核对截止 <strong>2026 年 10 月 20 日</strong>。观察窗口为 <strong>10 月 13 日至 20 日检索截止时</strong>；本周尚未结束，另将两项 10 月 12 日材料列为背景。来源均有一手页面，论文结论与性能数据为作者报告，本刊未独立复现。</p>
+    <div class="article-copy prose"><h2>编辑摘要</h2>
+<p>Agent 的可靠性不能只看答案得分。本期特例结合生产评测、安全公告、推理工程文章和开放架构提案，讨论系统边界如何影响实际行为。评测材料提示，应分别检查工具、Agent 和编排层，并保留评分者变化的记录。HTTP MCP 服务首先要确认：共享的服务或传输实例会不会把消息送错客户端。推理材料则说明，提前选择解码节点可能缩短首 token 路径，但多轮上下文复用还要付出显存保留和路由约束的代价，两类优化的收益不能直接相加。评分器审计进一步提醒，评测过程本身也可能改变环境。文中的测量和事故均来自来源方，本刊未做独立复现。落地时宜先验证客户端隔离与评分完整性，再判断性能结果是否适用于自己的负载。</p>
+<hr>
+<p>本期为 <strong>2026-W43 特例</strong>，资料核对截止 <strong>2026 年 10 月 20 日</strong>。观察窗口为 <strong>10 月 13 日至 20 日检索截止时</strong>；本周尚未结束，另将两项 10 月 12 日材料列为背景。来源均有一手页面，论文结论与性能数据为作者报告，本刊未独立复现。</p>
 <h2>本期最值得关注的四个判断</h2>
 <ol>
 <li><strong>Agent 质量监控要覆盖工具、单 Agent 与编排三个层级。</strong> 稳定的延迟和错误率不能证明答案质量没有退化；评测器、人工评分和最终业务结果必须能够相互校验。</li>
 <li><strong>MCP 无状态服务仍需要严格的对象生命周期与客户端隔离。</strong> 新安全公告展示了共享 transport/server 实例如何把 JSON-RPC 请求编号碰撞放大为跨客户端消息泄露。</li>
-<li><strong>KV 传输优化存在真实的路由取舍。</strong> 提前选择 decode 节点可缩短首次出字关键路径；多轮上下文复用则需要反向 KV 传输、TTL 和缓存感知路由。当前两种 connector 能力不能被默认叠加。</li>
+<li><strong>KV 传输优化存在路由取舍。</strong> 提前选择 decode 节点可缩短首次出字关键路径；多轮上下文复用则需要反向 KV 传输、TTL 和缓存感知路由。当前两种 connector 能力不能被默认叠加。</li>
 <li><strong>自主程度越高，权限执行越需要独立于模型。</strong> 开放参考架构将沙箱、网络、软件供应链和身份列为共同边界，为社区项目与平台团队提供可审阅的控制清单。</li>
 </ol>
 <p>这些是 LATENTX 的综合架构判断；下面分别说明支持它们的材料和边界。</p>
 <h2>1. Agent 评测：从一次验收到贯穿生产的闭环</h2>
 <h3>生产评测流程应在三个层级运行</h3>
 <p><strong>来源与日期：</strong> <a href="https://aws.amazon.com/blogs/machine-learning/building-trust-in-ai-agents-a-production-ready-evaluation-framework-with-amazon-bedrock-agentcore/">AWS：Building trust in AI agents</a>，10 月 16 日，一手工程分析。</p>
-<p><strong>作者报告。</strong> 文章用实际多 Agent 系统说明九阶段评测流程：质量定义、版本实验、CI、发布门禁、金丝雀、对抗测试、漂移、实时健康和反馈改进。工具、Agent、编排层分别需要自己的评测契约和验收依据，覆盖质量、安全、性能、成本与运行控制。</p>
-<p><strong>架构影响与落地价值。</strong> 对开源维护者，先发布可运行的任务集、工具契约和升级回归样例，比只贴排行榜更有帮助。对互联网平台，将模型、提示、工具 schema 和路由变更纳入同一发布记录，并让线上抽样质量检查与服务指标共用故障排查入口。PoC 可先选择一个客服或研发工作流：故意让工具返回陈旧数据，验证质量告警能否在 HTTP 成功且延迟正常时发现它。</p>
-<p><strong>证据边界。</strong> 这是厂商实现经验，不是对所有 Agent 平台的独立对照实验；九阶段也不是必须一次部署齐全的标准。推荐重点读三个评测层级、质量契约和金丝雀/漂移段落。<strong>阅读优先级：高。</strong></p>
+<p>文章用实际多 Agent 系统说明九阶段评测流程：质量定义、版本实验、CI、发布门禁、金丝雀、对抗测试、漂移、实时健康和反馈改进。工具、Agent、编排层分别需要自己的评测契约和验收依据，覆盖质量、安全、性能、成本与运行控制。</p>
+<p>对开源维护者，可先提供可运行的任务集、工具契约和升级回归样例，让使用者检查版本变化。对互联网平台，将模型、提示、工具 schema 和路由变更纳入同一发布记录，并让线上抽样质量检查与服务指标共用故障排查入口。PoC 可先选择一个客服或研发工作流：故意让工具返回陈旧数据，验证质量告警能否在 HTTP 成功且延迟正常时发现它。</p>
+<p>这是厂商实现经验，不是对所有 Agent 平台的独立对照实验；九阶段也不是必须一次部署齐全的标准。推荐重点读三个评测层级、质量契约和金丝雀/漂移段落。建议优先阅读。</p>
 <h3>人工评分者的变化会制造错误的质量趋势</h3>
 <p><strong>来源与日期：</strong> <a href="https://www.micro1.ai/research/are-ai-agents-getting-better">micro1 的生产研究解读</a>，10 月 14 日；对应<a href="https://arxiv.org/abs/2610.07003">论文 arXiv:2610.07003</a>首发 10 月 4 日。这里收录本周解读，明确不是本周新论文。</p>
-<p><strong>作者报告。</strong> 对 2,611 场生产访谈的分析中，同批访谈的两位评分者相差 0.79 个标准差。校正评分者差异后，3–8 月的质量指标提高 0.53 个标准差；相关投诉相对其他技术工单每月下降约 10%。作者明确表示，这不能证明评测计划造成了改进。</p>
-<p><strong>架构影响与落地价值。</strong> 将人工评分者、rubric、LLM judge 版本和重叠评分样本纳入评测数据模型。否则一次 judge 升级或标注团队轮换就可能看起来像模型回归。社区基准应公布评分口径变化，平台团队应保留桥接样本，检查新旧评测器能否恢复已知线上胜负方向。</p>
-<p><strong>证据边界。</strong> 单一公司、单一 Agent、五个月的观察研究。文中的“约五周后证据不再足够有信息量”来自不确定性较大的拟合，不能作为所有评测报告的固定有效期。<strong>阅读优先级：高。</strong></p>
+<p>对 2,611 场生产访谈的分析中，同批访谈的两位评分者相差 0.79 个标准差。校正评分者差异后，3–8 月的质量指标提高 0.53 个标准差；相关投诉相对其他技术工单每月下降约 10%。作者明确表示，这些观察不能证明改进由评测计划造成。</p>
+<p>将人工评分者、rubric、LLM judge 版本和重叠评分样本纳入评测数据模型。否则一次 judge 升级或标注团队轮换就可能看起来像模型回归。社区基准应公布评分口径变化，平台团队应保留桥接样本，检查新旧评测器能否恢复已知线上胜负方向。</p>
+<p>单一公司、单一 Agent、五个月的观察研究，外推时应保留这些范围限制。文中的“约五周后证据不再足够有信息量”来自不确定性较大的拟合，不能作为所有评测报告的固定有效期。建议优先阅读。</p>
 <h2>2. MCP：协议兼容之外，先检查消息属于谁</h2>
 <p><strong>来源与日期：</strong> <a href="https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-jm63-cq47-j5jp">MCP TypeScript SDK 安全公告 GHSA-jm63-cq47-j5jp</a>，10 月 15 日，项目维护方公告。</p>
-<p><strong>已公告事实。</strong> 受影响的是 <code>@modelcontextprotocol/server &gt;=2.0.0,&lt;2.3.0</code>。多个 HTTP 客户端共享同一个 stateless transport、<code>McpServer</code> 或 <code>Server</code> 实例时，按 JSON-RPC <code>id</code> 匹配连接可能发生碰撞，响应和通知被送到其他客户端。公告将 2.3.0 列为修复版本，并要求调用方同时改代码：每次请求或每个会话新建相应实例，或向 <code>createMcpHandler()</code> 提供创建新 server 的工厂。</p>
-<p><strong>架构影响与落地价值。</strong> 在多租户网关与服务模板中，必须把授权主体、请求关联、连接与对象生命周期分别检查。增加两个客户端同时使用相同 JSON-RPC 编号的回归场景，断言数据、通知与错误都不串线。升级后还应验证第二次连接/请求是否触发新版本的拒绝复用行为，避免以为安装补丁就完成迁移。</p>
-<p><strong>证据边界。</strong> 这是特定包及实例复用方式的缺陷。公告指出 stdio，以及 <code>@modelcontextprotocol/sdk</code> 1.26.0 及以后版本不在这一受影响范围；不能泛称所有 MCP SDK 都存在同样漏洞。无状态协议也不意味着程序没有可共享的内部状态。<strong>阅读优先级：最高，维护相关服务者先读修复段。</strong></p>
+<p>受影响的是 <code>@modelcontextprotocol/server &gt;=2.0.0,&lt;2.3.0</code>。多个 HTTP 客户端共享同一个 stateless transport、<code>McpServer</code> 或 <code>Server</code> 实例时，按 JSON-RPC <code>id</code> 匹配连接可能发生碰撞，响应和通知被送到其他客户端。公告将 2.3.0 列为修复版本，并要求调用方同时改代码：每次请求或每个会话新建相应实例，或向 <code>createMcpHandler()</code> 提供创建新 server 的工厂。</p>
+<p>在多租户网关与服务模板中，必须把授权主体、请求关联、连接与对象生命周期分别检查。增加两个客户端同时使用相同 JSON-RPC 编号的回归场景，断言数据、通知与错误都不串线。升级后还应验证第二次连接/请求是否触发新版本的拒绝复用行为，避免以为安装补丁就完成迁移。</p>
+<p>这是特定包及实例复用方式的缺陷。公告指出 stdio，以及 <code>@modelcontextprotocol/sdk</code> 1.26.0 及以后版本不在这一受影响范围；不能泛称所有 MCP SDK 都存在同样漏洞。无状态协议也不意味着程序没有可共享的内部状态。维护相关服务的团队应先读修复段。</p>
 <h2>3. 推理：关键路径、缓存复用与调度灵活性的取舍</h2>
 <h3>Push KV：提前注册目标内存，减少首 token 前的串行协调</h3>
 <p><strong>来源与日期：</strong> <a href="https://aws.amazon.com/blogs/machine-learning/push-based-kv-transfer-to-improve-ttft-and-tpot-for-disaggregated-inference-in-vllm/">AWS/vLLM：Push-based KV transfer</a>，AWS 版发表于 10 月 19 日；该机制此前已在 vLLM 社区传播，不能把转载日期等同于首次提出日期。</p>
-<p><strong>作者报告。</strong> decode 端在 prefill 尚未完成时注册目标 KV block；prefill 端在数据与目标信息都到齐后，通过后台线程提交 NIXL WRITE。Qwen3-32B、1P1D、EC2 P5en/EFA 的自测报告最高约 3 倍 TTFT 改善与 30% TPOT 改善。这些是该配置下的上限，不是集群的普遍收益。</p>
-<p><strong>架构影响与落地价值。</strong> 先从 trace 中拆出 prefill 计算、路由元数据、内存注册和 KV 传输时间，再决定是否使用 push。平台团队可比较相同请求到达率、输入输出长度和硬件下的成功率、P95 TTFT、TPOT 与内存占用，并注入 preemption、重试和目标节点失效。</p>
-<p><strong>关键取舍。</strong> push 需要较早确定 decode 节点，牺牲 prefill 完成后再按负载择优的灵活性。原文还明确：需要双向 KV 传输时，应选择 pull connector。<strong>阅读优先级：最高，优先读路由取舍与复现实验。</strong></p>
+<p>decode 端在 prefill 尚未完成时注册目标 KV block；prefill 端在数据与目标信息都到齐后，通过后台线程提交 NIXL WRITE。Qwen3-32B、1P1D、EC2 P5en/EFA 的自测报告最高约 3 倍 TTFT 改善与 30% TPOT 改善。测试以 pull 为对照，输入为 1k–16k token、输出为 128 token，到达速率为每秒 1–8 个请求。测试关闭 prefix caching，图注具体注明 decode 节点关闭缓存。低负载、短输入时，两种模式的表现几乎相同。这些是该配置下的上限，不是集群的普遍收益；所查性能段落未说明固定并发数。</p>
+<p>先从 trace 中拆出 prefill 计算、路由元数据、内存注册和 KV 传输时间，再决定是否使用 push。平台团队可比较相同请求到达率、输入输出长度和硬件下的成功率、P95 TTFT、TPOT 与内存占用，并注入 preemption、重试和目标节点失效。</p>
+<p>push 需要较早确定 decode 节点，牺牲 prefill 完成后再按负载择优的灵活性。原文还明确：需要双向 KV 传输时，应选择 pull connector。建议先读路由取舍与复现实验。</p>
 <h3>多轮反向 KV 复用：以显存保留换取少重算</h3>
 <p><strong>背景与本周传播：</strong> <a href="https://github.com/vllm-project/vllm-project.github.io/blob/main/_posts/2026-10-12-bidirectional-kvxfer-multiturn-agentic-workload.md">vLLM 社区原稿</a>日期为 10 月 12 日；<a href="https://aws.amazon.com/blogs/machine-learning/improve-ttft-for-multi-turn-agentic-workloads-with-bi-directional-kv-transfer-in-vllm/">AWS 版</a>为 10 月 19 日。</p>
-<p><strong>作者报告。</strong> decode 端保留上一轮 KV，下一轮由 prefill 拉回，避免增长中的对话被反复计算。默认保留 TTL 为 480 秒，重算阈值为 64 token。1P1D、P5en/EFA 自测中，长输入下 Qwen3-32B 和 GLM-5-FP8 的 TTFT 分别报告最高约 1.6 倍、3.3 倍改善。</p>
-<p><strong>架构影响与落地价值。</strong> 将工具等待时间、会话间隔、KV 驻留显存和淘汰率纳入容量规划。缓存占用并不免费：低复用率或慢互连可能使重算更划算。尤其需要注意，报告为模拟 prefill 缓存被淘汰/换节点而关闭了其 prefix caching，不能把收益直接套到已有高命中率的系统。<strong>阅读优先级：高，与 push 原文对读。</strong></p>
+<p>decode 端保留上一轮 KV，下一轮由 prefill 拉回，避免增长中的对话被反复计算。默认保留 TTL 为 480 秒，重算阈值为 64 token。1P1D、P5en/EFA 自测中，长输入下 Qwen3-32B 和 GLM-5-FP8 的 TTFT 分别报告最高约 1.6 倍、3.3 倍改善。 测试输入范围分别为 Qwen3-32B 的 2k–24k token 和 GLM-5-FP8 的 2k–20k token。OFF 对照重算不断增长的完整上下文；所查性能段落未说明固定并发数。</p>
+<p>将工具等待时间、会话间隔、KV 驻留显存和淘汰率纳入容量规划。缓存占用并不免费：低复用率或慢互连可能使重算更划算。尤其需要注意，报告为模拟 prefill 缓存被淘汰/换节点而关闭了其 prefix caching，不能把收益直接套到已有高命中率的系统。建议与 push 原文对读。</p>
 <h2>4. 企业架构：把自主执行放在可验证的四类边界内</h2>
 <p><strong>来源与日期：</strong> <a href="https://agentbaseline.org/reference-architecture">The Secure Software Factory: A Reference Architecture</a>，10 月 13 日，开放征求意见的参考架构。</p>
-<p><strong>作者主张。</strong> 不论下一步由人、工作流还是 Agent 决定，都需要沙箱、网络、软件供应链、身份与访问四类边界。控制应由基础设施执行，Agent 的计划本身不构成权限。</p>
-<p><strong>架构影响与落地价值。</strong> 开源项目可以把这些边界转化为可测试的默认配置；平台团队可以将它们做成自助服务模板，让“可读哪个服务的日志、可访问哪些出口、允许引入什么依赖、以谁的身份执行”具有明确记录。对自动发布等低风险稳定流程，可以预先授予狭窄权限，再通过发布后的公网验收与纠错闭环保持可追溯性。</p>
-<p><strong>证据边界。</strong> 这是架构提案，不是已证明有效的统一标准；需要在本机、容器、集群环境分别验证覆盖面。不要把“有审计日志”当作“所有副作用都被拦截”。<strong>阅读优先级：中高，重点读四类边界和自主等级。</strong></p>
+<p>不论下一步由人、工作流还是 Agent 决定，都需要沙箱、网络、软件供应链、身份与访问四类边界。控制应由基础设施执行，Agent 的计划本身不构成权限。</p>
+<p>开源项目可以把这些边界转化为可测试的默认配置；平台团队可以将它们做成自助服务模板，让“可读哪个服务的日志、可访问哪些出口、允许引入什么依赖、以谁的身份执行”具有明确记录。对自动发布等低风险稳定流程，可以预先授予狭窄权限，发布后再做公网验收，发现问题时及时纠正，并保留完整记录。</p>
+<p>这是架构提案，不是已证明有效的统一标准；需要在本机、容器、集群环境分别验证覆盖面。不要把“有审计日志”当作“所有副作用都被拦截”。重点读四类边界和自主等级。</p>
 <h2>5. 必要背景：评分器也可能改变被评分的环境</h2>
 <p><strong>来源与日期：</strong> <a href="https://arxiv.org/abs/2610.16067">When Agent Evaluation Becomes Unreliable</a>，10 月 12 日，预印本；超出本期主要窗口，作方法背景。</p>
-<p><strong>作者报告。</strong> 审计发现一个 reward 函数在评分前改变了环境状态。在 4,320 次执行记录上，回放修正后的测得成功率从 94.3% 降到 65.5%。方法包含状态完整性不变量、已知答案控制及缺陷注入；作者也说明，因为缺少可重建的终态，无法把方法直接用于第二个独立 benchmark。</p>
-<p><strong>架构判断与落地价值。</strong> 评测系统应保存初始状态、动作结果、最终状态与只读评分结果。先用已知成功、已知失败及评分前后状态不变的控制测试验证 oracle，再用它判断模型。论文未获本刊复现，结论只能限定于其审计配置。<strong>阅读优先级：高，适合 benchmark 与 AgentOps 维护者。</strong></p>
+<p>审计发现一个 reward 函数在评分前改变了环境状态。在 4,320 次执行记录上，回放修正后的测得成功率从 94.3% 降到 65.5%。方法包含状态完整性不变量、已知答案控制及缺陷注入；作者也说明，因为缺少可重建的终态，无法把方法直接用于第二个独立 benchmark。</p>
+<p>评测系统应保存初始状态、动作结果、最终状态与只读评分结果。先用已知成功、已知失败及评分前后状态不变的控制测试验证 oracle，再用它判断模型。论文未获本刊复现，结论只能限定于其审计配置。这部分适合 benchmark 与 AgentOps 维护者。</p>
 <h2>本期架构决策与 PoC</h2>
 <table>
 <thead>
@@ -179,7 +199,7 @@
 </tbody></table>
 <p>如果本周只能安排一项工作，维护 MCP HTTP 服务的团队先完成客户端隔离检查；运营 Agent 产品的团队先验证“质量告警能否发现 HTTP 成功的错误答案”。</p>
 <p>继续阅读建议按顺序：MCP 公告修复段、push/pull 取舍、双向传输实验配置、生产评测契约、评分者偏差论文、oracle 审计方法、软件工厂参考架构。</p>
-<p>本期没有为了凑齐主题而把搜索结果中的模型发布或无法完整读取的工程稿纳入强结论。下期继续跟踪：MCP SDK 修复后的迁移经验、两类 KV 路径的能力演进，以及评测 oracle 审计能否跨 benchmark 复现。</p>
+<p>模型发布消息和未能完整读取的工程稿未纳入本期技术结论。后续值得跟踪的问题包括：MCP SDK 修复后的迁移经验、两类 KV 路径的能力演进，以及评测 oracle 审计能否跨 benchmark 复现。</p>
 </div>
     <aside class="article-aside">
       <div class="aside-label">文件信息</div>

@@ -97,8 +97,28 @@
     </div>
   </header>
   
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-11-02_llm-agent-weekly-2026-w45.zh.ac3614ec95080e9f.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
   <div class="article-grid">
-    <div class="article-copy prose"><p><strong>2026-W45 · 发布日期：2026年11月2日 · Asia/Shanghai。</strong> 观察窗口为 <strong>[10月26日03:00，11月2日03:00)</strong>，对应 UTC <strong>[10月25日19:00，11月1日19:00)</strong>。本期为独立双语多来源综述，不进入每日单来源队列。六份一手材料包括五篇预印本和一篇维护者工程文章；已核读正文与版本记录，未独立复现实验。</p>
+    <div class="article-copy prose"><h2>编辑摘要</h2>
+<p>任务在多个 Skill 之间流转时，即使每个技能都通过准入，授权的用途限制仍可能丢失。本期结合技能组合研究与携带证据的消息提案，讨论如何在真正执行动作时再次检查授权和当前状态：签名记录或历史成功本身并不足够。评测材料还涉及两类问题，接口变化可能打乱已训练策略，扫描文档任务也可能在搜索、取页和数字识读之间失败。推理部分转向完整会话，分析工具等待、缓存保留与 KV 容量的相互影响。容量增加不意味着每个 token 更快，调度论文也保留了延迟变差的案例。上述结论均为作者报告，本刊未做独立复现；PCM 是研究提案，并非 MCP 标准。试点应围绕授权传递、接口迁移和相同负载下的服务比较展开。</p>
+<hr>
+<p><strong>2026-W45 · 发布日期：2026年11月2日 · Asia/Shanghai。</strong> 观察窗口为 <strong>[10月26日03:00，11月2日03:00)</strong>，对应 UTC <strong>[10月25日19:00，11月1日19:00)</strong>。本期为独立双语多来源综述，不进入每日单来源队列。六份一手材料包括五篇预印本和一篇维护者工程文章；已核读正文与版本记录，未独立复现实验。</p>
 <h2>面向平台架构师的四条判断</h2>
 <ol>
 <li><strong>把 Skill 新增视为系统变更。</strong> 组合会改变既有权限的使用方式，应检查产物、审批信号和目的地址在下游的用途。</li>
@@ -110,28 +130,28 @@
 <h2>主题精选</h2>
 <h3>1. CoSA：单个 Skill 通过准入，组合后仍可能丢失授权</h3>
 <p><strong>优先阅读 · v1，10月26日。</strong> <a href="https://arxiv.org/html/2610.35082v1">CoSA: The Conflict of Skills Attack in Real-World LLM Agent Ecosystems</a>。</p>
-<p><strong>作者报告：</strong> 在288个受控任务、五个模型与三个 Harness 上，每个技能池最多新增5%的 Skill，违规率从35.02%升至58.45%，既有权限与 Skill 保持不变。OpenClaw 招聘场景的防护实验将违规率从65.28%降至6.67%，正常任务完成率从66.67%变为65.00%。</p>
-<p><strong>架构影响与价值：</strong> 在产物交接中保留用途限制与授权条件。<strong>限制：</strong> 这是固定评测网格的结果，不是生产事故概率；防御证据仅覆盖更窄的领域与 Harness。</p>
+<p>在288个受控任务、五个模型与三个 Harness 上，每个技能池最多新增5%的 Skill，违规率从35.02%升至58.45%，既有权限与 Skill 保持不变。OpenClaw 招聘场景的防护实验将违规率从65.28%降至6.67%，正常任务完成率从66.67%变为65.00%。</p>
+<p>在产物交接中保留用途限制与授权条件。这是固定评测网格的结果，不是生产事故概率；防御证据仅覆盖更窄的领域与 Harness。</p>
 <h3>2. PCM：携带证据的消息需要独立信任边界</h3>
 <p><strong>高优先级 · v1，10月29日 · 研究提案，并非 MCP 标准。</strong> <a href="https://arxiv.org/html/2610.39109v1">PCM: A Proof-Carrying Message Protocol for Verifiable Multi-Agent Communication</a>。</p>
-<p><strong>作者方案：</strong> 以签名追加日志支持事实断言与源自人类、只能收窄的授权链；Agent 自报不能构成证明。作者的926条消息测试中接受了10条虚假断言，均使用过期证据。</p>
-<p><strong>架构影响与价值：</strong> 在 Agent 不可改写的状态之外验证动作收据，并在执行前复核当前状态。<strong>限制：</strong> 可信签名方与执行见证方是前提；证据不证明新鲜度、完整性或良好意图。协议基线包含建模实现，不能当作生产部署审计。</p>
+<p>该提案使用签名追加日志支持事实断言，授权链源自人的授权，且只能收窄；Agent 自报不能构成证明。作者的926条消息测试中接受了10条虚假断言，均使用过期证据。</p>
+<p>用 Agent 无法改写的记录验证动作收据，并在执行前复核当前状态。可信签名方与执行见证方是前提；证据不证明新鲜度、完整性或良好意图。协议基线包含建模实现，不能当作生产部署审计。</p>
 <h3>3. 固定模型比较可能否决有潜力的 Harness 接口</h3>
 <p><strong>高优先级 · 10月27日首次提交，10月28日 v2。</strong> <a href="https://arxiv.org/html/2610.37255v2">Your Policy Is Secretly a Harness: The Decision Geometry of Agent Interfaces</a>。</p>
-<p><strong>作者发现：</strong> 在 KL 正则控制假设下，部署回报可分为 Harness 上限与策略失配。在 Qwen3.5-2B 的 MiniWoB++ 实验中，仅反转观测字段顺序，最优决策不变，训练后模型成功率却从85.0%降至19.2%。</p>
-<p><strong>架构影响与价值：</strong> 固定序列化格式，分别评估即时迁移和等预算适配。<strong>限制：</strong> 受控任务支持机制分析；以更强教师估计编码 Harness 的最优策略仍是代理指标，不能代表通用能力上限。</p>
+<p>在 KL 正则控制假设下，部署回报可分为 Harness 上限与策略失配。在 Qwen3.5-2B 的 MiniWoB++ 实验中，仅反转观测字段顺序，最优决策不变，训练后模型成功率却从85.0%降至19.2%。</p>
+<p>固定序列化格式，分别评估即时迁移和等预算适配。受控任务支持机制分析；以更强教师估计编码 Harness 的最优策略仍是代理指标，不能代表通用能力上限。</p>
 <h3>4. TreasuryQA：覆盖从搜索到扫描识读的完整链路</h3>
 <p><strong>高优先级 · v1，UTC 10月28日。</strong> <a href="https://arxiv.org/html/2610.38924v1">TreasuryQA Bench: Can AI Agents Work an Archive of Scanned Financial Records?</a>。</p>
-<p><strong>作者证据：</strong> 70个问题对应1,435份扫描出版物，通过 Dropbox 仿真环境、MCP 与 OCR 完成。十组固定版本的模型与 Harness 均采用高推理强度，每题尝试三次。Claude Opus 5.5 配合 Claude Code 的 pass@1 为64.8%；校正多重比较后，相邻排名差异并不显著。</p>
-<p><strong>架构影响与价值：</strong> 保存页级证据，用数值容差判分。<strong>限制：</strong> 只公开三个完整例题，多数任务私有；提供方硬件与服务并发未受控，所列模型成本不含 OCR 费用。</p>
+<p>70个问题对应1,435份扫描出版物，通过 Dropbox 仿真环境、MCP 与 OCR 完成。十组固定版本的模型与 Harness 均采用高推理强度，每题尝试三次。Claude Opus 5.5 配合 Claude Code 的 pass@1 为64.8%；校正多重比较后，相邻排名差异并不显著。</p>
+<p>保存页级证据，用数值容差判分。只公开三个完整例题，多数任务私有；提供方硬件与服务并发未受控，所列模型成本不含 OCR 费用。</p>
 <h3>5. TAO：联合调度工具就绪、缓存价值与放置</h3>
 <p><strong>高优先级 · v1，10月27日。</strong> <a href="https://arxiv.org/html/2610.37230v1">TAO: Tool-Aware Joint Scheduling for LLM-Based Agentic Serving</a>。</p>
-<p><strong>作者测量：</strong> DeepSeek-V4 Flash、两节点且每节点4×H100、SWE-Lite、64个 worker，相对各指标最强基线，平均任务延迟降低26.8%、平均 TTFT 降低36.3%、解码吞吐提升29.5%。基线包括 Dynamo、轮询及缓存感知 vLLM、ThunderAgent；节点缓存价值观测随时间衰减。</p>
-<p><strong>架构影响与价值：</strong> 同时测量工具返回后的等待与完整任务耗时。<strong>限制：</strong> 最大收益不能泛化；Qwen3-32B 在 SWE-verified、128个 worker 时，延迟比最强基线差2.5%。比较必须携带缓存策略与预测误差。</p>
+<p>DeepSeek-V4 Flash、两节点且每节点4×H100、SWE-Lite、64个 worker，相对各指标最强基线，平均任务延迟降低26.8%、平均 TTFT 降低36.3%、解码吞吐提升29.5%。基线包括 Dynamo、轮询及缓存感知 vLLM、ThunderAgent；节点缓存价值观测随时间衰减。</p>
+<p>同时测量工具返回后的等待与完整任务耗时。最大收益不能泛化；Qwen3-32B 在 SWE-verified、128个 worker 时，延迟比最强基线差2.5%。比较必须携带缓存策略与预测误差。</p>
 <h3>6. Mistral Large 4：KV 容量不等于解码速度</h3>
 <p><strong>高优先级 · 维护者页面标注10月29日，最早公开时间未独立确证。</strong> <a href="https://vllm.ai/blog/2026-10-29-mistral-large-4">Day 0 support for Mistral Large 4 on vLLM</a>。</p>
-<p><strong>作者测量：</strong> 8×GB300、NVFP4、TP8 与 TP8+DCP8 对比，不启用推测解码，输入8k–60k、并发至128时，DCP 每 token 解码慢16–28%。显存利用率0.85时 KV 容量从3.60M升至28.76M token；这是容量，不能当吞吐倍率。</p>
-<p><strong>架构影响与价值：</strong> 当 KV 驻留成为会话瓶颈时考虑 DCP。<strong>限制：</strong> 该比较的前缀缓存匹配状态未确证；P/D 实验明确关闭前缀缓存，不应将两组实验拼接。</p>
+<p>8×GB300、NVFP4、TP8 与 TP8+DCP8 对比，不启用推测解码，输入8k–60k、并发至128时，DCP 每 token 解码慢16–28%。显存利用率0.85时 KV 容量从3.60M升至28.76M token；这是容量，不能当吞吐倍率。</p>
+<p>当 KV 驻留成为会话瓶颈时考虑 DCP。该比较的前缀缓存匹配状态未确证；P/D 实验明确关闭前缀缓存，不应将两组实验拼接。</p>
 <h2>架构决策与取舍</h2>
 <table>
 <thead>
@@ -147,7 +167,7 @@
 <td>增加检查和误拦截；保留允许执行的对照任务</td>
 </tr>
 <tr>
-<td>在 Agent 不可改写的状态外保存证明</td>
+<td>将证明保存在 Agent 无法改写的位置</td>
 <td>动作报告可验证</td>
 <td>仍需运维签名方并检查新鲜度</td>
 </tr>

@@ -97,8 +97,28 @@
     </div>
   </header>
   
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-11-16_llm-agent-weekly-2026-w47.zh.f9005ae7ebbd81b8.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
   <div class="article-grid">
-    <div class="article-copy prose"><p><strong>2026-W47 期 · 发布于 2026 年 11 月 16 日 · Asia/Shanghai。</strong> 观察窗口：<strong>[11 月 9 日 03:00，11 月 16 日 03:00)</strong>，即 <strong>UTC [11 月 8 日 19:00，11 月 15 日 19:00)</strong>。本期独立综述核读六篇一手预印本，固定为 v1。实验结论均为作者报告；LATENTX 未做独立复现。</p>
+    <div class="article-copy prose"><h2>编辑摘要</h2>
+<p>本期六篇论文分别讨论 Agent 的决策依据和推理系统的执行成本。前三篇关注经验是否适用于当前任务、缺少信息时应该执行还是询问，以及能否沿着来源记录核查一条经验。评测因此需要同时观察任务完成、错误调用和原有能力回退。后三篇处理不同的推理瓶颈：共享文档被重复读取、专家并行中的固定通信开销，以及解码池中的权重放置与注意力分工。选择方案时，必须保留各自的负载和部署条件，分别测试离线问题分组、小批量解码和长上下文并发服务。文中实验结果均来自作者，LATENTX 未独立复现；所列验收指标是供平台团队实施的实验建议，并非本刊已经取得的结果。</p>
+<hr>
+<p><strong>2026-W47 期 · 发布于 2026 年 11 月 16 日 · Asia/Shanghai。</strong> 观察窗口：<strong>[11 月 9 日 03:00，11 月 16 日 03:00)</strong>，即 <strong>UTC [11 月 8 日 19:00，11 月 15 日 19:00)</strong>。本期综述核读六篇一手预印本，固定为 v1。实验结论均为作者报告；LATENTX 未做独立复现。</p>
 <h2>给平台架构师的四条判断</h2>
 <ol>
 <li><strong>检索到的经验需要适用性检查。</strong> 相关记忆也可能在当前状态下建议错误动作，要保留可供核查的证据。</li>
@@ -110,31 +130,31 @@
 <h2>主题精选</h2>
 <h3>1. Synapse-Control：治理建议何时进入执行模型</h3>
 <p><strong>优先阅读 · v1，11 月 10 日。</strong> <a href="https://arxiv.org/html/2611.13615v1">Synapse-Control</a>。</p>
-<p><strong>作者报告：</strong> 规则筛选 micro-contract，Qwen3-1.7B 分类器判断适用性，Prompt Value Table 限制重复提示。Qwen3.5-9B 与分类器共置一张 H20，执行模型 BF16、TP=1、一个活跃序列、temperature 0.7、最多 60 次动作；相对集成的 Sentry 基线，AppWorld 与 WebShop 辅助控制耗时分别减少 50.2% 和 51.0%。每种方法在两环境合计 1,308 次尝试。这是控制耗时下降，不是同幅端到端加速。</p>
-<p><strong>架构影响与价值：</strong> 分离建议选择和投放预算。<strong>限制：</strong> 教师标签与环境适配器需要重新校准；保留的验证环节仍不可省略。</p>
+<p>规则筛选 micro-contract，Qwen3-1.7B 分类器判断适用性，Prompt Value Table 限制重复提示。Qwen3.5-9B 与分类器共置一张 H20，执行模型 BF16、TP=1、一个活跃序列、temperature 0.7、最多 60 次动作；相对集成的 Sentry 基线，AppWorld 与 WebShop 辅助控制耗时分别减少 50.2% 和 51.0%。每种方法在两环境合计 1,308 次尝试。这是控制耗时下降，不是同幅端到端加速。</p>
+<p>对 Agent 平台而言，可以将建议内容的选择与是否投放建议分开处理。教师标签与环境适配器仍需重新校准，原有验证环节也不可省略。</p>
 <h3>2. StateAlign：用成对任务状态训练决策</h3>
 <p><strong>优先阅读 · v1，11 月 12 日。</strong> <a href="https://arxiv.org/html/2611.16304v1">StateAlign</a>。</p>
-<p><strong>作者报告：</strong> 状态对比强化学习配对需要执行、澄清、检索或拒绝不可行请求的条件。Qwen3-8B 的 BFCL v4 多轮总分从 45.5 升至 55.2，SimpleToolHalluBench DT 从 28.2 降至 25.0。但 Qwen3-14B 在任务分数提高的同时，DT 从 20.7 恶化为 22.6；DT 越低越好。</p>
-<p><strong>架构影响与价值：</strong> 评测必要信息消失后的动作选择，而不只检查参数语法。<strong>限制：</strong> 构造的短交互、五个 4B–14B 文本模型不能证明长企业流程可靠。这里是基准质量分数，不是服务速度测量。</p>
+<p>StateAlign 用状态对比强化学习，将分别需要执行、澄清、检索或拒绝不可行请求的任务条件配对。Qwen3-8B 的 BFCL v4 多轮总分从 45.5 升至 55.2，SimpleToolHalluBench DT 从 28.2 降至 25.0。但 Qwen3-14B 在任务分数提高的同时，DT 从 20.7 恶化为 22.6；DT 越低越好。</p>
+<p>工具使用评测需要检查必要信息消失后的动作选择，也要检查参数是否合法。现有证据限于构造的短交互和五个 4B–14B 文本模型，尚不能证明长企业流程可靠。这里是基准质量分数，不是服务速度测量。</p>
 <h3>3. WikiTrace：让 Agent 核查经验背后的运行记录</h3>
 <p><strong>优先阅读 · v1，11 月 10 日。</strong> <a href="https://arxiv.org/html/2611.14320v1">Don&#39;t Just Trust Your Memory</a>。</p>
-<p><strong>作者报告：</strong> WikiTrace 将 insight 连接到归纳记录与原样保存的源轨迹；遇到失败、冲突或细节缺失时下钻核查。论文在五类基准上区分新增成功与加入记忆后丢失的原有成功。</p>
-<p><strong>架构影响与价值：</strong> 经验旁保留来源、适用条件和失败上下文；以关闭记忆的重复运行为基线统计回退。<strong>限制：</strong> 轨迹链接不能验证归因解释；全部 insight 放入首条消息，大规模检索仍未解决；LLM judge 的诊断是解释，不是因果证明。</p>
+<p>WikiTrace 将提炼的经验（insight）连接到归纳记录与原样保存的源轨迹，供 Agent 在遇到失败、冲突或细节缺失时查阅。论文在五类基准上区分新增成功与加入记忆后丢失的原有成功。</p>
+<p>记忆系统应在经验旁保留来源、适用条件和失败上下文，并以关闭记忆的重复运行为基线统计回退。轨迹链接提供了核查材料，但不能证明从轨迹得出的归因。系统把全部 insight 放入首条消息，尚未解决大规模检索；LLM 裁判的诊断也不构成因果证明。</p>
 <h3>4. Parallel Prompting：在解码阶段复用文档读取</h3>
 <p><strong>按需阅读 · v1，11 月 11 日。</strong> <a href="https://arxiv.org/html/2611.15130v1">Read Once, Answer Many</a>。</p>
-<p><strong>作者报告：</strong> stream mask 隔离答案，同时共享文档 KV 读取。CodeLlama-7B-Instruct、BF16、greedy、8k–16k 文档、64–256 个问题条件下，相对原生 SGLang/FlashInfer，在 A100-SXM4-80GB 上报告 3.7×，RTX A6000 上 5.9–6.0×；覆盖 v0.4.2.post3 与 v0.5.22。单纯 prefix caching 仍留下重复 decode 读取。</p>
-<p><strong>架构影响与价值：</strong> 将独立文档问题分组，用于离线评测。<strong>限制：</strong> 单 GPU、指定后端、预先已知的问题组；长答案和长度不均削弱收益。这是特定负载加速，不是交互服务 SLO 保证。</p>
+<p>Parallel Prompting 通过流掩码（stream mask）隔离答案，同时共享文档 KV 读取。CodeLlama-7B-Instruct、BF16、贪心解码、8k–16k 文档、64–256 个问题条件下，相对原生 SGLang/FlashInfer，在 A100-SXM4-80GB 上报告 3.7×，RTX A6000 上 5.9–6.0×；覆盖 v0.4.2.post3 与 v0.5.22。单纯 prefix caching 仍留下重复 decode 读取。</p>
+<p>离线评测可以尝试将同一文档的独立问题分组。现有实现限于单 GPU、指定后端以及预先已知的问题组；长答案和长度不均削弱收益。这是特定负载加速，不是交互服务 SLO 保证。</p>
 <h3>5. NVLinkOneSided：先消除固定成本，再追带宽</h3>
 <p><strong>按需阅读 · v1，UTC 11 月 9 日／上海 11 月 10 日。</strong> <a href="https://arxiv.org/html/2611.13188v1">One-Sided Expert-Parallel All-to-All</a>。</p>
-<p><strong>作者报告：</strong> 按 rank 排列的接收缓冲区消除前置元数据交换和按 expert 复制；Fence 与 Sentinel 提供不同同步取舍。评测包括八张 B300 上的 DeepSeek-V4.1-Flash、Kimi-K3 路由专家层，以及 GB200 NVL72 上的大规模专家并行，扫描批量和路由条件。</p>
-<p><strong>架构影响与价值：</strong> 在实际 decode 批量下分别测 dispatch、combine、launch 和同步。<strong>限制：</strong> 设计限定单个 NVLink 域，并有布局与工作区成本；层级微基准不能证明全模型或跨数据中心收益。</p>
+<p>按 rank 排列的接收缓冲区消除前置元数据交换和按 expert 复制；Fence 与 Sentinel 提供不同同步取舍。评测包括八张 B300 上的 DeepSeek-V4.1-Flash、Kimi-K3 路由专家层，以及 GB200 NVL72 上的大规模专家并行，扫描批量和路由条件。</p>
+<p>对实际解码批量，应分别测量分发（dispatch）、合并（combine）、内核启动（launch）和同步的耗时。设计限定在单个 NVLink 域内，并有布局与工作区成本；层级微基准不能证明全模型或跨数据中心收益。</p>
 <h3>6. TKNP：分离权重放置与请求所属的注意力</h3>
 <p><strong>按需阅读 · v1，UTC 11 月 9 日／上海 11 月 10 日。</strong> <a href="https://arxiv.org/html/2611.13293v1">Decode Token Parallelism</a>。</p>
-<p><strong>作者报告：</strong> TKNP 按层块分布权重，请求保留本地 KV，跨节点传递当前激活。测试包括 Llama 3.1 405B、Nemotron-4 340B，32/64 张 H100 decode GPU、vLLM、FP8 权重并保留部分 BF16 参数、BF16 KV，关闭 prefix sharing。低并发有利于独立副本，长上下文和容量压力有利于 TKNP。</p>
-<p><strong>架构影响与价值：</strong> 容量规划包含分批准入。<strong>限制：</strong> H100/InfiniBand 拓扑很关键；Nemotron 扩展 RoPE 的实验衡量解码性能，不代表长上下文准确率已验证。不能把吞吐倍数迁移到另一种到达轨迹。</p>
+<p>TKNP 按层块分布权重，请求保留本地 KV，跨节点传递当前激活。测试包括 Llama 3.1 405B、Nemotron-4 340B，32/64 张 H100 decode GPU、vLLM、FP8 权重并保留部分 BF16 参数、BF16 KV，关闭 prefix sharing。低并发有利于独立副本，长上下文和容量压力有利于 TKNP。</p>
+<p>容量规划应包括请求分批准入的等待时间，以及已准入请求的执行时间。结果受 H100/InfiniBand 拓扑影响；Nemotron 扩展 RoPE 的实验衡量解码性能，不代表长上下文准确率已验证。不能把吞吐倍数迁移到另一种到达轨迹。</p>
 <h2>架构决策与取舍</h2>
-<p>企业最容易启动的是带证据的建议层实验。在简短经验背后保留不可变源记录，区分建议文本与授权；工具副作用由当前应用状态和权限约束。学习式适用性评分可以减少控制开销，不能替代服务端权限检查。应用到 MCP 集成是基于本期 Agent 结果的编辑推断，不是新的 MCP 要求或已证明的协议防御。本期不宣称有新 MCP 规范。</p>
-<p>两类推理负载需要不同队列：离线文档评测可以聚合问题并共享读取；交互请求的到达变化和截止时间可能抵消分组收益。分组键应包含租户与文档访问边界。对 MoE 和分布式稠密模型，先在实际驻留批量下剖析通信，再改变所有权或布局。层级加速与准入容量改善回答不同问题，不应叠加论文报告的倍数。</p>
+<p>企业试验可以从保留证据链接的建议层开始。在简短经验背后保留不可变源记录，区分建议文本与授权；工具副作用由当前应用状态和权限约束。学习式适用性评分可以减少控制开销，不能替代服务端权限检查。应用到 MCP 集成是基于本期 Agent 结果的编辑推断，不是新的 MCP 要求或已证明的协议防御。本期不宣称有新 MCP 规范。</p>
+<p>两类推理负载适合分别排队：离线文档评测可以聚合问题并共享读取；交互请求的到达变化和截止时间可能抵消分组收益。分组键应包含租户与文档访问边界。对 MoE 和分布式稠密模型，先在实际驻留批量下剖析通信，再改变所有权或布局。层级加速与准入容量改善回答不同问题，不应叠加论文报告的倍数。</p>
 <h2>PoC 与验收指标</h2>
 <p>下表是建议的本地验收标准，不是本周刊已有实验结果：</p>
 <table>
@@ -176,7 +196,7 @@
 <p>动作策略先读 Synapse-Control 和 StateAlign，扩展持久记忆前结合 WikiTrace。离线文档负载读 Parallel Prompting；MoE 内核读 NVLinkOneSided，稠密 decode 池所有权读 TKNP。上文固定版本链接就是六篇一手阅读材料，不进入每日单来源队列。</p>
 <h2>方法与限制</h2>
 <p>检索公开研究目录，逐篇打开 arXiv 版本页与完整 HTML，核读架构、实验设置、结果和限制。以最早 arXiv 提交时间判断纳入，不使用索引或转载时间。核查的六篇历史均只有 v1；未穷尽排除 arXiv 之外的更早传播。本期没有独立复现、生产测量或标准符合性测试。</p>
-<p>窗口外剔除：Tracing MCP Security Vulnerabilities（2611.11104，UTC 11 月 8 日 19:00 前首次提交）、Where Does MCP Security End（2611.02611，11 月 2 日）、AgingBench（2605.26302，5 月首次提交；11 月修订不算新成果）。有意保持较窄选题。来源、版本、去重及交付证据保留在私有侧；可选语音缺失。发布日期采用实际上线的上海日期，与来源日期分开。</p>
+<p>窗口外剔除：Tracing MCP Security Vulnerabilities（2611.11104，UTC 11 月 8 日 19:00 前首次提交）、Where Does MCP Security End（2611.02611，11 月 2 日）、AgingBench（2605.26302，5 月首次提交；11 月修订不算新成果）。本期保留这一较窄的来源范围，没有用窗口外材料补足篇数。来源、版本、去重及交付记录保留在私有侧。文首摘要是本期语音的朗读文本。发布日期采用实际上线的上海日期，与来源日期分开。</p>
 </div>
     <aside class="article-aside">
       <div class="aside-label">文件信息</div>

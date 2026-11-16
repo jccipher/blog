@@ -720,6 +720,106 @@
       "sha256": "e97ba4952ee140614be520e48006d940d5d025ec4a703b071cd681044dc3a954",
       "summary_sha256": "10963bc950c2e70241514771c4662110c6a90b85b9c6df143e12b48b513ab87e",
       "duration_seconds": 66.52
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w43-trial",
+      "lang": "zh",
+      "published_on": "2026-10-20",
+      "asset": "2026-10-20_llm-agent-weekly-2026-w43-trial.zh.6cc0d613e4816b9e.mp3",
+      "bytes": 399981,
+      "sha256": "af6288160763f5bc41e7ca1a80eb978b8a9c96b2219bda0a93ab683cee4e7f28",
+      "summary_sha256": "e6be30e03c02f08733d03075bc0ebea89feb7e39bff315b86d2f92545e54f869",
+      "duration_seconds": 66.57
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w43-trial",
+      "lang": "en",
+      "published_on": "2026-10-20",
+      "asset": "2026-10-20_llm-agent-weekly-2026-w43-trial.en.18d3ab3dd9dabfe0.mp3",
+      "bytes": 497901,
+      "sha256": "c5304b6ff542c048fdbc33484f3f662ba39d3fd9659a8f0aaa46d2dc9c389dbc",
+      "summary_sha256": "5dcc969f130b3caa03ae8f0ee2b6dba6b233a52210d31721bb078548481dbc9f",
+      "duration_seconds": 82.89
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w44",
+      "lang": "zh",
+      "published_on": "2026-10-26",
+      "asset": "2026-10-26_llm-agent-weekly-2026-w44.zh.0a7b07011d966cde.mp3",
+      "bytes": 340509,
+      "sha256": "f5008da74aff371e0275caab511665e2c3c248ff763ee328abfe18d36f5c3080",
+      "summary_sha256": "de6e09912bd01bbc33836ad43fe84701af997d1575bef0369f44b0b48a536435",
+      "duration_seconds": 56.65
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w44",
+      "lang": "en",
+      "published_on": "2026-10-26",
+      "asset": "2026-10-26_llm-agent-weekly-2026-w44.en.aaf56df54cf746d1.mp3",
+      "bytes": 475869,
+      "sha256": "163cd17b7dc6faef46b1e8fef4a0175bb473f6e1c7d6a6b6ce63ab1b4a9f65b7",
+      "summary_sha256": "4e27689599ba5012ca874e49b9c78856ea91de1572ae20c4344edebff0a333c8",
+      "duration_seconds": 79.21
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w45",
+      "lang": "zh",
+      "published_on": "2026-11-02",
+      "asset": "2026-11-02_llm-agent-weekly-2026-w45.zh.ac3614ec95080e9f.mp3",
+      "bytes": 421149,
+      "sha256": "3debe7a4c30af08dea1eed4eef554a0864cb3ee3736378c5bd73c261f0a4b3c2",
+      "summary_sha256": "69fccd312b84d2876222302dfdd131ef2e1549a626e42d94745070965e1c99e0",
+      "duration_seconds": 70.09
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w45",
+      "lang": "en",
+      "published_on": "2026-11-02",
+      "asset": "2026-11-02_llm-agent-weekly-2026-w45.en.6cd121b00312588e.mp3",
+      "bytes": 479181,
+      "sha256": "23be6935274f2761f562ad1aa467987a88ed199a2dce84fefcab28aa04a22870",
+      "summary_sha256": "6fd80e882b905be6149d52791c0db55f693b2969c8b11f4def59d5ee27f6ab34",
+      "duration_seconds": 79.77
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w46",
+      "lang": "zh",
+      "published_on": "2026-11-09",
+      "asset": "2026-11-09_llm-agent-weekly-2026-w46.zh.49cbb74b8dfa3f09.mp3",
+      "bytes": 296877,
+      "sha256": "4b4fd846f21b144d3e332ebf1ac143a3eadd2c431f40e90115e9dc64e2cb00ee",
+      "summary_sha256": "01386448bb5abc2e7f953941ae644d97b372b250fdf53d206a992ae7c420cd6e",
+      "duration_seconds": 49.37
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w46",
+      "lang": "en",
+      "published_on": "2026-11-09",
+      "asset": "2026-11-09_llm-agent-weekly-2026-w46.en.722a6460408e563f.mp3",
+      "bytes": 385005,
+      "sha256": "8978537b09ca7af55774003bc4aa83600e35b37dff2ed8006b364722a0e14d85",
+      "summary_sha256": "65777b478fdd2ece5ef255bf49f1ec614e89c43c9911e1bcf52d6f7e33436ac2",
+      "duration_seconds": 64.07
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w47",
+      "lang": "zh",
+      "published_on": "2026-11-16",
+      "asset": "2026-11-16_llm-agent-weekly-2026-w47.zh.f9005ae7ebbd81b8.mp3",
+      "bytes": 326109,
+      "sha256": "f038fa9ce2096cd91a32984e7b8c15e3da061378100962e322549c56b7649578",
+      "summary_sha256": "27557fe999ad46106da98aed7f7b655630c22ab65938e25974f33f7e6afbda5d",
+      "duration_seconds": 54.25
+    },
+    {
+      "slug": "llm-agent-weekly-2026-w47",
+      "lang": "en",
+      "published_on": "2026-11-16",
+      "asset": "2026-11-16_llm-agent-weekly-2026-w47.en.b2e88167af5efc46.mp3",
+      "bytes": 400413,
+      "sha256": "85abaf50488d48b0ee7fcb92e61ab7cea64a385a8a7b2b6de0cd0c5e5d660eef",
+      "summary_sha256": "acfd15c3b44f5a941337619a567b6069204794721dce3eb15e9d07b4f8c0a651",
+      "duration_seconds": 66.64
     }
   ]
 }

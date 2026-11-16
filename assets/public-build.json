@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "build_id": "20261116T031105+0800-b471e313",
-  "built_at": "2026-11-16T03:11:05+08:00",
+  "build_id": "20261116T202326+0800-c34ffc1f",
+  "built_at": "2026-11-16T20:23:26+08:00",
   "files": [
     {
       "path": ".github/workflows/pages.yml",
@@ -30,8 +30,8 @@
     },
     {
       "path": "assets/audio-manifest.json",
-      "bytes": 34832,
-      "sha256": "b257072e53fd680be58cfdf296eb7876bd766bcca2126910038cb8dd64757f14"
+      "bytes": 39076,
+      "sha256": "295170d5cf887fbfad45dce9a667dced37aed3b4ca0dc82bd0198255d247c002"
     },
     {
       "path": "assets/audio/2026-09-05_ai-blog-anthropic-claude-for-commerce-agents.en.690f70b67de23d64.mp3",
@@ -394,6 +394,56 @@
       "sha256": "e97ba4952ee140614be520e48006d940d5d025ec4a703b071cd681044dc3a954"
     },
     {
+      "path": "assets/audio/2026-10-20_llm-agent-weekly-2026-w43-trial.en.18d3ab3dd9dabfe0.mp3",
+      "bytes": 497901,
+      "sha256": "c5304b6ff542c048fdbc33484f3f662ba39d3fd9659a8f0aaa46d2dc9c389dbc"
+    },
+    {
+      "path": "assets/audio/2026-10-20_llm-agent-weekly-2026-w43-trial.zh.6cc0d613e4816b9e.mp3",
+      "bytes": 399981,
+      "sha256": "af6288160763f5bc41e7ca1a80eb978b8a9c96b2219bda0a93ab683cee4e7f28"
+    },
+    {
+      "path": "assets/audio/2026-10-26_llm-agent-weekly-2026-w44.en.aaf56df54cf746d1.mp3",
+      "bytes": 475869,
+      "sha256": "163cd17b7dc6faef46b1e8fef4a0175bb473f6e1c7d6a6b6ce63ab1b4a9f65b7"
+    },
+    {
+      "path": "assets/audio/2026-10-26_llm-agent-weekly-2026-w44.zh.0a7b07011d966cde.mp3",
+      "bytes": 340509,
+      "sha256": "f5008da74aff371e0275caab511665e2c3c248ff763ee328abfe18d36f5c3080"
+    },
+    {
+      "path": "assets/audio/2026-11-02_llm-agent-weekly-2026-w45.en.6cd121b00312588e.mp3",
+      "bytes": 479181,
+      "sha256": "23be6935274f2761f562ad1aa467987a88ed199a2dce84fefcab28aa04a22870"
+    },
+    {
+      "path": "assets/audio/2026-11-02_llm-agent-weekly-2026-w45.zh.ac3614ec95080e9f.mp3",
+      "bytes": 421149,
+      "sha256": "3debe7a4c30af08dea1eed4eef554a0864cb3ee3736378c5bd73c261f0a4b3c2"
+    },
+    {
+      "path": "assets/audio/2026-11-09_llm-agent-weekly-2026-w46.en.722a6460408e563f.mp3",
+      "bytes": 385005,
+      "sha256": "8978537b09ca7af55774003bc4aa83600e35b37dff2ed8006b364722a0e14d85"
+    },
+    {
+      "path": "assets/audio/2026-11-09_llm-agent-weekly-2026-w46.zh.49cbb74b8dfa3f09.mp3",
+      "bytes": 296877,
+      "sha256": "4b4fd846f21b144d3e332ebf1ac143a3eadd2c431f40e90115e9dc64e2cb00ee"
+    },
+    {
+      "path": "assets/audio/2026-11-16_llm-agent-weekly-2026-w47.en.b2e88167af5efc46.mp3",
+      "bytes": 400413,
+      "sha256": "85abaf50488d48b0ee7fcb92e61ab7cea64a385a8a7b2b6de0cd0c5e5d660eef"
+    },
+    {
+      "path": "assets/audio/2026-11-16_llm-agent-weekly-2026-w47.zh.f9005ae7ebbd81b8.mp3",
+      "bytes": 326109,
+      "sha256": "f038fa9ce2096cd91a32984e7b8c15e3da061378100962e322549c56b7649578"
+    },
+    {
       "path": "assets/css/style.css",
       "bytes": 25358,
       "sha256": "24d750b182f78f8c1ff35bd9c1ccb4dac6662efed4a4dcbd0eb9685c7f870821"
@@ -425,13 +475,13 @@
     },
     {
       "path": "favorites/index.html",
-      "bytes": 69319,
-      "sha256": "cb63f06573878205fc96535d8a0066fb8e3a819ed462e9668b02aff1e25c4273"
+      "bytes": 69311,
+      "sha256": "810d04e8db64409f4241d294ff3629dc5dc832aace7d3230de38ed87a64f7755"
     },
     {
       "path": "index.html",
-      "bytes": 15182,
-      "sha256": "9cf7f66554bba0f26f33433e795cebc3609c4f08c714625077fef364b0501548"
+      "bytes": 15176,
+      "sha256": "ed31b4748f4d1270a5e02fb34cfe5ba476a5fb518795426f6407aaf9fd154eec"
     },
     {
       "path": "posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -715,28 +765,28 @@
     },
     {
       "path": "posts/llm-agent-weekly-2026-w43-trial/index.html",
-      "bytes": 22283,
-      "sha256": "3ceb46d8932c559c8764b8bc5b41ff0d65b66225d894ff6ac86078e0e782b2ff"
+      "bytes": 24410,
+      "sha256": "7d1b7a418efb8c2ec418a50cd4d443b04dba258f527d0597b1eb292e8321cf96"
     },
     {
       "path": "posts/llm-agent-weekly-2026-w44/index.html",
-      "bytes": 23592,
-      "sha256": "e0cf83799452d460875431618a27a0a8d7f7e8bb6baa83bb09e2774031e30cad"
+      "bytes": 25167,
+      "sha256": "f7c176343b2dde72f97faace676f4cbac4efcc22631fce17117fe51458bf7c34"
     },
     {
       "path": "posts/llm-agent-weekly-2026-w45/index.html",
-      "bytes": 19434,
-      "sha256": "9d6d9593373f8f21662ba9f9876dd9b438c9d4ff113d7127d5151ca88bff80eb"
+      "bytes": 21274,
+      "sha256": "890dd925faf5064c7e0ee0dc6ea127d88c42074ddc4b176e04170b9d51b138d4"
     },
     {
       "path": "posts/llm-agent-weekly-2026-w46/index.html",
-      "bytes": 20588,
-      "sha256": "0593cdfbbc0a8fac4185960bc1c607e2b84d66a37e26eb0eae91a095abcba623"
+      "bytes": 22400,
+      "sha256": "071eadf82c1a8f2f0dc7023822a878f3d2a6b7c4c3765d73303a3a83f5ff1aa6"
     },
     {
       "path": "posts/llm-agent-weekly-2026-w47/index.html",
-      "bytes": 20078,
-      "sha256": "cf7c37a9b4bc9c4b2734cea01f6eefa8e93a3752d3325685723197416e3f7586"
+      "bytes": 22087,
+      "sha256": "b42c6b96ed0d74ed4a4176215e82a3efc945a8ec3c1002b67e5a6625c2d36800"
     },
     {
       "path": "posts/llm-evaluation-assistant-prefill/index.html",
@@ -800,13 +850,13 @@
     },
     {
       "path": "zh/favorites/index.html",
-      "bytes": 76390,
-      "sha256": "89d1b012d8f0a73e7254f0afe6f4c1ce0fa8c7dfde2c4543a644ab920fb3bdc6"
+      "bytes": 77156,
+      "sha256": "36326c1f07d1910df4bf88ac365ad38e185b47c115b6d7b3d2aaa8af7a3342c5"
     },
     {
       "path": "zh/index.html",
-      "bytes": 15461,
-      "sha256": "3d564a4b98b27f96a715d34fa51aaf7248611d66316d9d4d53c85e0fd41ce416"
+      "bytes": 15981,
+      "sha256": "996ad328fb82fe21adbc6adcc179b157ccf21e95454f2089ebb7d5741ac5b045"
     },
     {
       "path": "zh/posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -1090,28 +1140,28 @@
     },
     {
       "path": "zh/posts/llm-agent-weekly-2026-w43-trial/index.html",
-      "bytes": 21924,
-      "sha256": "bb31a6d8626c34b5d687276d7a5c3990c403af2ded1f40ea525d831e19349d95"
+      "bytes": 23486,
+      "sha256": "b03f9720fee6960f94b26db6c450063ba4e684a331f097b2b83aeeb7b23269bb"
     },
     {
       "path": "zh/posts/llm-agent-weekly-2026-w44/index.html",
-      "bytes": 21662,
-      "sha256": "5392cca9ebca14d97a756b4249f56b6f1ffee1ea6f721abba3cfb83374f8201b"
+      "bytes": 22880,
+      "sha256": "ce70f33847c5c16d3fdfc5d58a2f83f639f9ccea134ae6c729bf92216d42998a"
     },
     {
       "path": "zh/posts/llm-agent-weekly-2026-w45/index.html",
-      "bytes": 18349,
-      "sha256": "6fee605b1089afbd38147b7d9e12adc127340f17947e778e088b36ed83dd1ac9"
+      "bytes": 19736,
+      "sha256": "0a6187cbffeb9da88c4812449392761063852ebfbec91cc9d0c2d3068f55fbd2"
     },
     {
       "path": "zh/posts/llm-agent-weekly-2026-w46/index.html",
-      "bytes": 19185,
-      "sha256": "47ce7e52ead68e1553ae740bcb96174698a0bc8768743659a5ed8e6eef293c91"
+      "bytes": 20784,
+      "sha256": "a13e46dfd8e61a63e3ae069de6221cafb3d2528e2499f14a80da1a48e477221e"
     },
     {
       "path": "zh/posts/llm-agent-weekly-2026-w47/index.html",
-      "bytes": 18756,
-      "sha256": "aa6f02add564ef6b98cd69cc5d94a4507ccefc223d117fce737966d4264bacc0"
+      "bytes": 20580,
+      "sha256": "e727833da7f1f5ead64f96c6d0d7899ae028403385d0fb25ad4167634d5709c6"
     },
     {
       "path": "zh/posts/llm-evaluation-assistant-prefill/index.html",

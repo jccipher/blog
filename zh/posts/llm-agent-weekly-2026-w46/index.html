@@ -97,8 +97,28 @@
     </div>
   </header>
   
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-11-09_llm-agent-weekly-2026-w46.zh.49cbb74b8dfa3f09.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
   <div class="article-grid">
-    <div class="article-copy prose"><p><strong>2026-W46 · 发布于 2026 年 11 月 9 日 · Asia/Shanghai。</strong> 观察窗口为 <strong>[11 月 2 日 03:00, 11 月 9 日 03:00)</strong>，对应 UTC <strong>[11 月 1 日 19:00, 11 月 8 日 19:00)</strong>。本期独立双语综述核读六篇一手预印本及版本历史，不进入每日单来源队列。以下结果均为作者报告，LATENTX 未独立复现实验。</p>
+    <div class="article-copy prose"><h2>编辑摘要</h2>
+<p>本期六篇论文讨论 Agent 的上下文、执行框架或推理环境变化后，原有约束和能力是否还能成立。压缩摘要保留了规则，后续行动仍可能违规；基准平均分提高，也可能掩盖新框架丢失的任务能力。引入多个模型后，投票器与共享错误证据同样需要测试。对平台团队而言，应检查实际动作和逐任务回退，保留工具依赖的来源，并在上线前实测推理配置。模拟器可以缩小候选范围，确定性回放则需要明确硬件、后端和执行条件。上述建议来自对论文的工程分析；LATENTX 未独立复现作者实验，不能据此推算生产故障率，也不能把特定部署的性能或确定性结论直接移植到其他环境。</p>
+<hr>
+<p><strong>2026-W46 · 发布于 2026 年 11 月 9 日 · Asia/Shanghai。</strong> 观察窗口为 <strong>[11 月 2 日 03:00, 11 月 9 日 03:00)</strong>，对应 UTC <strong>[11 月 1 日 19:00, 11 月 8 日 19:00)</strong>。本期核读六篇一手预印本及版本历史，独立于每日单来源文章发布。以下结果均为作者报告，LATENTX 未独立复现实验。</p>
 <h2>给平台架构师的四条判断</h2>
 <ol>
 <li><strong>保留规则不等于执行规则。</strong> 同时检查压缩摘要保留了什么，以及压缩后的实际行动。</li>
@@ -110,28 +130,28 @@
 <h2>主题精选</h2>
 <h3>1. ARCBench：摘要之后，还要检查行动</h3>
 <p><strong>优先阅读 · v1，11 月 2 日。</strong> <a href="https://arxiv.org/html/2611.03223v1">Do Agents Still Follow the Rules?</a>。</p>
-<p><strong>作者报告：</strong> S1 在 pi harness 中以 Hermes 压缩测试 17 个案例，使用 OpenRouter 上的 DeepSeek-V4-Flash、GLM-5.3-Flash、Qwen3.7-Flash 和 GPT-Luna；同一模型承担压缩与行动。136 个案例/模型/渠道组合中，violation@3 从完整历史的 9.6% 升至压缩后的 37.8%；70.1% 的压缩运行保留规则。violation@3 表示三次运行中至少一次违规的案例比例，规则保留率则以运行次数为分母，两者不能混算。</p>
-<p><strong>架构影响与价值：</strong> 显式保存规则状态，测试压缩后的真实工具调用。<strong>限制：</strong> 诊断依赖 LLM 裁判、选定案例和特定 harness；仅保留规则不能证明合规。这不是生产故障概率。</p>
+<p>作者在 pi harness 中进行 S1 评估，以 Hermes 压缩测试 17 个案例，使用 OpenRouter 上的 DeepSeek-V4-Flash、GLM-5.3-Flash、Qwen3.7-Flash 和 GPT-Luna；同一模型承担压缩与行动。136 个案例/模型/渠道组合中，violation@3 从完整历史的 9.6% 升至压缩后的 37.8%；70.1% 的压缩运行保留规则。violation@3 表示三次运行中至少一次违规的案例比例，规则保留率则以运行次数为分母，两者不能混算。</p>
+<p>部署时应显式保存规则状态，并测试压缩后的真实工具调用。研究的诊断依赖 LLM 裁判、选定案例和特定 harness；仅保留规则不能证明合规。这不是生产故障概率。</p>
 <h3>2. Harness 演化：更高总分可能掩盖能力丢失</h3>
 <p><strong>优先阅读 · v1，11 月 5 日。</strong> <a href="https://arxiv.org/html/2611.07624v1">Beneath the Surface</a>。</p>
-<p><strong>作者报告：</strong> 四种演化方法使用 GPT-5.4，组合 MiniSWE 2.4.5 与 Codex 0.143.0，在 τ³-Banking 和 Terminal-Bench 2 上评估。十六个演化后 Agent 都同时获得和丢失任务覆盖。迁移与部署成本分析进一步限制了总分收益的解释；更严格的候选准入也可能丢弃有价值的替代方案。</p>
-<p><strong>架构影响与价值：</strong> 将提示、工具和编排作为一个发布单元，保留逐任务转移记录，避免只看最终平均分。<strong>限制：</strong> MiniSWE 可改内部源码，Codex 仅改外层，两者搜索空间不同。结果不能证明所有严格门禁都有害，也不能证明某方法适合所有企业负载。摘要与正文对后续算法的命名不同，本期不作具名算法性能结论。</p>
+<p>四种演化方法使用 GPT-5.4，组合 MiniSWE 2.4.5 与 Codex 0.143.0，在 τ³-Banking 和 Terminal-Bench 2 上评估。十六个演化后 Agent 都同时获得和丢失任务覆盖。迁移与部署成本分析进一步限制了总分收益的解释；更严格的候选准入也可能丢弃有价值的替代方案。</p>
+<p>比较版本时，应把提示、工具和编排作为一个发布单元，并保留每个任务由成功转为失败或由失败转为成功的记录。研究中的搜索空间也有区别：MiniSWE 可改内部源码，Codex 仅改外层。结果不能证明所有严格门禁都有害，也不能证明某方法适合所有企业负载。摘要与正文对后续算法的命名不同，本期不作具名算法性能结论。</p>
 <h3>3. 多 Agent 可靠性：把投票器和共因故障纳入模型</h3>
 <p><strong>高优先级 · v1，UTC 11 月 4 日 / 上海 11 月 5 日。</strong> <a href="https://arxiv.org/html/2611.07140v1">More Agents, More Reliable?</a>。</p>
-<p><strong>作者报告：</strong> LangGraph 化学危害信息抽取案例使用保存的 ECHA 页面，对比 GPT-5-mini、Gemini-2.5-Flash 与 Qwen2.5-VL-3B。九种物质，每模型各重复十次，排除三次基础设施失败。多数投票没有明确超过最强单模型。框架将投票器故障与相关错误显式列为敏感性参数。</p>
-<p><strong>架构影响与价值：</strong> 独立测试聚合器，以最强单模型为冗余方案基线。<strong>限制：</strong> 业务输入比例由作者声明，并非日志估计；九种物质上的重复运行不是独立生产请求。两个 API 模型未固定日期快照，不确定性区间可能过窄。这是结构化事实抽取证据，不是化学安全建议。</p>
+<p>LangGraph 化学危害信息抽取案例使用保存的 ECHA 页面，对比 GPT-5-mini、Gemini-2.5-Flash 与 Qwen2.5-VL-3B。九种物质，每模型各重复十次，排除三次基础设施失败。多数投票没有明确超过最强单模型。框架将投票器故障与相关错误显式列为敏感性参数。</p>
+<p>评估冗余方案时，应单独测试聚合器，并与最强单模型比较。解释结果还要注意，业务输入比例由作者声明，并非由日志估计；九种物质上的重复运行不是独立生产请求。两个 API 模型未固定日期快照，不确定性区间可能过窄。这是结构化事实抽取证据，不是化学安全建议。</p>
 <h3>4. MCP-Eco：先核接口溯源，再看生态总量</h3>
 <p><strong>高优先级 · v1，UTC 11 月 4 日 / 上海 11 月 5 日。</strong> <a href="https://arxiv.org/html/2611.06897v1">MCP-Eco</a>。</p>
-<p><strong>作者数据集：</strong> 论文关联 78,302 个候选服务器项目和 16,165 个候选使用方仓库。9,200 条配置声明中，5,975 条解析为 5,138 个不同的仓库—服务器配对。能力记录区分实时探测与目录声明，保留匹配方法。</p>
-<p><strong>架构影响与价值：</strong> 用溯源字段建立可审查的配置依赖清单，再对选定部署重新探测。<strong>限制：</strong> 导出冻结于 <strong>2026-06-23</strong>。这是介绍旧快照的新论文，不能证明本周采用量或数据集刚刚首次发布。候选仓库和配置声明不证明安装活跃、安全或互操作。本项是研究数据集，不是 MCP 规范变更。</p>
+<p>论文关联 78,302 个候选服务器项目和 16,165 个候选使用方仓库。9,200 条配置声明中，5,975 条解析为 5,138 个不同的仓库—服务器配对。能力记录区分实时探测与目录声明，保留匹配方法。</p>
+<p>溯源字段可用于建立可审查的配置依赖清单，但选定部署仍需重新探测。导出冻结于 <strong>2026-06-23</strong>。这是介绍旧快照的新论文，不能证明本周采用量或数据集刚刚首次发布。候选仓库和配置声明不证明安装活跃、安全或互操作。本项是研究数据集，不是 MCP 规范变更。</p>
 <h3>5. ROCm InferaSim：预测缩小候选集，实测决定上线</h3>
 <p><strong>高优先级 · v1，UTC 11 月 2 日 / 上海 11 月 3 日。</strong> <a href="https://arxiv.org/html/2611.04032v1">ROCm InferaSim</a>。</p>
-<p><strong>作者报告：</strong> 锚点测量内核配置，再以解析规律和流量模拟迁移预测。评估使用八卡 MI355X 节点、ROCm 7、图捕获及 vLLM/SGLang/ATOM，模型包括 DeepSeek-V4、GLM-5.2 和 Kimi-K3。六个模型、1–384 个会话的 95 个留出 AgentX 多轮配置中，锚定模式吞吐、token 间延迟和 TTFT 误差分别在 8%、14%、23% 以内；这里使用几何平均误差因子，不是逐请求误差上限。</p>
-<p><strong>架构影响与价值：</strong> 将物理搜索缩小为可测候选集，同时保留延迟余量。<strong>限制：</strong> 更换内核、引擎构建或 DCP 可能需要新锚点。缓存驻留和驱逐引入不确定性；吞吐预测准确不等于尾延迟达标。本期不推断跨厂商加速比。</p>
+<p>作者先测量作为锚点的内核配置，再通过解析模型和流量模拟，将预测扩展到其他配置。评估使用八卡 MI355X 节点、ROCm 7、图捕获及 vLLM/SGLang/ATOM，模型包括 DeepSeek-V4、GLM-5.2 和 Kimi-K3。六个模型、1–384 个会话的 95 个留出 AgentX 多轮配置中，锚定模式吞吐、token 间延迟和 TTFT 误差分别在 8%、14%、23% 以内；这里使用几何平均误差因子，不是逐请求误差上限。</p>
+<p>模拟器可以把实测搜索缩小到一组候选配置，但最终配置仍需测量，并留出延迟余量。更换内核、引擎构建或 DCP 可能需要新锚点。缓存驻留和驱逐引入不确定性；吞吐预测准确不等于尾延迟达标。本期不推断跨厂商加速比。</p>
 <h3>6. BlockLock：在部署数值边界内定义可复现性</h3>
 <p><strong>按需优先 · v1，11 月 4 日。</strong> <a href="https://arxiv.org/html/2611.06977v1">BlockLock</a>。</p>
-<p><strong>作者报告：</strong> 固定受保护请求所见的批几何形状，稳定其数值路径。测试覆盖 A6000、A100、H100 上的 Qwen3-8B/14B、Llama-3.1-8B-Instruct 和 Gemma-3-4B/12B，使用 BF16、贪心解码、批大小 1、2、4、8、16，十次重复改变同批其他请求。两种模式在报告条件内保留目标序列与 Top-20 logits，另有范围有限的双 A6000 张量并行实验。</p>
-<p><strong>架构影响与价值：</strong> 回放测试加入同批请求扰动，固定硬件、后端与执行形状。<strong>限制：</strong> 契约逐部署成立，不保证跨 GPU 或软件版本逐位一致。Pack 只解码目标，Rows 还解码其他请求，墙钟时间对应的交付工作量不同。因此本期不引用混合加速比，也不外推至未经测试的 MoE。</p>
+<p>BlockLock 固定受保护请求所见的批处理形状，以稳定数值计算路径。测试覆盖 A6000、A100、H100 上的 Qwen3-8B/14B、Llama-3.1-8B-Instruct 和 Gemma-3-4B/12B，使用 BF16、贪心解码、批大小 1、2、4、8、16，十次重复改变同批其他请求。两种模式在报告条件内保留目标序列与 Top-20 logits，另有范围有限的双 A6000 张量并行实验。</p>
+<p>回放测试应改变同批的其他请求，同时固定硬件、后端与执行形状。这一契约只在特定部署内成立，不保证跨 GPU 或软件版本逐位一致。Pack 只解码目标，Rows 还解码其他请求，墙钟时间对应的交付工作量不同。因此本期不引用混合加速比，也不外推至未经测试的 MoE。</p>
 <h2>架构决策与取舍</h2>
 <table>
 <thead>
@@ -179,7 +199,7 @@
 <h2>继续阅读</h2>
 <p>发布治理先读 ARCBench 与演化研究；组合假设读可靠性论文；清单溯源读 MCP-Eco；配置搜索和回放设计读两篇推理论文。上文链接均固定版本，借用指标前应核对方法和限制。</p>
 <h2>方法限制</h2>
-<p>六篇均为一手预印本，未经本刊独立复现。选择偏向可落地方法与限制，不是穷尽文献调查。首个 arXiv 提交时间均在窗口内，但无法普遍排除 arXiv 之外更早的公开版本。MCP-Eco 的旧快照已明确标注。搜索摘要仅用于发现线索。RECEIPT 首次提交于 11 月 1 日 14:06 UTC，早于窗口，予以剔除。本期不声称出现新 MCP 规范要求、生产事故概率、跨硬件确定性或通用推理加速比。可选周刊音频缺席。</p>
+<p>六篇均为一手预印本，未经本刊独立复现。选择偏向可落地方法与限制，不是穷尽文献调查。首个 arXiv 提交时间均在窗口内，但无法普遍排除 arXiv 之外更早的公开版本。MCP-Eco 的旧快照已明确标注。搜索摘要仅用于发现线索。RECEIPT 首次提交于 11 月 1 日 14:06 UTC，早于窗口，予以剔除。本期不声称出现新 MCP 规范要求、生产事故概率、跨硬件确定性或通用推理加速比。文首摘要是本期语音的朗读文本。</p>
 </div>
     <aside class="article-aside">
       <div class="aside-label">文件信息</div>

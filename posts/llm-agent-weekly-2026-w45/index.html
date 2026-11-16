@@ -86,8 +86,28 @@
     </div>
   </header>
   
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">Listen to the summary · English</h2>
+    <p>AI-generated narration of the editorial summary only, not the original article.</p>
+    <audio controls preload="none" aria-label="English summary audio">
+      <source src="/blog/assets/audio/2026-11-02_llm-agent-weekly-2026-w45.en.6cd121b00312588e.mp3" type="audio/mpeg">
+      Your browser does not support audio playback.
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">Back 15s</button>
+      <button type="button" data-audio-seek="15">Forward 15s</button>
+      <label>Speed <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">Audio is temporarily unavailable. The full text remains available below.</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
   <div class="article-grid">
-    <div class="article-copy prose"><p><strong>Issue 2026-W45 · Published November 2, 2026 · Asia/Shanghai.</strong> Observation window: <strong>[October 26, 03:00, November 2, 03:00)</strong>, or <strong>[October 25, 19:00, November 1, 19:00) UTC</strong>. Six primary documents inform this independent bilingual review, separate from the daily single-source queue. Five are preprints; one is a maintainer engineering account. LATENTX read the primary bodies and version histories but did not independently reproduce experiments.</p>
+    <div class="article-copy prose"><h2>Editorial summary</h2>
+<p>Adding Skills can change how an agent uses its existing permissions, even when those permissions and the existing Skills remain unchanged. This issue pairs research on Skill composition with a proposal for messages that carry evidence, then asks how both should be checked at the point of action. A signed or historical record is not enough when the relevant state may have changed. The evaluation papers examine two further sources of error: an interface change can disrupt a trained policy, and scanned-document tasks can fail between search, page retrieval and number reading. The serving readings extend the analysis to whole sessions, where tool delays, cache retention and available KV capacity interact. More capacity does not necessarily make each token faster, and the scheduling study retains a case where latency worsened. These findings are author reports rather than LATENTX replications. PCM is a research proposal, not an MCP standard. Practical trials should preserve authorization, test interface migrations and compare serving behavior under matched workloads.</p>
+<hr>
+<p><strong>Issue 2026-W45 · Published November 2, 2026 · Asia/Shanghai.</strong> Observation window: <strong>[October 26, 03:00, November 2, 03:00)</strong>, or <strong>[October 25, 19:00, November 1, 19:00) UTC</strong>. Six primary documents inform this independent bilingual review, separate from the daily single-source queue. Five are preprints; one is a maintainer engineering account. LATENTX read the primary bodies and version histories but did not independently reproduce experiments.</p>
 <h2>Four judgments for platform architects</h2>
 <ol>
 <li><strong>Treat Skill additions as system changes.</strong> Composition changes how existing permissions are exercised. Review downstream use of artifacts, approval signals, and destinations.</li>
@@ -99,28 +119,28 @@
 <h2>Theme selections</h2>
 <h3>1. CoSA: authorization can disappear between individually admitted Skills</h3>
 <p><strong>Read first · v1, October 26.</strong> <a href="https://arxiv.org/html/2610.35082v1">CoSA: The Conflict of Skills Attack in Real-World LLM Agent Ecosystems</a>.</p>
-<p><strong>Author report:</strong> Across 288 controlled tasks, five models and three harnesses, adding at most 5% to each Skill pool raises violations from 35.02% to 58.45%. Existing permissions and Skills stay fixed. The OpenClaw recruiting guard experiment reduces violations from 65.28% to 6.67%, with benign completion moving from 66.67% to 65.00%.</p>
-<p><strong>Architecture/value:</strong> Preserve purpose and authorization through artifact handoffs. <strong>Limit:</strong> this is a fixed evaluation grid, not a production incident probability; defense evidence covers a narrower domain and harness.</p>
+<p>In the CoSA evaluation, across 288 controlled tasks, five models and three harnesses, adding at most 5% to each Skill pool raises violations from 35.02% to 58.45%. Existing permissions and Skills stay fixed. The OpenClaw recruiting guard experiment reduces violations from 65.28% to 6.67%, with benign completion moving from 66.67% to 65.00%.</p>
+<p>Preserve purpose and authorization through artifact handoffs. This is a fixed evaluation grid, not a production incident probability; defense evidence covers a narrower domain and harness.</p>
 <h3>2. PCM: evidence-bearing messages need an independent trust boundary</h3>
 <p><strong>High priority · v1, October 29 · research proposal, not an MCP standard.</strong> <a href="https://arxiv.org/html/2610.39109v1">PCM: A Proof-Carrying Message Protocol for Verifiable Multi-Agent Communication</a>.</p>
-<p><strong>Author proposal:</strong> Signed append-only records support claims and narrowing human-rooted grants. Agent self-reports cannot establish proof. In the authors&#39; 926-message test, 10 false claims are accepted, all using stale evidence.</p>
-<p><strong>Architecture/value:</strong> Verify action receipts outside agent-writable state and recheck current state before execution. <strong>Limit:</strong> honest signers and attesting executors are assumptions; evidence does not prove freshness, completeness, or benign intent. Protocol baselines include modeled implementations, not audited production deployments.</p>
+<p>The proposal uses signed append-only records to support claims and grants rooted in human authorization that can only be narrowed. Agent self-reports cannot establish proof. In the authors&#39; 926-message test, 10 false claims are accepted, all using stale evidence.</p>
+<p>Verify action receipts against records the agent cannot alter and recheck current state before execution. Honest signers and attesting executors are assumptions; evidence does not prove freshness, completeness, or benign intent. Protocol baselines include modeled implementations, not audited production deployments.</p>
 <h3>3. A fixed-model harness comparison can reject a useful interface</h3>
 <p><strong>High priority · first submitted October 27; v2 October 28.</strong> <a href="https://arxiv.org/html/2610.37255v2">Your Policy Is Secretly a Harness: The Decision Geometry of Agent Interfaces</a>.</p>
-<p><strong>Author finding:</strong> Under KL-regularized control, deployed return separates into harness ceiling and policy mismatch. In a Qwen3.5-2B MiniWoB++ study, reversing observation fields drops trained success from 85.0% to 19.2% despite unchanged optimal decisions.</p>
-<p><strong>Architecture/value:</strong> Pin serialization and test both immediate migration and equal-budget adaptation. <strong>Limit:</strong> controlled tasks support the mechanism; using a stronger teacher to estimate a coding harness&#39;s optimum remains a proxy, not a universal capability ceiling.</p>
+<p>The harness paper shows that under KL-regularized control, deployed return separates into harness ceiling and policy mismatch. In a Qwen3.5-2B MiniWoB++ study, reversing observation fields drops trained success from 85.0% to 19.2% despite unchanged optimal decisions.</p>
+<p>Pin serialization and test both immediate migration and equal-budget adaptation. Controlled tasks support the mechanism; using a stronger teacher to estimate a coding harness&#39;s optimum remains a proxy, not a universal capability ceiling.</p>
 <h3>4. TreasuryQA: test the search-to-scan path, including wrong digits</h3>
 <p><strong>High priority · v1, October 28 UTC.</strong> <a href="https://arxiv.org/html/2610.38924v1">TreasuryQA Bench: Can AI Agents Work an Archive of Scanned Financial Records?</a>.</p>
-<p><strong>Author evidence:</strong> 70 questions over 1,435 scanned publications use a Dropbox twin, MCP and OCR. Ten pinned model–harness pairs attempt each task three times at high reasoning effort. Claude Opus 5.5 in Claude Code reaches 64.8% pass@1; adjacent rankings are not statistically significant after correction.</p>
-<p><strong>Architecture/value:</strong> Retain page evidence and use numeric tolerance graders. <strong>Limit:</strong> only three worked examples are public; most tasks remain private. Provider hardware and serving concurrency are not controlled, and listed model cost excludes OCR charges.</p>
+<p>70 questions over 1,435 scanned publications use a Dropbox twin, MCP and OCR. Ten pinned model–harness pairs attempt each task three times at high reasoning effort. Claude Opus 5.5 in Claude Code reaches 64.8% pass@1; adjacent rankings are not statistically significant after correction.</p>
+<p>Retain page evidence and use numeric tolerance graders. Only three worked examples are public; most tasks remain private. Provider hardware and serving concurrency are not controlled, and listed model cost excludes OCR charges.</p>
 <h3>5. TAO: schedule tool readiness with cache value and placement</h3>
 <p><strong>High priority · v1, October 27.</strong> <a href="https://arxiv.org/html/2610.37230v1">TAO: Tool-Aware Joint Scheduling for LLM-Based Agentic Serving</a>.</p>
-<p><strong>Author measurement:</strong> DeepSeek-V4 Flash on two nodes, each with 4×H100, SWE-Lite and 64 workers reports 26.8% lower mean task latency, 36.3% lower mean TTFT and 29.5% more decode throughput against the best baseline per metric. Baselines include Dynamo, round-robin/cache-aware vLLM and ThunderAgent; observed node cache credit decays with age.</p>
-<p><strong>Architecture/value:</strong> Measure post-tool return delay alongside total task time. <strong>Limit:</strong> maxima are not universal; Qwen3-32B SWE-verified at 128 workers has 2.5% worse latency than the best baseline. Cache policy and predictor error must accompany comparisons.</p>
+<p>DeepSeek-V4 Flash on two nodes, each with 4×H100, SWE-Lite and 64 workers reports 26.8% lower mean task latency, 36.3% lower mean TTFT and 29.5% more decode throughput against the best baseline per metric. Baselines include Dynamo, round-robin/cache-aware vLLM and ThunderAgent; observed node cache credit decays with age.</p>
+<p>Measure post-tool return delay alongside total task time. Maxima are not universal; Qwen3-32B SWE-verified at 128 workers has 2.5% worse latency than the best baseline. Cache policy and predictor error must accompany comparisons.</p>
 <h3>6. Mistral Large 4: KV capacity is not decode speed</h3>
 <p><strong>High priority · maintainer page dated October 29; earliest public timestamp not independently established.</strong> <a href="https://vllm.ai/blog/2026-10-29-mistral-large-4">Day 0 support for Mistral Large 4 on vLLM</a>.</p>
-<p><strong>Author measurement:</strong> On 8×GB300, NVFP4, TP8 versus TP8+DCP8, no speculative decoding, 8k–60k inputs and up to 128 concurrent requests, DCP decodes 16–28% slower per token. KV capacity rises from 3.60M to 28.76M tokens at memory utilization 0.85; this is capacity, not a throughput multiplier.</p>
-<p><strong>Architecture/value:</strong> Enable DCP when KV residency constrains sessions. <strong>Limit:</strong> matching prefix-cache state is not established for that comparison; P/D results explicitly disable prefix caching. Do not combine these separate experiments.</p>
+<p>On 8×GB300, NVFP4, TP8 versus TP8+DCP8, no speculative decoding, 8k–60k inputs and up to 128 concurrent requests, DCP decodes 16–28% slower per token. KV capacity rises from 3.60M to 28.76M tokens at memory utilization 0.85; this is capacity, not a throughput multiplier.</p>
+<p>Enable DCP when KV residency constrains sessions. Matching prefix-cache state is not established for that comparison; P/D results explicitly disable prefix caching. Do not combine these separate experiments.</p>
 <h2>Architecture decisions and tradeoffs</h2>
 <table>
 <thead>
@@ -136,7 +156,7 @@
 <td>Extra checks and false blocks; retain allowed controls</td>
 </tr>
 <tr>
-<td>Store attestations outside agent-writable state</td>
+<td>Store attestations where agents cannot alter them</td>
 <td>Makes reported actions verifiable</td>
 <td>Signer operations and freshness checks remain necessary</td>
 </tr>
@@ -167,7 +187,7 @@
 <h2>Continue reading</h2>
 <p>Read CoSA and PCM together for the authorization/evidence boundary; then the harness paper and TreasuryQA for evaluation design; finally TAO and the vLLM account for serving tradeoffs. Links above point directly to the six primary bodies and pin paper versions.</p>
 <h2>Method limits</h2>
-<p>arXiv submission histories determine first submission and revision dates; UTC and Shanghai dates can differ. Submission is a dated preprint record, not proof of peer review or the absence of an earlier workshop artifact. The vLLM item is included as a dated engineering account with uncertain earliest public availability. Aggregator upload dates are not treated as new results: <em>When Agents Fail</em> first submitted October 23 and <em>Matched Capabilities, Different Behaviors</em> first submitted October 25 are outside this window. The official MCP blog supplied no new in-window specification announcement in this search; PCM must not be described as one. Search coverage is selective and no independent replication was performed. Missing experimental conditions remain unknown rather than inferred.</p>
+<p>arXiv submission histories determine first submission and revision dates; UTC and Shanghai dates can differ. Submission is a dated preprint record, not proof of peer review or the absence of an earlier workshop artifact. The vLLM item is included as a dated engineering account with uncertain earliest public availability. Aggregator upload dates are not treated as new results: <em>When Agents Fail</em> first submitted October 23 and <em>Matched Capabilities, Different Behaviors</em> first submitted October 25 are outside this window. The official MCP blog supplied no new in-window specification announcement in this search; PCM must not be described as one. Search coverage is selective and no independent replication was performed. Experimental conditions that the sources do not disclose remain unknown.</p>
 </div>
     <aside class="article-aside">
       <div class="aside-label">FILE INFO</div>

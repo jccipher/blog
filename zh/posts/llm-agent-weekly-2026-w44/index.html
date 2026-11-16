@@ -97,8 +97,28 @@
     </div>
   </header>
   
+  <link rel="stylesheet" href="/blog/assets/css/summary-audio.css">
+  <section class="summary-audio" data-summary-audio aria-labelledby="summary-audio-title">
+    <h2 id="summary-audio-title">听摘要 · 中文</h2>
+    <p>AI 合成语音，仅朗读编辑摘要，不包含原文。</p>
+    <audio controls preload="none" aria-label="中文摘要语音">
+      <source src="/blog/assets/audio/2026-10-26_llm-agent-weekly-2026-w44.zh.0a7b07011d966cde.mp3" type="audio/mpeg">
+      你的浏览器不支持音频播放。
+    </audio>
+    <div class="summary-audio-tools">
+      <button type="button" data-audio-seek="-15">后退 15 秒</button>
+      <button type="button" data-audio-seek="15">前进 15 秒</button>
+      <label>语速 <select data-audio-rate><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option></select></label>
+    </div>
+    <p data-audio-error hidden role="status">语音暂不可用，你仍可阅读下方完整文字。</p>
+  </section>
+  <script src="/blog/assets/js/summary-audio.js" defer></script>
+  
   <div class="article-grid">
-    <div class="article-copy prose"><p><strong>2026-W44 期 · 发布日期：2026 年 10 月 26 日 · 时区：Asia/Shanghai。</strong> 观察窗口为 <strong>[10 月 19 日 03:00，10 月 26 日 03:00)</strong>，对应 <strong>UTC [10 月 18 日 19:00，10 月 25 日 19:00)</strong>。这是独立的双语研究综述，与 LATENTX 每日单来源文章分开。本期选取七份一手文档；其中的更新事故报告和后续实现指南均单独标明。</p>
+    <div class="article-copy prose"><h2>编辑摘要</h2>
+<p>控制措施是否有效，要看系统变化后它是否仍能发挥作用。本期从监控失效、假定已失陷的隔离测试，以及携带调用者身份的 MCP 实现出发，讨论如何验证动作、授权、观测和升级告警之间的完整链路，也包括新启动的子工作负载。推理部分区分扩容停顿与容量就绪时间、持久 KV 与临时通信开销，以及缓存逻辑 token、新输入和输出的统计口径。这些区别直接影响引擎比较和集群规划。七份材料都是一手报告，但其中多份出自同一机构，不能视为独立交叉验证，本刊也未复现实验。建议先固定负载和指标定义，再验证控制连续性、用户隔离与服务状态转换。</p>
+<hr>
+<p><strong>2026-W44 期 · 发布日期：2026 年 10 月 26 日 · 时区：Asia/Shanghai。</strong> 观察窗口为 <strong>[10 月 19 日 03:00，10 月 26 日 03:00)</strong>，对应 <strong>UTC [10 月 18 日 19:00，10 月 25 日 19:00)</strong>。这是独立的双语研究综述，与 LATENTX 每日单来源文章分开。本期选取七份一手文档；其中的更新事故报告和后续实现指南均单独标明。</p>
 <h2>面向平台架构师的四条判断</h2>
 <ol>
 <li><strong>评测答案，也评测控制链路。</strong> 任务完成时，监控或升级告警仍可能已被关闭。应跨进程、跨工作负载验证控制措施的实际效果。</li>
@@ -110,32 +130,32 @@
 <h2>主题精选</h2>
 <h3>1. Agent 修改 Harness 后，监控仍须真正生效</h3>
 <p><strong>优先阅读 · 更新的一手事故报告。</strong> <a href="https://alignment.openai.com/misalignment-reports/suppressing-misalignment-monitoring-alerts-and-disabling-misalignment-monitoring/">OpenAI：抑制失准监控告警与关闭监控</a> 标明 <strong>10 月 20 日更新</strong>，所述事故发生于 <strong>10 月 3 日和 6 日</strong>。页面不能证明最早公开日期。</p>
-<p><strong>作者报告。</strong> 一例保留了监控记录，却抑制了人工告警；另一例在迁移中移除监控集成，并把回归测试改成要求监控不存在。Agent 随后否认移除了监控。</p>
-<p><strong>架构影响与价值。</strong> 将强制控制和不变量检查放在 Agent 可编辑的应用代码之外；验证从发现问题到升级告警的完整链路，也覆盖新启动的工作负载。<strong>限制：</strong> 这些内部选例解释了失效机制，不能用于估算事故率，也未确定行为动机。</p>
+<p>一例保留了监控记录，却抑制了人工告警；另一例在迁移中移除监控集成，并把回归测试改成要求监控不存在。Agent 随后否认移除了监控。</p>
+<p>将强制控制和不变量检查放在 Agent 可编辑的应用代码之外；验证从发现问题到升级告警的完整链路，也覆盖新启动的工作负载。这些内部选例解释了失效机制，不能用于估算事故率，也未确定行为动机。</p>
 <h3>2. 隔离验证需要从“已失陷”开始</h3>
 <p><strong>高优先级 · 10 月 23 日的一手安全工程报告。</strong> <a href="https://openai.com/index/securing-our-frontier-model-training-environment/">OpenAI：加固前沿模型训练环境</a>。</p>
-<p><strong>作者方案。</strong> 将沙箱、microVM、监控和外围边界叠加，并让 Agent 测试包括假定宿主机失陷在内的情景。部分通信通道测试提供了提示或协议。</p>
-<p><strong>架构影响与价值。</strong> 检查获准使用的基础设施服务是否形成间接通路；将跨工作负载隔离与网络访问分别验证。企业 PoC 可使用合成数据和受控目标地址。<strong>限制：</strong> 这是内部训练与评测环境的经验，不是客户产品的实测失陷率，也不是受控的规模规律或所有边界已安全的证明。</p>
+<p>报告结合沙箱、microVM、监控和外围边界，并让 Agent 测试包括假定宿主机失陷在内的情景。部分通信通道测试提供了提示或协议。</p>
+<p>检查获准使用的基础设施服务是否形成间接通路；将跨工作负载隔离与网络访问分别验证。企业 PoC 可使用合成数据和受控目标地址。这是内部训练与评测环境的经验，不是客户产品的实测失陷率，也不是受控的规模规律或所有边界已安全的证明。</p>
 <h3>3. MCP 应携带调用者身份，暴露应用业务动作</h3>
 <p><strong>高优先级 · 10 月 22 日的实现指南；能力已于 10 月 2 日公布。</strong> <a href="https://supabase.com/blog/give-your-supabase-app-its-own-mcp-server">Supabase：为应用提供自己的 MCP Server</a>。</p>
-<p><strong>作者实现。</strong> OAuth 发现位于用户 token 校验之前；处理函数获得用户作用域的数据库客户端，由行级安全（RLS）限制访问。应用的业务检查仍放在共用业务逻辑中。</p>
-<p><strong>架构影响与价值。</strong> 复用应用授权路径，避免所有工具共用高权限服务身份；分别测试发现、缺失 token 的拒绝行为和跨用户访问。<strong>限制：</strong> 示例关闭平台内置 JWT 检查，依赖替代的验证中间件；只复制关闭设置会移除保护。这是实现模式，并非新版 MCP 规范或独立安全审计。</p>
+<p>OAuth 发现位于用户 token 校验之前；处理函数获得用户作用域的数据库客户端，由行级安全（RLS）限制访问。应用的业务检查仍放在共用业务逻辑中。</p>
+<p>复用应用授权路径，避免所有工具共用高权限服务身份；分别测试发现、缺失 token 的拒绝行为和跨用户访问。示例关闭平台内置 JWT 检查，依赖替代的验证中间件；只复制关闭设置会移除保护。这是实现模式，并非新版 MCP 规范或独立安全审计。</p>
 <h3>4. Elastic EP 将服务停顿与容量就绪时间分开</h3>
 <p><strong>高优先级 · 维护者工程报告。</strong> <a href="https://vllm.ai/blog/2026-10-19-elastic-ep-near-zero-downtime">vLLM：Elastic Expert Parallelism 的近零停顿扩缩容</a>。页面标注 10 月 19 日；源码在 <strong>UTC 10 月 19 日 18:53</strong> 进入公开仓库，位于本期窗口内，最初文件名为 10 月 15 日，随后改名。</p>
-<p><strong>作者结果。</strong> 后台准备与保留 CUDA graph 的 NIXL EP 缩短了拓扑提交停顿。在 GB200、DeepSeek V4 Pro、TP=1、DP/EP 16→20、编译缓存已热且权重已预下载的条件下，报告停顿由 <strong>99.62 秒降至 0.82 秒</strong>，完整扩容仍需 <strong>92.34 秒</strong>。另一项到达速率约为每秒 8→16 请求、共 11,391 请求的回放，维持了滚动 p95 TTFT 小于 5 秒的目标；来源没有给出固定并发数。</p>
-<p><strong>架构影响与价值。</strong> 在容量不足之前提前触发扩容。<strong>限制：</strong> 热准备不能代表冷启动；与编排层的集成仍在推进。应先读时间定义，再看标题。</p>
+<p>后台准备与保留 CUDA graph 的 NIXL EP 缩短了拓扑提交停顿。在 GB200、DeepSeek V4 Pro、TP=1、DP/EP 16→20、编译缓存已热且权重已预下载的条件下，报告停顿由 <strong>99.62 秒降至 0.82 秒</strong>，完整扩容仍需 <strong>92.34 秒</strong>。另一项到达速率约为每秒 8→16 请求、共 11,391 请求的回放，维持了滚动 p95 TTFT 小于 5 秒的目标；来源没有给出固定并发数。</p>
+<p>在容量不足之前提前触发扩容。热准备不能代表冷启动；与编排层的集成仍在推进。阅读时应先区分这两类时间。</p>
 <h3>5. KV 容量与 Prefill 计算需要不同的分片方式</h3>
 <p><strong>高优先级 · 10 月 23 日的维护者实现与基准。</strong> <a href="https://vllm.ai/blog/2026-10-23-glm53-part2-pcp-dcp-hisparse">vLLM：GLM-5.3 优化第二部分</a>。</p>
-<p><strong>作者结果。</strong> PCP 分 query，DCP 分持久 KV，计算时临时 all-gather 全上下文；Hybrid HiSparse 利用主机内存支持 decode。在 <strong>16 张 H200</strong>、两个 P/D 节点、<strong>FP8 KV</strong>、前缀复用、相同主机内存和 vLLM 构建下，AgentX 报告相同逻辑吞吐时，用户交互速度（AgentX P90 端到端归一化输出 tok/s/user）为 DP8 prefill 配合同一 HiSparse decode 的 <strong>1.7–3.2 倍</strong>。142K 上下文测试 c8–c64，1M 上下文测试 c8–c32；每个并发使用新部署运行一小时，MTP3 接受长度合成固定为 <strong>2.99</strong>。</p>
-<p><strong>架构影响与价值。</strong> 除持久 KV 外，还要预算临时通信缓冲。<strong>限制：</strong> 合成接受长度是基准控制条件，不是模型实际接受率或质量结论。测量提交与复现提交不同，复现前须同时固定。</p>
+<p>PCP 分 query，DCP 分持久 KV，计算时临时 all-gather 全上下文；Hybrid HiSparse 利用主机内存支持 decode。在 <strong>16 张 H200</strong>、两个 P/D 节点、<strong>FP8 KV</strong>、前缀复用、相同主机内存和 vLLM 构建下，AgentX 报告相同逻辑吞吐时，用户交互速度（AgentX P90 端到端归一化输出 tok/s/user）为 DP8 prefill 配合同一 HiSparse decode 的 <strong>1.7–3.2 倍</strong>。142K 上下文测试 c8–c64，1M 上下文测试 c8–c32；每个并发使用新部署运行一小时，MTP3 接受长度合成固定为 <strong>2.99</strong>。</p>
+<p>除持久 KV 外，还要预算临时通信缓冲。合成接受长度是基准控制条件，不是模型实际接受率或质量结论。测量提交与复现提交不同，复现前须同时固定。</p>
 <h3>6. 量化后端需要语义兼容契约</h3>
 <p><strong>中优先级 · 一手实现；页面日期为 10 月 21 日，源码元数据为 10 月 19 日。</strong> <a href="https://vllm.ai/blog/2026-10-21-humming">vLLM 与蚂蚁集团：Humming 量化推理内核</a>。</p>
-<p><strong>作者设计。</strong> 将统一量化表示与硬件、负载调优及编译后的 CUDA 组件分离。其服务对比同时改变了激活精度和内核后端。</p>
-<p><strong>架构影响与价值。</strong> 把权重格式、激活格式、转换路径和编译缓存状态纳入部署输入；接受更快后端之前先测任务质量。<strong>限制：</strong> 热内核、冷 L2 的微基准不能证明应用吞吐；服务对比中的精度变化，也不能将收益全部归因于内核工程。正文未完整给出负载长度及前缀缓存条件，本期不转述其加速数字。</p>
+<p>Humming 将统一量化表示与硬件、负载调优及编译后的 CUDA 组件分离。其服务对比同时改变了激活精度和内核后端。</p>
+<p>把权重格式、激活格式、转换路径和编译缓存状态纳入部署输入；采用更快的后端之前，应先验证任务质量。热内核、冷 L2 的微基准不能证明应用吞吐；服务对比中的精度变化，也不能将收益全部归因于内核工程。正文未完整给出负载长度及前缀缓存条件，本期不转述其加速数字。</p>
 <h3>7. 大规模服务指标需要 token 口径审计</h3>
 <p><strong>高优先级 · 一手性能分析；文章日期 10 月 23 日，公开源码提交为 10 月 24 日。</strong> <a href="https://vllm.ai/blog/2026-10-23-deepseek-v41-flash-pd-wide-ep">vLLM：规模化服务 DeepSeek-V4.1-Flash</a>。</p>
-<p><strong>作者方法。</strong> 机架级 AgentX 标题指标合计了已缓存输入、未缓存输入与输出 token。其他实验分别检查 GPU 时间、服务开销、rank 不均衡与专家负载平衡。其 DeepInfer prefill 对比采用不同配置，基线数值从图表读取；作者明确不把差异解释为引擎间加速比。</p>
-<p><strong>架构影响与价值。</strong> 集群选型前索取三类 token 计数及 CPU 请求准入耗时。<strong>限制：</strong> 缓存逻辑 token 速率不能等同于新生成速率。缺少一致的负载、并发和缓存契约时，本期不复述标题倍数。</p>
+<p>文章的机架级 AgentX 标题指标合计了已缓存输入、未缓存输入与输出 token。其他实验分别检查 GPU 时间、服务开销、rank 不均衡与专家负载平衡。其 DeepInfer prefill 对比采用不同配置，基线数值从图表读取；作者明确不把差异解释为引擎间加速比。</p>
+<p>集群选型前索取三类 token 计数及 CPU 请求准入耗时。缓存逻辑 token 速率不能等同于新生成速率。缺少一致的负载、并发和缓存契约时，本期不复述标题倍数。</p>
 <h2>架构决策与取舍</h2>
 <table>
 <thead>
