@@ -1,0 +1,266 @@
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#050706">
+    <meta name="color-scheme" content="dark">
+    <title>What Stanford’s Payroll Data Say About Young U.S. Software Developers · LATENTX</title>
+    <meta name="description" content="Reproduce the 38.8-point gap from a dated Stanford–ADP release, recompute it from the latest data and compare it with U.S. federal evidence.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="What Stanford’s Payroll Data Say About Young U.S. Software Developers · LATENTX">
+    <meta property="og:description" content="Reproduce the 38.8-point gap from a dated Stanford–ADP release, recompute it from the latest data and compare it with U.S. federal evidence.">
+    <meta property="og:locale" content="en_US">
+    
+      <meta name="twitter:card" content="summary">
+    
+    <link rel="canonical" href="https://jccipher.github.io/blog/posts/stanford-us-software-developer-employment/">
+    <link rel="alternate" hreflang="en" href="https://jccipher.github.io/blog/posts/stanford-us-software-developer-employment/">
+    <link rel="alternate" hreflang="zh-CN" href="https://jccipher.github.io/blog/zh/posts/stanford-us-software-developer-employment/">
+    <link rel="alternate" hreflang="x-default" href="https://jccipher.github.io/blog/posts/stanford-us-software-developer-employment/">
+    <link rel="stylesheet" href="/blog/assets/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%23050706%22/><path d=%22M18 16l28 32M46 16L18 48%22 fill=%22none%22 stroke=%22%238b7cff%22 stroke-width=%226%22 stroke-linecap=%22round%22/></svg>">
+  </head>
+  <body
+    data-page-id="/posts/stanford-us-software-developer-employment/"
+    data-page-title="What Stanford’s Payroll Data Say About Young U.S. Software Developers"
+    data-page-kind="post"
+    data-page-lang="en"
+    data-engagement-endpoint=""
+  >
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="shell nav-shell">
+        <a class="brand" href="/blog/" aria-label="LATENTX home">
+          <span class="brand-word">LATENT</span><span class="brand-x">X</span><span class="cursor" aria-hidden="true"></span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/blog/">./home</a>
+          <a href="/blog/archives/">./archive</a>
+          <a href="/blog/favorites/">./favorites</a>
+          <a href="/blog/about/">./about</a>
+          <span class="language-switch" aria-label="Choose language">
+            <a href="/blog/posts/stanford-us-software-developer-employment/" lang="en" aria-current="page">EN</a>
+            <i aria-hidden="true">/</i>
+            <a href="/blog/zh/posts/stanford-us-software-developer-employment/" lang="zh-CN">中文</a>
+          </span>
+          <a class="nav-github" href="https://github.com/jccipher" target="_blank" rel="noreferrer">github↗</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+
+
+
+<article class="article shell">
+  <header class="article-header">
+    <a class="back-link" href="/blog/">← cd ~/blog</a>
+    <div class="eyebrow"><span>~/posts</span>$ cat stanford-us-software-developer-employment.md</div>
+    <h1>What Stanford’s Payroll Data Say About Young U.S. Software Developers</h1>
+    <div class="article-meta">
+      <time datetime="2026-11-23">PUBLISHED 2026.11.23</time>
+      <span>6 MIN READ</span>
+      <span><b data-inline-page-views>—</b> VIEWS</span>
+      <span>#Software Developers</span><span>#AI</span><span>#Employment</span><span>#Stanford</span><span>#ADP</span>
+    </div>
+    <div class="article-actions">
+      <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/stanford-us-software-developer-employment/" data-page-title="What Stanford’s Payroll Data Say About Young U.S. Software Developers" aria-pressed="false">
+        <span aria-hidden="true" data-favorite-icon>♡</span>
+        <span data-favorite-label>Save article</span>
+        <span class="action-count" data-page-favorites>0</span>
+      </button>
+      <button class="console-button console-button-primary" type="button" data-support-open><span aria-hidden="true">$</span> Donate</button>
+    </div>
+  </header>
+  
+  <div class="article-grid">
+    <div class="article-copy prose"><h2>Editorial summary</h2>
+<p><strong>The 38.8 percentage-point gap is reproducible from an earlier Stanford release.</strong> In the October 2026 release from Stanford Digital Economy Lab and ADP Research, September headcount for software developers aged 22–25 was 18.56% below its November 2022 level. Headcount for ages 41–49 was 20.20% above it. The November release revised September and added October. It shows changes of <strong>−16.85% and +20.80%</strong>, a gap of <strong>37.65 percentage points</strong>. The gap is wider than a year earlier and below its May 2026 peak. These payroll records show a substantial age divergence in the sample. The series alone cannot predict whether it will widen or estimate how much of it AI caused. <a href="https://digitaleconomy.stanford.edu/project/indicators/canaries-dashboard/">Stanford Canaries Dashboard</a></p>
+<hr>
+<h2>Where the 38.8 points came from</h2>
+<p>The claim accompanying the <a href="https://mp.weixin.qq.com/s/iz5Mql4VMPlOuD9OpK_EMg">WeChat link</a> cites changes of −18.6% and +20.2% and a gap of 38.8 percentage points. The link returned an access challenge during verification. We checked the supplied figures against Stanford&#39;s original downloads.</p>
+<p>The dashboard&#39;s <em>Software Developer Employment Index in Canaries Sample by Age Group</em> sets <strong>each group’s own</strong> November 2022 headcount to 100. We checked the baseline and the September and October observations in <code>canaries_software_developers.csv</code> inside each dated ZIP. Subtract 100 from the index to get the cumulative percent change for that age group. Subtract the younger group&#39;s change from the older group&#39;s change to get the gap in percentage points. <a href="https://storage.googleapis.com/aviary-del-public/release_memos/2026-10/downloads/canaries_software_developers_results.zip">October release ZIP</a> · <a href="https://storage.googleapis.com/aviary-del-public/release_memos/2026-11/downloads/canaries_software_developers_results.zip">November release ZIP</a></p>
+<table>
+<thead>
+<tr>
+<th>Observation month and release</th>
+<th align="right">Ages 22–25 index</th>
+<th align="right">Ages 41–49 index</th>
+<th align="right">Gap in cumulative change</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2026-09, October release (<code>vintage</code> 2026-10-16)</td>
+<td align="right">81.44</td>
+<td align="right">120.20</td>
+<td align="right"><strong>38.76 pp</strong></td>
+</tr>
+<tr>
+<td>2026-09, November release (<code>vintage</code> 2026-11-15)</td>
+<td align="right">81.87</td>
+<td align="right">120.30</td>
+<td align="right"><strong>38.43 pp</strong></td>
+</tr>
+<tr>
+<td>2026-10, November release (<code>vintage</code> 2026-11-15)</td>
+<td align="right">83.15</td>
+<td align="right">120.80</td>
+<td align="right"><strong>37.65 pp</strong></td>
+</tr>
+</tbody></table>
+<p>The original 38.76 rounds to 38.8. Two things account for the 1.11-point difference between the earlier September estimate and the latest October estimate. <strong>The September revision reduced the gap by 0.33 points</strong>, and <strong>the September-to-October change within the same release reduced it by another 0.78 points</strong>. November is the release month. October is the last observation available when checked on November 23, 2026.</p>
+<h2>The gap remains large and has narrowed since May</h2>
+<p>Within the November release, the gap rose from <strong>24.32</strong> percentage points in October 2024 to <strong>34.45</strong> in October 2025. It reached <strong>40.63</strong> in May 2026 and eased to <strong>37.65</strong> by October, still 3.20 points wider than a year earlier. It fluctuated in the intervening months. The series does not establish where it will go next. <a href="https://storage.googleapis.com/aviary-del-public/release_memos/2026-11/downloads/canaries_software_developers_results.zip">November release ZIP</a></p>
+<p><img src="/blog/assets/images/stanford-developer-employment-en.png" alt="Monthly employment indexes and their gap. In October 2026 the 22–25 index is 83.15, the 41–49 index is 120.80, and the gap is 37.65 points, below its May peak of 40.63."></p>
+<p>The <strong>year-over-year</strong> series provides a shorter view. In October 2026, developer headcount was down <strong>0.12%</strong> for ages 22–25 and up <strong>2.63%</strong> for ages 41–49, a difference of about <strong>2.75 percentage points</strong> in annual growth. The youngest group remained well below its 2022 baseline while its latest annual change was close to flat. In the same month, ages 26–30 were down 4.72% from November 2022. Ages 31–34, 35–40 and 50+ were up 7.00%, 12.70% and 8.00%, respectively. <a href="https://storage.googleapis.com/aviary-del-public/release_memos/2026-11/downloads/canaries_software_developers_results.zip">November release ZIP, which includes the year-over-year CSV</a></p>
+<h2>What the payroll sample can establish</h2>
+<p>The dashboard rolls forward a five-year panel of firms using ADP and includes workers successfully matched to an occupation code. This helps track employment inside firms that remain in the panel and limits coverage of firm entry, exit, payroll-provider changes and employment reallocation across firms. The researchers say the panel represents neither the entire U.S. labor market nor all ADP clients. People can age into and out of the bands, and the groups have different starting headcounts. The index measures each group’s employment relative to its own baseline. Layoffs, new hires, unemployment and openings for junior positions require their own counts or denominators. <a href="https://digitaleconomy.stanford.edu/project/indicators/canaries-dashboard/">Dashboard methodology</a></p>
+<p>Estimating <strong>how much AI affected the age gap</strong> requires evidence about employer adoption, the tasks that changed and a credible comparison group. An occupational exposure score measures the potential for AI to affect tasks. In a February 2026 note, the authors reported that with firm-by-time fixed effects the relative decline in exposed occupations among young workers became evident in 2024. They observed that earlier weakness could partly reflect other factors. In the August revision of their working paper, they estimated that by June 2026, employment of workers aged 22–25 in the <strong>two most exposed occupational quintiles</strong> was about <strong>19%</strong> below the level implied by growth in the other three quintiles for the same ages. Their analysis of hiring and separations links that cross-occupation divergence primarily to reduced hiring. The comparison is among occupations within one age group and does not attribute the 37.65-point developer age gap to AI. <a href="https://digitaleconomy.stanford.edu/news/canaries-interest-rates-and-timinga-more-on-recent-drivers-of-employment-changes-for-young-workers/">February research note</a> · <a href="https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf">August working paper revision, §§2.2, 2.4 and 5</a></p>
+<h2>What the federal evidence measures</h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Observation or estimate</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>U.S. Bureau of Labor Statistics, 2025 CPS annual table 11b</td>
+<td>About <strong>2.254 million</strong> U.S. software developers, including <strong>140,000</strong> aged 20–24 and <strong>808,000</strong> aged 25–34</td>
+<td>The household survey publishes different age bands. Its 2025 average covers 11 months because no October survey was collected.</td>
+</tr>
+<tr>
+<td>U.S. Census Bureau CES working paper, Quarterly Workforce Indicators</td>
+<td>In the most AI-exposed quintile of industry-by-state cells, weighted by employment, the regression-adjusted estimate for ages 22–24 fell <strong>12.4%</strong> from the reference period around ChatGPT’s release through Q2 2025. The author links the decline mainly to fewer hires.</td>
+<td>The analysis covers industries across occupations. The author also finds evidence of possible shifts in trends around the pandemic.</td>
+</tr>
+<tr>
+<td>BLS 2025–2035 employment projections, SOC 15-1252</td>
+<td>Total software developer employment is projected to grow from about <strong>1.718 million</strong> to <strong>1.893 million</strong>, or <strong>10.2%</strong> over ten years</td>
+<td>This is an all-age projection with its own BLS employment base. It supplies no separate projections for junior roles or these two age groups. Its base differs from the CPS household estimate.</td>
+</tr>
+</tbody></table>
+<p><a href="https://www.bls.gov/cps/cpsaat11b.htm">BLS CPS table 11b</a> · <a href="https://www2.census.gov/library/working-papers/2026/adrm/ces/CES-WP-26-27.pdf#page=14">Census Bureau working paper CES-26-27</a> · <a href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS employment projections table</a></p>
+<p>The Stanford authors also charted software developers in the same age bands using CPS microdata in Appendix Figure H.1. The monthly estimates are volatile, with only <strong>23–48 survey respondents</strong> per month for software developers aged 22–25. In a separate comparison using the American Community Survey, the authors estimated a <strong>−2.2 percentage-point</strong> gap between employment changes in the most and least exposed occupation quintiles for ages 22–25 over 2022–2024, with a confidence interval that includes zero. The comparable gap in the ADP sample was <strong>−13.2 points</strong>. These comparisons limit how precisely the payroll results can be generalized nationally. <a href="https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf#page=122">August working paper revision, §5 and Appendix H</a></p>
+<p>Teams trying to understand entry into the profession can track <strong>new hires, separations, the share of hires at junior levels and year-over-year headcount on a consistent basis</strong>. The cumulative gap records a divergence that has already happened. New hiring and employment flows can show whether it is accelerating.</p>
+</div>
+    <aside class="article-aside">
+      <div class="aside-label">FILE INFO</div>
+      <dl>
+        <div><dt>author</dt><dd>James Chen</dd></div>
+        <div><dt>format</dt><dd>markdown</dd></div>
+        <div><dt>status</dt><dd class="online">published</dd></div>
+        <div><dt>views</dt><dd data-inline-page-views>—</dd></div>
+      </dl>
+    </aside>
+  </div>
+</article>
+</main>
+
+    <section class="engagement-console" data-engagement-root aria-labelledby="engagement-title">
+      <div class="shell">
+        <div class="engagement-heading">
+          <div>
+            <p class="eyebrow"><span>~/telemetry</span>$ tail -f visitor.log</p>
+            <h2 id="engagement-title">Visitor activity<span>.</span></h2>
+          </div>
+          <span class="telemetry-mode" data-engagement-mode>LOCAL</span>
+        </div>
+
+        <div class="engagement-grid" aria-live="polite">
+          <div class="engagement-stat">
+            <span>LATEST VISITOR</span>
+            <strong data-latest-visitor>INITIALIZING</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>PAGE VIEWS</span>
+            <strong data-page-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SITE VIEWS</span>
+            <strong data-site-views>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>UNIQUE VISITORS</span>
+            <strong data-unique-visitors>—</strong>
+          </div>
+          <div class="engagement-stat">
+            <span>SAVED POSTS</span>
+            <strong data-saved-count>0</strong>
+          </div>
+        </div>
+
+        <div class="engagement-actions">
+          
+            <button class="console-button" type="button" data-favorite-toggle data-page-id="/posts/stanford-us-software-developer-employment/" data-page-title="What Stanford’s Payroll Data Say About Young U.S. Software Developers" aria-pressed="false">
+              <span aria-hidden="true" data-favorite-icon>♡</span>
+              <span data-favorite-label>Save article</span>
+              <span class="action-count" data-page-favorites>0</span>
+            </button>
+          
+          <button class="console-button console-button-primary" type="button" data-support-open>
+            <span aria-hidden="true">$</span> Support the blog
+          </button>
+          <a class="console-link" href="/blog/favorites/">View favorites →</a>
+        </div>
+        <p class="telemetry-note" data-engagement-status role="status">
+          Starting an anonymous visitor session…
+        </p>
+      </div>
+    </section>
+
+    <dialog class="support-dialog" data-support-dialog aria-labelledby="support-title">
+      <div class="support-dialog-inner">
+        <form method="dialog">
+          <button class="dialog-close" value="close" aria-label="Close">×</button>
+        </form>
+        <p class="eyebrow"><span>$</span> ./support.sh</p>
+        <h2 id="support-title">Support this engineering log<span>.</span></h2>
+        <p>If an article saved you time, these are a few ways to support the next one.</p>
+
+        
+          <div class="support-pending">
+            <span>STATUS: PENDING_CONFIG</span>
+            <p>A payment destination has not been configured, so no unverified payment link is shown.</p>
+          </div>
+        
+
+        <div class="support-secondary">
+          <a href="https://github.com/jccipher/blog" target="_blank" rel="noopener noreferrer">☆ Star the repository</a>
+          <a href="mailto:chenjianbangjob@126.com?subject=Support%20for%20your%20blog">@ Contact the author</a>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div>
+          <div class="footer-command"><span>$</span> echo "thanks for reading"</div>
+          <p>Keep building. Stay curious.</p>
+        </div>
+        <div class="footer-meta">
+          <span>© <span data-current-year>2026</span> James Chen</span>
+          <span class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/blog/assets/js/main.js" defer></script>
+    <script src="/blog/assets/js/engagement.js" defer></script>
+    
+  </body>
+</html>
