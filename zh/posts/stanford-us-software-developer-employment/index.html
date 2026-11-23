@@ -83,7 +83,7 @@
     <h1>美国年轻开发者就业降了多少？核对斯坦福的两版数据</h1>
     <div class="article-meta">
       <time datetime="2026-11-23">发布于 2026.11.23</time>
-      <span>12 分钟阅读</span>
+      <span>14 分钟阅读</span>
       <span><b data-inline-page-views>—</b> 次浏览</span>
       <span>#Software Developers</span><span>#AI</span><span>#Employment</span><span>#Stanford</span><span>#ADP</span>
     </div>
@@ -100,7 +100,7 @@
   <div class="article-grid">
     <div class="article-copy prose"><h2>编辑摘要</h2>
 <p><strong>38.8 个百分点可以从斯坦福的旧版数据复算。</strong> 斯坦福数字经济实验室与 ADP Research 的 2026 年 10 月版显示，9 月时，22–25 岁软件开发者的在职人数比 2022 年 11 月少 18.56%，41–49 岁则多 20.20%。11 月版修订了 9 月数据，并更新至 10 月。最新两组累计变动为 <strong>−16.85% 和 +20.80%</strong>，差距 <strong>37.65 个百分点</strong>。这个差距较一年前更大，却已低于今年 5 月的高点。工资单样本揭示了值得关注的年龄分化，但仅凭这条曲线无法预测差距会继续扩大，也无法估算 AI 造成了多少就业变化。<a href="https://digitaleconomy.stanford.edu/project/indicators/canaries-dashboard/">斯坦福 Canaries Dashboard</a></p>
-<p><em>11 月 23 日更新。就业流量研究指向招聘减少。一项使用 GitHub Copilot 实际许可证记录的研究识别出部分大型企业的采用影响。AI 对全美年轻开发者就业下滑的贡献仍无法量化。新增的 CPS 跨月复算显示，合并后期样本中年轻开发者确认换主雇主的占比下降，观测到的失业事件太少，无法判断裁员趋势。</em></p>
+<p><em>11 月 23 日更新。就业流量研究指向招聘减少。一项使用 GitHub Copilot 实际许可证记录的研究识别出部分大型企业的采用影响。AI 对全美年轻开发者就业下滑的贡献仍无法量化。新增的 CPS 跨月复算显示，合并后期样本中年轻开发者确认换主雇主的占比下降，观测到的失业事件太少，无法判断裁员趋势。2026 年同月复算的入职指标点估计上升，同比差值的置信区间仍包含零。</em></p>
 <hr>
 <h2>38.8 个百分点从哪里来</h2>
 <p><a href="https://mp.weixin.qq.com/s/iz5Mql4VMPlOuD9OpK_EMg">微信链接所附的说法</a>给出了 −18.6%、+20.2% 和 38.8 个百分点。核查时微信页面返回访问验证，以下复算以斯坦福公开的原始数据包为准。</p>
@@ -197,6 +197,40 @@
 <h3>样本能说明什么</h3>
 <p>按后一月统计，每对月份中年轻组匹配到的开发者中位数是 <strong>26 人</strong>（<strong>14–40 人</strong>），年长组是 <strong>72 人</strong>（<strong>56–104 人</strong>），同一人可能出现在多对月份中。后期两个访谈月均就业的开发者里，雇主问题缺有效答案的年轻组有 <strong>74 / 1,130</strong> 条，年长组有 <strong>227 / 3,327</strong> 条。已有论文发现这一问题的缺答可能具有选择性。这里对匹配样本使用横截面权重，搬家、失访和不同年龄组的匹配率仍可能影响估计。要对总体差异作统计判断，还需要按调查设计估计抽样误差。<a href="https://www.aeaweb.org/articles?id=10.1257/mac.20210076">Fujita、Moscarini 与 Postel-Vinay 的论文</a> · <a href="https://www.bls.gov/cps/cps_flows.htm">BLS 劳动力状态流量方法</a></p>
 <p>入职代理指标覆盖两条可见路径。换主雇主有时是已有两份工作的主次调换，从非就业重新上岗也可能是回到旧雇主。裁员后在下一次访谈前已经再就业，或离开了劳动力市场，都超出表中可见的失业转移范围。这次复算提供了两组特定就业转移的直接证据，完整的入职率与非自愿离职率仍缺少可观测数据。</p>
+<h3>2026 年的同月比较支持入职回升吗？</h3>
+<p>上文的 <strong>8.76%</strong> 覆盖 2026 年 1–10 月，使用的是横截面权重。由于 2025 年 10 月没有 CPS 调查，这轮统一比较两年各自的 1–9 月，沿用原入职指标和职业筛选，改用后一月官方的相邻月纵向权重 <code>PWLGWGT</code>。每年 1 月匹配上一年 12 月。比较中所有通过校验的开发者记录都有正的纵向权重。<a href="https://www2.census.gov/programs-surveys/cps/datasets/2026/basic/cps_dd_record_layout.txt">人口普查局字段字典，PWLGWGT</a> · <a href="https://cps.ipums.org/cps-action/variables/PANLWT">IPUMS 纵向权重说明</a></p>
+<table>
+<thead>
+<tr>
+<th>1–9 月可观察入职占比</th>
+<th align="right">2025 年（方括号内为 95% 区间）</th>
+<th align="right">2026 年（方括号内为 95% 区间）</th>
+<th align="right">同比变化（百分点）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>22–25 岁</td>
+<td align="right">4.86% [2.24%, 7.95%]</td>
+<td align="right"><strong>9.21% [4.76%, 14.34%]</strong></td>
+<td align="right"><strong>+4.35 [−1.06, +10.22]</strong></td>
+</tr>
+<tr>
+<td>41–49 岁</td>
+<td align="right">1.31% [0.53%, 2.26%]</td>
+<td align="right">2.36% [1.32%, 3.57%]</td>
+<td align="right">+1.05 [−0.34, +2.52]</td>
+</tr>
+<tr>
+<td>年轻组减年长组（百分点）</td>
+<td align="right">+3.54 [0.77, 6.72]</td>
+<td align="right"><strong>+6.85 [2.24, 12.07]</strong></td>
+<td align="right">+3.30 [−2.38, +9.42]</td>
+</tr>
+</tbody></table>
+<p>年轻组的点估计向上。同比区间包含零，单靠这组比较还不能确认回升。与 2023–2025 年的同期年均值相比，2026 年高 <strong>5.05 个百分点</strong> [0.22, 10.51]。这项比较的证据也接近临界，用按住户聚类的线性化方法估算，同一差值的区间下沿仅比零高约 0.005 个百分点。与 2022 年同期相比，差值为 +3.46 个百分点 [−2.01, +9.38]。</p>
+<p>2026 年的年龄差距更明确。在同一批匹配记录上改用横截面权重，差距为 6.75 个百分点 [2.17, 11.94]。使用纵向权重并让九个月等权，差距为 6.71 个百分点 [2.40, 11.36]。这两种做法下年轻组的同比点估计分别上升 4.31 和 4.11 个百分点，区间均包含零。年龄差距的同比变化区间也包含零。这里比较的是两组匹配在职开发者可观察的入职和换雇主转移。</p>
+<p><strong>复算方法。</strong> 每个年龄组、每个年度，用入职事件的后一月 <code>PWLGWGT</code> 之和除以该组全部匹配在职开发者的权重和。等月权重检验取九个月各自比例的算术平均。主比较对 <strong>779 个样本住户</strong>有放回重抽 <strong>20,000 次</strong>，随机种子为 <strong>242649</strong>。同一住户跨年龄组、跨月份和跨年度的记录在每轮一起抽取。每轮同时计算各组比例和差值，取第 2.5 和第 97.5 百分位作区间。历史比较用同样的办法对所涉年份一起重抽。<a href="https://cameron.econ.ucdavis.edu/research/Cameron_Miller_JHR_2015.pdf">Cameron 与 Miller 的聚类推断论文</a></p>
+<p>2026 年年轻组是 <strong>204 条匹配人月中的 17 次</strong>，年长组是 <strong>740 条中的 18 次</strong>。年轻组的 204 条记录来自 <strong>101 个</strong>个人编号，其中 <strong>64 个</strong>重复出现。区间把公开权重视为固定，在住户层面近似抽样不确定性。CPS 的完整分层和更高层抽样结构未进入重抽。雇主缺答和搬家失访也仍会影响这个指标的覆盖范围。<a href="https://www.bls.gov/cps/factsheets/understanding-standard-errors-and-confidence-intervals.htm">BLS 对 CPS 标准误和置信区间的说明</a></p>
 <h2>能区分 AI 采用和科技行业降温吗？</h2>
 <p><strong>美国软件开发招聘需求在 2022 年已经降温。</strong> Indeed 的美国软件开发招聘广告指数从 2022 年 2 月 28 日的当年高点 <strong>233.82</strong> 降至 11 月 29 日的 <strong>142.64</strong>，在 ChatGPT 正式公开前一天已回落 <strong>39.0%</strong>。2026 年 11 月 13 日为 <strong>81.71</strong>。该指数是 Indeed 活跃招聘广告数的季调七日平均，以 2020 年 2 月 1 日为 100。Westby 等人的另一项研究用 Lightcast 数据估计，ChatGPT 发布后，要求最多三年经验的软件开发招聘广告，相对要求四年及以上的广告少了 <strong>14–15%</strong>。这衡量的是按经验分组的招聘需求。广告与产品发布时间无法给出各企业的采用时点。<a href="https://fred.stlouisfed.org/graph/fredgraph.csv?id=IHLIDXUSTPSOFTDEVE">Indeed 原始指数 CSV，由 FRED 分发</a> · <a href="https://openai.com/index/chatgpt/">OpenAI 发布记录</a> · <a href="https://docs.iza.org/dp18723.pdf">IZA 工作论文 18723</a></p>
 <p><strong>行业对照能解释一部分降温。</strong> 美联储研究者 Leland Crane 与 Paul Soto 用 CPS 和 O*NET 做了一个对照，假定每个行业中编程密集型职业的占比维持不变，推算这些岗位随各行业整体就业会怎样变化。扣除这一部分后，行业内部仍观察到就业增速下降。斯坦福与 ADP 分别剔除计算机职业或研究定义的科技行业后，年轻员工的就业与职业暴露度仍呈现相似关系。这些比较能处理行业层面共同的波动，企业和行业内部仍可能对特定岗位或资历层级改变招聘需求。<a href="https://www.federalreserve.gov/econres/feds/files/2026018pap.pdf#page=19">美联储 FEDS 2026-018，第 5.2 节</a> · <a href="https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf#page=73">斯坦福工作论文，表 C.1</a></p>

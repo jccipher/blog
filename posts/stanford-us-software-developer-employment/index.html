@@ -72,7 +72,7 @@
     <h1>What Stanford’s Payroll Data Say About Young U.S. Software Developers</h1>
     <div class="article-meta">
       <time datetime="2026-11-23">PUBLISHED 2026.11.23</time>
-      <span>12 MIN READ</span>
+      <span>14 MIN READ</span>
       <span><b data-inline-page-views>—</b> VIEWS</span>
       <span>#Software Developers</span><span>#AI</span><span>#Employment</span><span>#Stanford</span><span>#ADP</span>
     </div>
@@ -89,7 +89,7 @@
   <div class="article-grid">
     <div class="article-copy prose"><h2>Editorial summary</h2>
 <p><strong>The 38.8 percentage-point gap is reproducible from an earlier Stanford release.</strong> In the October 2026 release from Stanford Digital Economy Lab and ADP Research, September headcount for software developers aged 22–25 was 18.56% below its November 2022 level. Headcount for ages 41–49 was 20.20% above it. The November release revised September and added October. It shows changes of <strong>−16.85% and +20.80%</strong>, a gap of <strong>37.65 percentage points</strong>. The gap is wider than a year earlier and below its May 2026 peak. These payroll records show a substantial age divergence in the sample. The series alone cannot predict whether it will widen or estimate how much of it AI caused. <a href="https://digitaleconomy.stanford.edu/project/indicators/canaries-dashboard/">Stanford Canaries Dashboard</a></p>
-<p><em>November 23 update. Worker-flow studies point to fewer hires. One study using actual GitHub Copilot licensing isolates an adoption effect for a group of large firms. The share of the national decline among young developers attributable to AI remains unmeasured. A new estimate from linked CPS interviews finds fewer reported main-employer changes among young developers in the later pooled period and too few job-loss events to establish a layoff trend.</em></p>
+<p><em>November 23 update. Worker-flow studies point to fewer hires. One study using actual GitHub Copilot licensing isolates an adoption effect for a group of large firms. The share of the national decline among young developers attributable to AI remains unmeasured. A new estimate from linked CPS interviews finds fewer reported main-employer changes among young developers in the later pooled period and too few job-loss events to establish a layoff trend. The season-matched 2026 point estimate is higher, and the year-over-year confidence interval still includes zero.</em></p>
 <hr>
 <h2>Where the 38.8 points came from</h2>
 <p>The claim accompanying the <a href="https://mp.weixin.qq.com/s/iz5Mql4VMPlOuD9OpK_EMg">WeChat link</a> cites changes of −18.6% and +20.2% and a gap of 38.8 percentage points. The link returned an access challenge during verification. We checked the supplied figures against Stanford&#39;s original downloads.</p>
@@ -186,6 +186,40 @@
 <h3>What the sample can support</h3>
 <p>The median monthly matched destination sample had <strong>26</strong> young developers (range <strong>14–40</strong>) and <strong>72</strong> older developers (range <strong>56–104</strong>). The same respondents can appear in multiple pairs. Among later-period developers employed at both interviews, the employer question lacked a usable answer in <strong>74 of 1,130</strong> young records and <strong>227 of 3,327</strong> older records. Published research finds that missing responses to this question can be selective. The ratios weight matched records using cross-sectional weights, so sampling error, movers and unequal follow-up still matter. A survey-design variance estimate would be needed for population comparisons. <a href="https://www.aeaweb.org/articles?id=10.1257/mac.20210076">Fujita, Moscarini and Postel-Vinay, 2024</a> · <a href="https://www.bls.gov/cps/cps_flows.htm">BLS labor-force flow methodology</a></p>
 <p>The hiring proxy captures two observable paths. A reported main-employer change can include switching which of two jobs is primary, and an entry from nonemployment can include returning to a past employer. A layoff followed by reemployment before the next interview, or by leaving the labor force, falls outside the observed job-loss-to-unemployment measure. The CPS check adds direct evidence for these specific transitions and leaves the overall hiring and involuntary separation rates unresolved.</p>
+<h3>Does the same-month comparison show a rebound in 2026?</h3>
+<p>The <strong>8.76%</strong> above covers January–October 2026 and uses the cross-sectional weight. The comparison below uses January–September in both years, because the CPS did not collect data in October 2025. It retains the same hiring proxy and occupation filter and uses the second interview’s official adjacent-month weight, <code>PWLGWGT</code>. January links to December of the preceding year. Every validated developer record in the comparison has a positive longitudinal weight. <a href="https://www2.census.gov/programs-surveys/cps/datasets/2026/basic/cps_dd_record_layout.txt">Census record layout, PWLGWGT</a> · <a href="https://cps.ipums.org/cps-action/variables/PANLWT">IPUMS panel weight documentation</a></p>
+<table>
+<thead>
+<tr>
+<th>January–September hiring proxy</th>
+<th align="right">2025, 95% interval in brackets</th>
+<th align="right">2026, 95% interval in brackets</th>
+<th align="right">Year-over-year change, percentage points</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ages 22–25</td>
+<td align="right">4.86% [2.24%, 7.95%]</td>
+<td align="right"><strong>9.21% [4.76%, 14.34%]</strong></td>
+<td align="right"><strong>+4.35 [−1.06, +10.22]</strong></td>
+</tr>
+<tr>
+<td>Ages 41–49</td>
+<td align="right">1.31% [0.53%, 2.26%]</td>
+<td align="right">2.36% [1.32%, 3.57%]</td>
+<td align="right">+1.05 [−0.34, +2.52]</td>
+</tr>
+<tr>
+<td>Younger minus older, percentage points</td>
+<td align="right">+3.54 [0.77, 6.72]</td>
+<td align="right"><strong>+6.85 [2.24, 12.07]</strong></td>
+<td align="right">+3.30 [−2.38, +9.42]</td>
+</tr>
+</tbody></table>
+<p>The young group’s estimate rose. Its year-over-year interval includes zero, so this comparison does not establish a rebound. Against the mean of the January–September estimates for 2023–2025, 2026 was <strong>5.05 points higher</strong> [0.22, 10.51]. That result is close to the threshold. A linearized household-cluster interval for the same comparison has a lower endpoint only about 0.005 points above zero. Compared with the same months of 2022, the difference is +3.46 points [−2.01, +9.38].</p>
+<p>The 2026 age gap is clearer. Using the cross-sectional weight on the same matches puts it at 6.75 points [2.17, 11.94]. Giving each month equal weight with <code>PWLGWGT</code> puts it at 6.71 points [2.40, 11.36]. The young group’s year-over-year estimates under those alternatives are +4.31 and +4.11 points, respectively, and both intervals include zero. The interval for the change in the age gap also includes zero. The gap measures the two groups’ observed entry and employer transitions among matched employed developers.</p>
+<p><strong>Reproduction.</strong> For each age-year cell, sum the second interview’s <code>PWLGWGT</code> for observed entries and divide by the weight sum for all matched destination developers. For the equal-month check, average the nine monthly ratios. The main comparison uses <strong>20,000</strong> bootstrap samples of the <strong>779</strong> observed households, drawn with replacement using seed <strong>242649</strong>. In each draw, a household’s records from both age groups and all its observed months in both years move together. Recalculate the rates and their differences within each draw and take the 2.5th and 97.5th percentiles. Apply the same joint resampling to all relevant years for the historical contrasts. <a href="https://cameron.econ.ucdavis.edu/research/Cameron_Miller_JHR_2015.pdf">Cameron and Miller on cluster inference</a></p>
+<p>In 2026, there were <strong>17 events in 204 matched person-months</strong> among ages 22–25, and <strong>18 in 740</strong> among ages 41–49. The 204 young records came from <strong>101</strong> person keys, <strong>64</strong> of which appeared more than once. The intervals treat the published weights as fixed and approximate sampling uncertainty at the household level. They omit the full CPS stratification and higher-level sampling structure. Employer-answer nonresponse and movers remain limits of the proxy. <a href="https://www.bls.gov/cps/factsheets/understanding-standard-errors-and-confidence-intervals.htm">BLS CPS standard errors and confidence intervals</a></p>
 <h2>Can research separate AI adoption from the tech slowdown?</h2>
 <p><strong>Software hiring demand was already cooling in 2022.</strong> Indeed’s seasonally adjusted U.S. software-development postings index fell from <strong>233.82</strong> at its 2022 peak on February 28 to <strong>142.64</strong> on November 29, the day before ChatGPT’s public release. That was a <strong>39.0%</strong> decline. On November 13, 2026, the index was <strong>81.71</strong>. The index tracks a seven-day average of active postings on Indeed, with February 1, 2020 set to 100. In a separate study of Lightcast ads, Westby and co-authors estimate a <strong>14–15% relative decline</strong> after the release in developer vacancies asking for up to three years of experience versus those asking for four or more. This measures advertised demand by experience. The release date and postings series provide no firm-level adoption dates. <a href="https://fred.stlouisfed.org/graph/fredgraph.csv?id=IHLIDXUSTPSOFTDEVE">Indeed index CSV via FRED</a> · <a href="https://openai.com/index/chatgpt/">OpenAI release date</a> · <a href="https://docs.iza.org/dp18723.pdf">IZA Discussion Paper 18723</a></p>
 <p><strong>Industry controls account for some of the slowdown.</strong> Federal Reserve economists Leland Crane and Paul Soto use CPS and O*NET to ask how U.S. coding-intensive employment would have evolved if each industry had kept its existing share of coders. A slowdown remains within industries after accounting for their overall employment changes. The Stanford–ADP age–exposure pattern also remains when the authors exclude computer occupations or exclude their definition of tech industries. These comparisons address industry-wide shocks. Demand can also shift toward particular roles or experience levels within a firm or industry. <a href="https://www.federalreserve.gov/econres/feds/files/2026018pap.pdf#page=19">Federal Reserve FEDS 2026-018, §5.2</a> · <a href="https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf#page=73">Stanford working paper, Table C.1</a></p>
