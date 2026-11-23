@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "build_id": "20261123T111751+0800-f30b476c",
-  "built_at": "2026-11-23T11:17:51+08:00",
+  "build_id": "20261123T140336+0800-115e48fb",
+  "built_at": "2026-11-23T14:03:36+08:00",
   "files": [
     {
       "path": ".github/workflows/pages.yml",
@@ -491,7 +491,7 @@
     {
       "path": "index.html",
       "bytes": 15057,
-      "sha256": "fa59baaed7b6a97a1c6fdea20f1891e885a884e630dc6d8d4d69df9e7af3dcc9"
+      "sha256": "fcc7b34595e9525a39f0c35c37d3e265b9c2450872f9563a3acb236a0c5f3518"
     },
     {
       "path": "posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -835,8 +835,8 @@
     },
     {
       "path": "posts/stanford-us-software-developer-employment/index.html",
-      "bytes": 19115,
-      "sha256": "bd05ddf4dc876269e69af86a72b1bf6ae5cc1b323511569d9afb3bedad039cf1"
+      "bytes": 27481,
+      "sha256": "937029a86b93cb27e69df14274e9f2109dc8f5f5e454f29f34d0f876a61e5fcd"
     },
     {
       "path": "posts/time-management-01-principles-google-calendar-events-tasks/index.html",
@@ -881,7 +881,7 @@
     {
       "path": "zh/index.html",
       "bytes": 15894,
-      "sha256": "0c5420667943125dd70685a35d8bee4240f43100e35cc206450b70ca09cee0ba"
+      "sha256": "3457eafb91ea41e5752a19cc9a6af2065c5932e0975b2c34cd074f6210f24712"
     },
     {
       "path": "zh/posts/ai-blog-anthropic-agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic/index.html",
@@ -1225,8 +1225,8 @@
     },
     {
       "path": "zh/posts/stanford-us-software-developer-employment/index.html",
-      "bytes": 18536,
-      "sha256": "d05f9620e8e66014fdd3cbe5b2ed5e83ad35e8ecfbb1ce8dc3819f09e3f96fe1"
+      "bytes": 26131,
+      "sha256": "6221e6e5404e4d0d027d1aee6d84d4a2474d960f88bf5137c133baece82de271"
     },
     {
       "path": "zh/posts/time-management-01-principles-google-calendar-events-tasks/index.html",
