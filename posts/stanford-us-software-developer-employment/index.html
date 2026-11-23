@@ -72,7 +72,7 @@
     <h1>What Stanford’s Payroll Data Say About Young U.S. Software Developers</h1>
     <div class="article-meta">
       <time datetime="2026-11-23">PUBLISHED 2026.11.23</time>
-      <span>9 MIN READ</span>
+      <span>12 MIN READ</span>
       <span><b data-inline-page-views>—</b> VIEWS</span>
       <span>#Software Developers</span><span>#AI</span><span>#Employment</span><span>#Stanford</span><span>#ADP</span>
     </div>
@@ -89,7 +89,7 @@
   <div class="article-grid">
     <div class="article-copy prose"><h2>Editorial summary</h2>
 <p><strong>The 38.8 percentage-point gap is reproducible from an earlier Stanford release.</strong> In the October 2026 release from Stanford Digital Economy Lab and ADP Research, September headcount for software developers aged 22–25 was 18.56% below its November 2022 level. Headcount for ages 41–49 was 20.20% above it. The November release revised September and added October. It shows changes of <strong>−16.85% and +20.80%</strong>, a gap of <strong>37.65 percentage points</strong>. The gap is wider than a year earlier and below its May 2026 peak. These payroll records show a substantial age divergence in the sample. The series alone cannot predict whether it will widen or estimate how much of it AI caused. <a href="https://digitaleconomy.stanford.edu/project/indicators/canaries-dashboard/">Stanford Canaries Dashboard</a></p>
-<p><em>November 23 update. Worker-flow studies point to fewer hires. One study using actual GitHub Copilot licensing isolates an adoption effect for a group of large firms. The share of the national decline among young developers attributable to AI remains unmeasured.</em></p>
+<p><em>November 23 update. Worker-flow studies point to fewer hires. One study using actual GitHub Copilot licensing isolates an adoption effect for a group of large firms. The share of the national decline among young developers attributable to AI remains unmeasured. A new estimate from linked CPS interviews finds fewer reported main-employer changes among young developers in the later pooled period and too few job-loss events to establish a layoff trend.</em></p>
 <hr>
 <h2>Where the 38.8 points came from</h2>
 <p>The claim accompanying the <a href="https://mp.weixin.qq.com/s/iz5Mql4VMPlOuD9OpK_EMg">WeChat link</a> cites changes of −18.6% and +20.2% and a gap of 38.8 percentage points. The link returned an access challenge during verification. We checked the supplied figures against Stanford&#39;s original downloads.</p>
@@ -135,6 +135,57 @@
 <p>Lee Tucker’s U.S. Census Bureau working paper reaches a similar result using public Quarterly Workforce Indicators (QWI). For ages 22–24 in the most AI-exposed industry-by-state quintile, the regression-adjusted count of new hires still employed at quarter-end was <strong>12.7% lower</strong> on average over the four quarters through Q2 2025 than over the four corresponding reference quarters. In an accounting exercise, restoring the hiring path estimated from less-exposed groups brings early-2025 employment close to its pre-release level. Fewer separations partially offset the hiring decline. The QWI comparison pools occupations, and separations include voluntary and involuntary exits. <a href="https://lehd.ces.census.gov/data/qwi/">Public QWI files</a> · <a href="https://www2.census.gov/library/working-papers/2026/adrm/ces/CES-WP-26-27.pdf#page=15">Tucker, Figures 7 and 11</a></p>
 <p>The rate of involuntary departures rose in the broader <strong>U.S. information industry</strong>. In BLS Job Openings and Labor Turnover Survey (JOLTS) data, the average monthly hiring rate for January–September went from <strong>3.64% in 2022 to 2.91% in 2026</strong>, while the monthly layoffs-and-discharges rate rose from <strong>1.16% to 1.82%</strong>. Each figure averages the same nine non-seasonally-adjusted months, and September 2026 is preliminary. These are establishment survey rates for all ages and roles in NAICS 51. Many developers work in other industries, including computer systems design. <a href="https://www.bls.gov/news.release/archives/jolts_11032026.htm">BLS September 2026 release, Tables 9 and 12</a> · <a href="https://fred.stlouisfed.org/graph/fredgraph.csv?id=JTU5100HIR,JTU5100LDR">BLS monthly rates CSV via FRED</a></p>
 <p>California unemployment-insurance records also show pockets of job loss. The California Policy Lab’s June 2026 report finds that initial claims by college-educated workers in highly exposed occupations remained elevated through May relative to their pre-pandemic levels, while the statewide share of claims from highly exposed occupations showed no significant rise across all education levels combined. The records track benefit claims and measure AI exposure by prior occupation. <a href="https://capolicylab.org/wp-content/uploads/2026/06/Tracking-AI-Related-Job-Loss-Using-Unemployment-Insurance-Claims-Data-in-California.pdf">California Policy Lab report</a> · <a href="https://capolicylab.org/california-ai-unemployment-tracker/">Public claims tables</a></p>
+<h2>Tracking the same CPS respondents month to month</h2>
+<p>The Census Bureau’s monthly Current Population Survey (CPS) can track a worker across adjacent interviews. We linked <strong>69 official files</strong> from January 2021 through October 2026 to form <strong>67 adjacent-month pairs</strong>. For both age groups, we counted people whose main job was wage-and-salary software development (Census occupation <strong>1021</strong>). The table pools weighted person-month transitions. Periods are labeled by the second interview month, and the numbers in parentheses are unweighted events and eligible matched records. <a href="https://www.census.gov/data/datasets/time-series/demo/cps/cps-basic.html">Original CPS monthly files</a> · <a href="https://www2.census.gov/programs-surveys/cps/datasets/2026/basic/oct26pub.dat.gz">October 2026 microdata</a> · <a href="https://www2.census.gov/programs-surveys/cps/datasets/2026/basic/cps_dd_record_layout.txt">Official record layout</a> · <a href="https://www2.census.gov/programs-surveys/cps/datasets/2026/basic/cps_occupation_codes.csv">Occupation codes</a></p>
+<table>
+<thead>
+<tr>
+<th>Second interview month</th>
+<th>Age</th>
+<th align="right">Observed hiring proxy</th>
+<th align="right">Of which, changed main employer</th>
+<th align="right">Job loss followed by unemployment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Feb 2021–Nov 2022</td>
+<td>22–25</td>
+<td align="right"><strong>6.26%</strong> (31 / 583)</td>
+<td align="right">3.73% (20 / 583)</td>
+<td align="right">0.00% (0 / 599)</td>
+</tr>
+<tr>
+<td>Feb 2021–Nov 2022</td>
+<td>41–49</td>
+<td align="right"><strong>1.91%</strong> (28 / 1,581)</td>
+<td align="right">1.56% (22 / 1,581)</td>
+<td align="right">0.16% (3 / 1,586)</td>
+</tr>
+<tr>
+<td>Dec 2022–Oct 2026</td>
+<td>22–25</td>
+<td align="right"><strong>5.04%</strong> (53 / 1,164)</td>
+<td align="right">1.94% (19 / 1,164)</td>
+<td align="right">0.35% (4 / 1,180)</td>
+</tr>
+<tr>
+<td>Dec 2022–Oct 2026</td>
+<td>41–49</td>
+<td align="right"><strong>1.65%</strong> (56 / 3,348)</td>
+<td align="right">1.08% (36 / 3,348)</td>
+<td align="right">0.48% (15 / 3,396)</td>
+</tr>
+</tbody></table>
+<p>For ages 22–25, the pooled hiring proxy fell from <strong>6.26% to 5.04%</strong>, driven by fewer reported changes of main employer as a share of matched developers. Entry from nonemployment rose from <strong>2.53% to 3.10%</strong>. The pooled decline also appears when restricting both periods to February–September. The proxy fluctuates across years. For interviews ending in January–October 2026 it was <strong>8.76%</strong> for ages 22–25, based on 18 events in 222 matched records. The young group had only <strong>four</strong> observed job-loss-to-unemployment transitions in the later period, including one temporary layoff. The zero in the first period means the sample captured zero such events. These counts are too small to establish an age-specific layoff trend or attribute the change in payroll headcount.</p>
+<h3>How to reproduce the estimates</h3>
+<ol>
+<li><strong>Link people.</strong> Read <code>HRHHID</code>, <code>HRHHID2</code> and <code>PULINENO</code> as the household and person key. Within adjacent calendar months, keep records with <code>HRMIS</code> increasing by one from 1–3 or 5–7, unchanged sex (<code>PESEX</code>) and race (<code>PTDTRACE</code>), and age (<code>PRTAGE</code>) unchanged or up one year. The 4–8–4 design samples an address for four months, pauses eight months and returns for four. Use the revised Census files for January 2024–July 2025, which correct household IDs. The absence of an October 2025 survey leaves two adjacent-month comparisons missing. <a href="https://cps.ipums.org/cps/cps_linking_documentation.shtml">CPS linkage documentation</a> · <a href="https://www.census.gov/programs-surveys/cps/data/datasets/cps-basic-footnotes.html">Census revision notes, items 24–26</a> · <a href="https://www.bls.gov/cps/methods/2025-federal-government-shutdown-impact-cps.htm">BLS shutdown documentation</a></li>
+<li><strong>Measure observable entries.</strong> For matched workers in the destination month, require employment (<code>PEMLR=1/2</code>), occupation <code>PTIO1OCD=1021</code> and wage-and-salary class <code>PEIO1COW=1–5</code>. Group by age and weight with that month’s <code>PWCMPWGT</code>. The numerator combines workers who were looking for work or out of the labor force one month earlier (<code>PEMLR=4–7</code>) and continuously employed workers who reported a different main employer (<code>PUIODP1=2</code>). Both use all matched destination developers as the denominator. Prior-month temporary layoffs (<code>PEMLR=3</code>) stay in the denominator and are excluded from the numerator because returning to work can be a recall. Missing employer answers stay in the denominator. The numerator counts only reported changes among those employed at both interviews.</li>
+<li><strong>Measure job-loss transitions.</strong> Use the same occupation and wage-and-salary screen in the origin month and group and weight by that month. Count workers who are unemployed in the second interview (<code>PEMLR=3/4</code>) with <code>PRUNTYPE=1/2</code>, temporary layoff or other job loss. Code 3, completion of a temporary job, is tracked separately. Divide the event weights by the weights of all matched origin-month developers in the age group.</li>
+</ol>
+<h3>What the sample can support</h3>
+<p>The median monthly matched destination sample had <strong>26</strong> young developers (range <strong>14–40</strong>) and <strong>72</strong> older developers (range <strong>56–104</strong>). The same respondents can appear in multiple pairs. Among later-period developers employed at both interviews, the employer question lacked a usable answer in <strong>74 of 1,130</strong> young records and <strong>227 of 3,327</strong> older records. Published research finds that missing responses to this question can be selective. The ratios weight matched records using cross-sectional weights, so sampling error, movers and unequal follow-up still matter. A survey-design variance estimate would be needed for population comparisons. <a href="https://www.aeaweb.org/articles?id=10.1257/mac.20210076">Fujita, Moscarini and Postel-Vinay, 2024</a> · <a href="https://www.bls.gov/cps/cps_flows.htm">BLS labor-force flow methodology</a></p>
+<p>The hiring proxy captures two observable paths. A reported main-employer change can include switching which of two jobs is primary, and an entry from nonemployment can include returning to a past employer. A layoff followed by reemployment before the next interview, or by leaving the labor force, falls outside the observed job-loss-to-unemployment measure. The CPS check adds direct evidence for these specific transitions and leaves the overall hiring and involuntary separation rates unresolved.</p>
 <h2>Can research separate AI adoption from the tech slowdown?</h2>
 <p><strong>Software hiring demand was already cooling in 2022.</strong> Indeed’s seasonally adjusted U.S. software-development postings index fell from <strong>233.82</strong> at its 2022 peak on February 28 to <strong>142.64</strong> on November 29, the day before ChatGPT’s public release. That was a <strong>39.0%</strong> decline. On November 13, 2026, the index was <strong>81.71</strong>. The index tracks a seven-day average of active postings on Indeed, with February 1, 2020 set to 100. In a separate study of Lightcast ads, Westby and co-authors estimate a <strong>14–15% relative decline</strong> after the release in developer vacancies asking for up to three years of experience versus those asking for four or more. This measures advertised demand by experience. The release date and postings series provide no firm-level adoption dates. <a href="https://fred.stlouisfed.org/graph/fredgraph.csv?id=IHLIDXUSTPSOFTDEVE">Indeed index CSV via FRED</a> · <a href="https://openai.com/index/chatgpt/">OpenAI release date</a> · <a href="https://docs.iza.org/dp18723.pdf">IZA Discussion Paper 18723</a></p>
 <p><strong>Industry controls account for some of the slowdown.</strong> Federal Reserve economists Leland Crane and Paul Soto use CPS and O*NET to ask how U.S. coding-intensive employment would have evolved if each industry had kept its existing share of coders. A slowdown remains within industries after accounting for their overall employment changes. The Stanford–ADP age–exposure pattern also remains when the authors exclude computer occupations or exclude their definition of tech industries. These comparisons address industry-wide shocks. Demand can also shift toward particular roles or experience levels within a firm or industry. <a href="https://www.federalreserve.gov/econres/feds/files/2026018pap.pdf#page=19">Federal Reserve FEDS 2026-018, §5.2</a> · <a href="https://digitaleconomy.stanford.edu/app/uploads/2026/08/Canaries_August2026.pdf#page=73">Stanford working paper, Table C.1</a></p>
